@@ -6,6 +6,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 import java.awt.Button;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 @SuppressWarnings("serial")
 public class Fanorona extends JFrame {
@@ -35,21 +37,35 @@ public class Fanorona extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(200, 200, 800, 600);
 		setTitle("Fanorona");
-		
+
 		contentPane = new JPanel();
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
-		
+
 		Board board = new Board();
 		contentPane.add(board);
-		
+
 		Button btnMainMenu = new Button("Main Menu");
+		btnMainMenu.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Welcome_Menu win = new Welcome_Menu();
+				win.setVisible(true);
+				dispose();
+			}
+		});
 		board.add(btnMainMenu);
-		
+
 		Button btnPause = new Button("Pause");
+		btnPause.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//stop clock and pause game!
+				PauseMenu win = new PauseMenu();
+				win.makeVisible();
+			}
+		});
 		board.add(btnPause);
 		//contentPane.add(new Piece());
-		
+
 	}
 
 }
