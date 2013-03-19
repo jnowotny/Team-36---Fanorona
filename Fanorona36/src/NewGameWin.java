@@ -16,6 +16,10 @@ import java.awt.event.ActionEvent;
 
 public class NewGameWin extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 137750314898293920L;
 	private JPanel contentPane;
 	private final JButton btnNewGame = new JButton("Player 1 vs CPU (TEST)");
 	private final JButton btnNewButton = new JButton("Player 1 vs Player 2");

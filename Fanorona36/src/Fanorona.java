@@ -9,9 +9,13 @@ import java.awt.Button;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-@SuppressWarnings("serial")
+
 public class Fanorona extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3335293785778663915L;
 	private JPanel contentPane;
 
 	/**

@@ -15,6 +15,10 @@ import java.awt.Color;
 
 public class AboutWin extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2763013922320706076L;
 	private JPanel contentPane;
 	private final JButton btnClose = new JButton("Close");
 	private final JTextArea txtrFanoromaByTeam = new JTextArea();

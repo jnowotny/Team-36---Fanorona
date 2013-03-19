@@ -16,6 +16,10 @@ import java.awt.event.ActionEvent;
 
 public class Welcome_Menu extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6917194983908145199L;
 	private JPanel contentPane;
 	private final JButton btnRules = new JButton("Rules");
 

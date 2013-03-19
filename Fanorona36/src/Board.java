@@ -2,8 +2,13 @@ import javax.swing.JPanel;
 import java.awt.*;
 import java.awt.geom.*;
 
-@SuppressWarnings("serial")
+
 public class Board extends JPanel {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -9165633611662257140L;
 
 	public void paint(Graphics g)
     {

@@ -1,3 +1,4 @@
+# Class files #
 *.class
 
 # Package Files #
@@ -5,4 +6,5 @@
 *.war
 *.ear
 
+# OS Junk #
 *.DS_Store
