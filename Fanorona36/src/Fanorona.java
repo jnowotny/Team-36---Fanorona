@@ -3,8 +3,6 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JButton;
 import java.awt.Button;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -12,9 +10,6 @@ import java.awt.event.ActionEvent;
 
 public class Fanorona extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3335293785778663915L;
 	private JPanel contentPane;
 
@@ -38,6 +33,7 @@ public class Fanorona extends JFrame {
 	 * Create the frame.
 	 */
 	public Fanorona() {
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(200, 200, 800, 600);
 		setTitle("Fanorona");
@@ -68,7 +64,6 @@ public class Fanorona extends JFrame {
 			}
 		});
 		board.add(btnPause);
-		//contentPane.add(new Piece());
 
 	}
 

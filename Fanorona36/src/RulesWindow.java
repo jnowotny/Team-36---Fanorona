@@ -1,12 +1,6 @@
 import java.awt.EventQueue;
 import javax.swing.JFrame;
-import java.awt.GridLayout;
-import javax.swing.JScrollPane;
-import javax.swing.border.SoftBevelBorder;
-import javax.swing.border.BevelBorder;
-import javax.swing.ScrollPaneConstants;
 import java.awt.Window.Type;
-import javax.swing.JTextPane;
 import java.awt.TextArea;
 import java.awt.Font;
 
