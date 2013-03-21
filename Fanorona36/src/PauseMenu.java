@@ -30,14 +30,13 @@ public class PauseMenu {
 			}
 		});
 	}
-
 	/**
 	 * Create the application.
 	 */
 	public PauseMenu() {
 		initialize();
 	}
-
+	
 	public void makeVisible() {
 		frmPause.setVisible(true);
 	}
@@ -50,25 +49,27 @@ public class PauseMenu {
 		frmPause.dispose();
 	}
 	
+	public boolean isOpen() {
+		return frmPause.isActive();
+	}
+	
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
 		frmPause = new JFrame();
-		frmPause.setState(Frame.ICONIFIED);
 		frmPause.setTitle("-Pause-");
 		frmPause.setType(Type.POPUP);
 		frmPause.setResizable(false);
 		frmPause.setBounds(100, 100, 450, 300);
 		frmPause.setLocationRelativeTo(null);
-		frmPause.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmPause.getContentPane().setLayout(null);
 		Button button_1 = new Button("Resume Game");
 		button_1.setBounds(75, 69, 300, 33);
 		button_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				frmPause.dispose();
+				frmPause.setVisible(false);
 				//Resume Game
 			}
 		});
