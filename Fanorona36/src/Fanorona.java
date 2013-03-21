@@ -9,6 +9,7 @@ import javax.swing.Timer;
 import java.awt.Button;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JInternalFrame;
 
 
 public class Fanorona extends JFrame {
@@ -20,6 +21,7 @@ public class Fanorona extends JFrame {
 	private int timeRemaining = 25;
 	private PauseMenu pause = new PauseMenu();
 	private SwitchPlayers swap = new SwitchPlayers();
+	private Board board = new Board();
 
 	/**
 	 * Launch the application.
@@ -66,10 +68,11 @@ public class Fanorona extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 
-		Board board = new Board();
+		
 		contentPane.add(board);
 
 		Button btnMainMenu = new Button("Main Menu");
+		btnMainMenu.setBounds(311, 23, 112, 29);
 		btnMainMenu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Welcome_Menu win = new Welcome_Menu();
@@ -77,12 +80,15 @@ public class Fanorona extends JFrame {
 				dispose();
 			}
 		});
+		board.setLayout(null);
 		board.add(btnMainMenu);
 		
 		label = new Label("Time Remaining: " + String.valueOf(timeRemaining));
+		label.setBounds(428, 29, 130, 17);
 		board.add(label);
 		
 		Button btnPause = new Button("Pause");
+		btnPause.setBounds(563, 23, 80, 29);
 		btnPause.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//stop clock and pause game!
@@ -92,12 +98,7 @@ public class Fanorona extends JFrame {
 		board.add(btnPause);
 		
 		countdown = new Timer(1000, new CountdownTimerListener());
-		//countdown.addWindowListener(new isPauseMenuOpen());
-		setVisible(true);
 		countdown.start();
-		
-		swap.setVisible(false);
-		add(swap);
 		
 	}
 
