@@ -1,18 +1,23 @@
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
+//import javax.swing.JInternalFrame;
 import javax.swing.JButton;
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
+//import java.awt.BorderLayout;
+//import java.awt.GridLayout;
 import javax.swing.JTextPane;
-import java.awt.Color;
+//import java.awt.Color;
 import java.awt.SystemColor;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 
 public class SwitchPlayers extends JFrame {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6521832783486381602L;
 
 	/**
 	 * Launch the application.
