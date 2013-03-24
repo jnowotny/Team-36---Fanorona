@@ -9,7 +9,6 @@ import javax.swing.Timer;
 import java.awt.Button;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.JInternalFrame;
 
 
 public class Fanorona extends JFrame {
@@ -19,7 +18,7 @@ public class Fanorona extends JFrame {
 	private Timer countdown;
 	private Label label;
 	private int timeRemaining = 25;
-	private PauseMenu pause = new PauseMenu();
+	private PauseMenu pause = new PauseMenu(this);
 	private SwitchPlayers swap = new SwitchPlayers();
 	private Board board = new Board();
 
@@ -103,5 +102,4 @@ public class Fanorona extends JFrame {
 		swap.setVisible(false);
 
 	}
-
 }
