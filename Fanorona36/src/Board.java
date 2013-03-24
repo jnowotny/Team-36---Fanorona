@@ -25,7 +25,7 @@ public class Board extends JPanel {
 	
 	public Board() {
 		//Row-by-row initialization of pieces at start positions on board
-		
+		this.setLayout(null);
 		boardState = new BoardState();
 		
 		//Row 0
@@ -78,12 +78,16 @@ public class Board extends JPanel {
 	    boardPieces[4][6] = new Piece(493, 340, 1);
 	    boardPieces[4][7] = new Piece(549, 340, 1);
 	    boardPieces[4][8] = new Piece(605, 340, 1);
-		
-		
+	    
+	    for(int i = 0; i < 5; i++){
+	    	for(int j = 0; j < 9; j++){
+	    		this.add(boardPieces[i][j]);
+	    	}
+	    }
 	}
-	
-	public void paint(Graphics g){
-		super.paint(g);
+	@Override
+	public void paintComponent(Graphics g){
+		super.paintComponent(g);
 
 		Graphics2D g2 = (Graphics2D) g;
 	    
@@ -132,7 +136,7 @@ public class Board extends JPanel {
 	public void drawPieces(Graphics2D g2){
 		for(int i = 0; i < 5; i++){
 	    	for(int j = 0; j < 9; j++){
-    			boardPieces[i][j].draw(g2);
+    			boardPieces[i][j].paintComponent(g2);
 	    	}
 	    }
 	}

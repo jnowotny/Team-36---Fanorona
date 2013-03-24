@@ -12,12 +12,10 @@ import java.awt.Button;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-import java.awt.event.MouseListener;
-import java.awt.event.MouseEvent;
 import javax.swing.JLabel;
 import java.awt.Color;
 
-public class Fanorona extends JFrame implements MouseListener {
+public class Fanorona extends JFrame {
 
 	private static final long serialVersionUID = 3335293785778663915L;
 	private JPanel contentPane;
@@ -105,7 +103,6 @@ public class Fanorona extends JFrame implements MouseListener {
 	 * Create the frame.
 	 */
 	public Fanorona() {
-		super("MouseListener Test");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		int width = 800;
@@ -156,9 +153,6 @@ public class Fanorona extends JFrame implements MouseListener {
 			public void actionPerformed(ActionEvent e) {
 				//stop clock and pause game!
 				pause.makeVisible();
-				//TESTING highlight on action
-				(board.getBoardPieces())[2][4].setHighlight(true);
-				board.repaint();
 			}
 		});
 		board.add(btnPause);
@@ -184,34 +178,5 @@ public class Fanorona extends JFrame implements MouseListener {
 		swap.setVisible(false);
 
 	}
-	
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-	
-	}
-	
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-	
-	}
-	
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-	
-	}
-	
-	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-	
-	}
-	
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-	
-	}
+
 }
