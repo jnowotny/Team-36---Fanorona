@@ -10,8 +10,10 @@ import java.awt.Button;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
 
-public class Fanorona extends JFrame {
+public class Fanorona extends JFrame implements MouseListener {
 
 	private static final long serialVersionUID = 3335293785778663915L;
 	private JPanel contentPane;
@@ -57,19 +59,18 @@ public class Fanorona extends JFrame {
 	 * Create the frame.
 	 */
 	public Fanorona() {
+		super("MouseListener Test");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(200, 200, 800, 600);
 		setTitle("Fanorona");
 		
-
 		contentPane = new JPanel();
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
-
-		
 		contentPane.add(board);
 
+		
 		Button btnMainMenu = new Button("Main Menu");
 		btnMainMenu.setBounds(311, 23, 112, 29);
 		btnMainMenu.addActionListener(new ActionListener() {
@@ -92,9 +93,14 @@ public class Fanorona extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				//stop clock and pause game!
 				pause.makeVisible();
+				//TESTING highlight on action
+				(board.getBoardPieces())[2][4].setHighlight(true);
+				board.repaint();
 			}
 		});
 		board.add(btnPause);
+		
+		
 		
 		countdown = new Timer(1000, new CountdownTimerListener());
 		countdown.start();
@@ -102,4 +108,35 @@ public class Fanorona extends JFrame {
 		swap.setVisible(false);
 
 	}
+	
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+	
+	}
+	
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+	
+	}
+	
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+	
+	}
+	
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+	
+	}
+	
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+	
+	}
+
 }

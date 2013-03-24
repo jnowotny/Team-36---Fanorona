@@ -10,9 +10,9 @@ public class BoardState {
 
 	public BoardState(){
 		/*	Below demonstrates the initial piece layout on the board
-		 *  x = maroon piece
-		 *  o = white piece
-		 *  e = empty space 
+		 *  2 = maroon piece
+		 *  1 = white piece
+		 *  0 = empty space 
 		 * 		(empty spaces not currently represented as a piece object..so nothing is in matrix at [2][4])
 		 * 
 		 *		2 2 2 2 2 2 2 2 2
