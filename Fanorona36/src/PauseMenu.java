@@ -14,6 +14,7 @@ import java.awt.Color;
 
 public class PauseMenu {
 	private JFrame frmPause;
+	private static Fanorona fan;
 
 	/**
 	 * Launch the application.
@@ -22,7 +23,7 @@ public class PauseMenu {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					PauseMenu window = new PauseMenu();
+					PauseMenu window = new PauseMenu(fan);
 					window.frmPause.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -33,8 +34,9 @@ public class PauseMenu {
 	/**
 	 * Create the application.
 	 */
-	public PauseMenu() {
-		initialize();
+	public PauseMenu(Fanorona f) {
+		fan = f;
+		initialize(fan);
 	}
 	
 	public void makeVisible() {
@@ -56,7 +58,7 @@ public class PauseMenu {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	private void initialize(final Fanorona f) {
 		frmPause = new JFrame();
 		frmPause.setTitle("-Pause-");
 		frmPause.setType(Type.POPUP);
@@ -82,6 +84,7 @@ public class PauseMenu {
 				Welcome_Menu win = new Welcome_Menu();
 				win.setVisible(true);
 				frmPause.dispose();
+				fan.dispose();
 				//Launch Menu
 			}
 		});		
