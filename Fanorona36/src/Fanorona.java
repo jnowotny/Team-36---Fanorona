@@ -100,11 +100,8 @@ public class Fanorona extends JFrame {
 		countdown = new Timer(1000, new CountdownTimerListener());
 		countdown.start();
 		
-<<<<<<< HEAD
-=======
 		swap.setVisible(false);
-		
->>>>>>> Added BoardState
+
 	}
 
 }
