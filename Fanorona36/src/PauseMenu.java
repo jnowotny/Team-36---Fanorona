@@ -1,9 +1,9 @@
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.Timer;
 
 import java.awt.Window.Type;
-//import java.awt.Frame;
 import java.awt.Button;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -11,8 +11,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Panel;
-import javax.swing.JTextPane;
-import java.awt.Dimension;
 import java.awt.Color;
 
 
@@ -20,6 +18,10 @@ public class PauseMenu {
 	private JFrame frmPause;
 	private static Fanorona fan;
 	private JLabel gameInfoText;
+	protected int curTurn;
+	protected int curP1Score;
+	protected int curP2Score;
+	private Timer updateText;
 
 	/**
 	 * Launch the application.
@@ -36,6 +38,28 @@ public class PauseMenu {
 			}
 		});
 	}
+	
+	class UpdateTimerListener implements ActionListener {
+		private Fanorona fan;
+        public UpdateTimerListener(Fanorona f) {
+        	fan = f;
+        }
+        public void actionPerformed(ActionEvent e) {
+    		curTurn = fan.board.getTurnCount();
+    		curP1Score = fan.board.getP1Score();
+    		curP2Score = fan.board.getP2Score();
+    		EventQueue.invokeLater(new Runnable() {
+    			public void run() {
+    				try {
+    					gameInfoText.setText("Maroon: " + Integer.toString(curP2Score) + " White: " + Integer.toString(curP1Score) + " Moves Remaining: " + Integer.toString(50 - curTurn));
+    				} catch (Exception e) {
+    					e.printStackTrace();
+    				}
+    			}
+    		});
+        }
+    }
+	
 	/**
 	 * Create the application.
 	 */
@@ -113,17 +137,21 @@ public class PauseMenu {
 		
 		gameInfoText = new JLabel();
 		gameInfoText.setAlignmentY(Component.BOTTOM_ALIGNMENT);
-		gameInfoText.setPreferredSize(new Dimension(120, 33));
 		gameInfoText.setVerifyInputWhenFocusTarget(false);
+		curTurn = f.board.getTurnCount();
+		curP1Score = f.board.getP1Score();
+		curP2Score = f.board.getP2Score();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					gameInfoText.setText("Black: White: Moves Remaining: " + Integer.toString((f.board.getTurnCount())));
+					gameInfoText.setText("Maroon: " + Integer.toString(curP2Score) + " White: " + Integer.toString(curP1Score) + " Moves Remaining: " + Integer.toString(50 - curTurn));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
+		updateText = new Timer(1000, new UpdateTimerListener(f));
+		updateText.start();
 		panel.add(gameInfoText);
 	}
 

@@ -1,4 +1,4 @@
-import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -9,6 +9,7 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.FlowLayout;
 
 
 public class EndMenu extends JFrame {
@@ -18,6 +19,7 @@ public class EndMenu extends JFrame {
 	 */
 	private static final long serialVersionUID = 5569512002788537335L;
 	private JPanel contentPane;
+	private JLabel lblScoreLabel;
 	private static Fanorona fan;
 
 	/**
@@ -87,8 +89,29 @@ public class EndMenu extends JFrame {
 		lblGameOver.setBounds(163, 19, 124, 29);
 		contentPane.add(lblGameOver);
 		
-		JLabel lblNewLabel = new JLabel("New label");
-		lblNewLabel.setBounds(193, 60, 61, 16);
-		contentPane.add(lblNewLabel);
+		JPanel panel = new JPanel();
+		panel.setBounds(0, 0, 434, 261);
+		contentPane.add(panel);
+		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		
+//		JLabel lblNewLabel = new JLabel("New Label");
+//		lblNewLabel.setBounds(193, 60, 61, 16);
+//		contentPane.add(lblNewLabel);
+		lblScoreLabel = new JLabel();
+		lblScoreLabel.setAlignmentY(Component.BOTTOM_ALIGNMENT);
+		lblScoreLabel.setVerifyInputWhenFocusTarget(false);
+		final int curP1Score = f.board.getP1Score();
+		final int curP2Score = f.board.getP2Score();
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					lblScoreLabel.setText("Maroon: " + Integer.toString(curP2Score) + " White: " + Integer.toString(curP1Score));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		panel.add(lblScoreLabel);
+		
 	}
 }

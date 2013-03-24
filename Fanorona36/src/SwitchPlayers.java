@@ -10,10 +10,11 @@ import javax.swing.JTextPane;
 import java.awt.SystemColor;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 
 public class SwitchPlayers extends JFrame {
-
 	/**
 	 * 
 	 */
@@ -24,9 +25,11 @@ public class SwitchPlayers extends JFrame {
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
+			private Fanorona f;
+
 			public void run() {
 				try {
-					SwitchPlayers frame = new SwitchPlayers();
+					SwitchPlayers frame = new SwitchPlayers(f);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -38,13 +41,21 @@ public class SwitchPlayers extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public SwitchPlayers() {
+	public SwitchPlayers(final Fanorona f) {
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setResizable(true);
 		setBounds(100, 100, 450, 300);
+		this.setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
 		
 		JButton btnNewButton = new JButton("OK!");
+		btnNewButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				setVisible(false);
+				f.board.nextTurn();
+			}
+		});
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);

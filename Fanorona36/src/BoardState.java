@@ -3,10 +3,10 @@
 
 public class BoardState {
 	private int[][] boardGrid = new int [5][9];
-	private int p1Score;			//0-22
-	private int p2Score;			//0-22
-	private int turnCount = 50;			//1-50
-	private int currentPlayer;		//1 or 2 (player), 0: error
+	private int p1Score = 22;			//0-22
+	private int p2Score = 22;			//0-22
+	private int turnCount = 1;		//1-50
+	private int currentPlayer = 2;		//1 or 2 (player), 0: error
 
 	public BoardState(){
 		/*	Below demonstrates the initial piece layout on the board

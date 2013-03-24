@@ -20,11 +20,13 @@ public class Fanorona extends JFrame implements MouseListener {
 	private static final long serialVersionUID = 3335293785778663915L;
 	private JPanel contentPane;
 	private Timer countdown;
+	private Timer gameLoop;
 	private Label label;
 	private int timeRemaining = 25;
 	protected Board board = new Board();
 	private PauseMenu pause = new PauseMenu(this);
-	private SwitchPlayers swap = new SwitchPlayers();
+	private SwitchPlayers swap = new SwitchPlayers(this);
+	private EndMenu endMenu = new EndMenu(this);
 
 	/**
 	 * Launch the application.
@@ -53,6 +55,22 @@ public class Fanorona extends JFrame implements MouseListener {
 	                swap.setVisible(true);
 	                timeRemaining = 26;
 	            }
+        	}
+        }
+    }
+	
+	//creates the handler for updating the timer!
+	class GameLoopListener implements ActionListener {
+		private Fanorona fan;
+        public GameLoopListener(Fanorona f) {
+        	fan = f;
+        }
+
+		public void actionPerformed(ActionEvent e) {
+        	final int maxTurn = 50;
+        	if (fan.board.getTurnCount() == maxTurn) {
+        		endMenu.setVisible(true);
+        		dispose();
         	}
         }
     }
@@ -107,10 +125,22 @@ public class Fanorona extends JFrame implements MouseListener {
 		});
 		board.add(btnPause);
 		
+		Button button = new Button("Skip Turn");
+		button.setBounds(157, 23, 112, 29);
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				board.nextTurn();
+			}
+		});
+		board.add(button);
+		
 		
 		
 		countdown = new Timer(1000, new CountdownTimerListener());
 		countdown.start();
+		
+		gameLoop = new Timer(100, new GameLoopListener(this));
+		gameLoop.start();
 
 		swap.setVisible(false);
 
@@ -145,5 +175,4 @@ public class Fanorona extends JFrame implements MouseListener {
 		// TODO Auto-generated method stub
 	
 	}
-
 }

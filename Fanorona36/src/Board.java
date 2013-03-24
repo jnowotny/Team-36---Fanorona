@@ -153,6 +153,18 @@ public class Board extends JPanel {
 		return boardState.getTurnCount();
 	}
 	
+	public int getP1Score(){
+		return boardState.getP1Score();
+	}
+	public int getP2Score(){
+		return boardState.getP2Score();
+	}
+	
+	public void nextTurn(){
+		boardState.nextCurrentPlayer();
+		boardState.updateTurnCount();
+	}
+	
 	public void highlightMovablePieces(){
 		/*
 		 * This should highlight all Pieces that can be moved for the current player's turn
