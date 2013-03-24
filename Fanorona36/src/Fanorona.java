@@ -14,6 +14,8 @@ import java.awt.event.ActionEvent;
 
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
+import javax.swing.JLabel;
+import java.awt.Color;
 
 public class Fanorona extends JFrame implements MouseListener {
 
@@ -22,7 +24,11 @@ public class Fanorona extends JFrame implements MouseListener {
 	private Timer countdown;
 	private Timer gameLoop;
 	private Label label;
+	private JLabel p1Score;
+	private JLabel p2Score;
 	private int timeRemaining = 25;
+	private int curP1Score;
+	private int curP2Score;
 	protected Board board = new Board();
 	private PauseMenu pause = new PauseMenu(this);
 	private SwitchPlayers swap = new SwitchPlayers(this);
@@ -47,7 +53,7 @@ public class Fanorona extends JFrame implements MouseListener {
 	//creates the handler for updating the timer!
 	class CountdownTimerListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-        	if (!pause.isVisible() && !swap.isVisible()) {
+        	if ((!pause.isVisible()) && (!swap.isVisible()) && (!endMenu.isVisible())) {
         		if (--timeRemaining > 0) 
 	                label.setText("Time Remaining: " + String.valueOf(timeRemaining));
 	            else {
@@ -68,6 +74,26 @@ public class Fanorona extends JFrame implements MouseListener {
 
 		public void actionPerformed(ActionEvent e) {
         	final int maxTurn = 50;
+        	
+    		curP1Score = fan.board.getP1Score();
+    		curP2Score = fan.board.getP2Score();
+    		
+    		EventQueue.invokeLater(new Runnable() {
+    			public void run() {
+    				try {
+    					p2Score.setText("Maroon: " + Integer.toString(curP2Score)); 
+    					p1Score.setText("White: " + Integer.toString(curP1Score));
+    				} catch (Exception e) {
+    					e.printStackTrace();
+    				}
+    			}
+    		});
+        	
+        	//Any other Looping actions we need done here
+        	if ((fan.board.getP1Score() == 0) || (fan.board.getP2Score() == 0)) {
+        		endMenu.setVisible(true);
+        		dispose();
+        	}
         	if (fan.board.getTurnCount() == maxTurn) {
         		endMenu.setVisible(true);
         		dispose();
@@ -108,7 +134,19 @@ public class Fanorona extends JFrame implements MouseListener {
 		board.setLayout(null);
 		board.add(btnMainMenu);
 		
+		p1Score = new JLabel();
+		p1Score.setBackground(Color.LIGHT_GRAY);
+		p1Score.setBounds(223, 428, 60, 14);
+		board.add(p1Score);
+		
+		p2Score = new JLabel();
+		p2Score.setBackground(Color.LIGHT_GRAY);
+		p2Score.setBounds(455, 428, 60, 14);
+		board.add(p2Score);
+		
+		
 		label = new Label("Time Remaining: " + String.valueOf(timeRemaining));
+		label.setBackground(Color.LIGHT_GRAY);
 		label.setBounds(428, 29, 130, 17);
 		board.add(label);
 		
@@ -125,14 +163,15 @@ public class Fanorona extends JFrame implements MouseListener {
 		});
 		board.add(btnPause);
 		
-		Button button = new Button("Skip Turn");
-		button.setBounds(157, 23, 112, 29);
-		button.addActionListener(new ActionListener() {
+		//This was just for testing, couldn't wait for all the turns to time out.
+		Button skipbutton = new Button("Skip Turn");
+		skipbutton.setBounds(157, 23, 112, 29);
+		skipbutton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				board.nextTurn();
 			}
 		});
-		board.add(button);
+		board.add(skipbutton);
 		
 		
 		
