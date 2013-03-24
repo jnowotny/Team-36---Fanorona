@@ -1,4 +1,6 @@
+import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -40,8 +42,13 @@ public class Welcome_Menu extends JFrame {
 	 */
 	public Welcome_Menu() {
 		setTitle("Fanorona");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
+		int width = 470;
+	    int height = 330;
+	    Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+	    int x = (screen.width - width) / 2;
+	    int y = (screen.height - height) / 2;
+	    setBounds(x, y, width, height);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);

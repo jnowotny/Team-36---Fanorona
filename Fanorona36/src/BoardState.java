@@ -68,7 +68,7 @@ public class BoardState {
 	public void setP2Score(int newP2Score){
 		p2Score = newP2Score;
 	}
-	public void updateTurnCount(int newP1Score){
+	public void updateTurnCount(){
 		turnCount++;
 	}
 	public void nextCurrentPlayer(){

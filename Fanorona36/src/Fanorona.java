@@ -1,6 +1,8 @@
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Label;
+import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -22,7 +24,7 @@ public class Fanorona extends JFrame implements MouseListener {
 	private int timeRemaining = 25;
 	private PauseMenu pause = new PauseMenu(this);
 	private SwitchPlayers swap = new SwitchPlayers();
-	private Board board = new Board();
+	protected Board board = new Board();
 
 	/**
 	 * Launch the application.
@@ -62,7 +64,12 @@ public class Fanorona extends JFrame implements MouseListener {
 		super("MouseListener Test");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(200, 200, 800, 600);
+		int width = 800;
+	    int height = 600;
+	    Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+	    int x = (screen.width - width) / 2;
+	    int y = (screen.height - height) / 2;
+	    setBounds(x, y, width, height);
 		setTitle("Fanorona");
 		
 		contentPane = new JPanel();

@@ -110,7 +110,7 @@ public class PauseMenu {
 		txtpnBlack.setAlignmentY(Component.BOTTOM_ALIGNMENT);
 		txtpnBlack.setPreferredSize(new Dimension(120, 33));
 		txtpnBlack.setVerifyInputWhenFocusTarget(false);
-		txtpnBlack.setText("Black: \tWhite: \nMoves Remaining: ");
+		txtpnBlack.setText("Black: \tWhite: \nMoves Remaining: " + String.valueOf(50 - fan.board.getTurnCount()));
 		txtpnBlack.setEditable(false);
 		panel.add(txtpnBlack);
 	}
