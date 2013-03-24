@@ -7,38 +7,44 @@ import java.awt.geom.Ellipse2D;
 public class Piece {
 	private int x_cord;
 	private int y_cord;
-	private Color color;
-	private Graphics2D gPiece;
+	private Color maroon = new Color(80,0,30);
+	private int pieceState;
+	private boolean isHighlighted = false;
 	
-	public Piece(Graphics2D g, int x, int y, Color c){
+	public Piece(int x, int y, int pieceSt){
 		x_cord = x;
 		y_cord = y;
-		color = c;
-		gPiece = g;
+		pieceState = pieceSt;
+	}
+	
+	public void draw(Graphics2D g2){
+		if(pieceState == 1){
+			Ellipse2D e = new Ellipse2D.Double(x_cord, y_cord, 20, 20);
+			g2.setStroke(new BasicStroke(1));
+			g2.setColor(Color.white);
+		    g2.fill(e);
+		}
+		else if(pieceState == 2){
+			Ellipse2D e = new Ellipse2D.Double(x_cord, y_cord, 20, 20);
+			g2.setStroke(new BasicStroke(1));
+			g2.setColor(maroon);
+		    g2.fill(e);
+		}
 		
-		draw(x_cord, y_cord, color);
+		if(isHighlighted){
+			highlight(g2);
+		}
 	}
 	
-	public void draw(int x, int y, Color c){
-		Ellipse2D e = new Ellipse2D.Double(x, y, 20, 20);
-		gPiece.setStroke(new BasicStroke(1));
-	    gPiece.setColor(color);
-	    gPiece.fill(e);
-	}
-	
-	public void highlight(){
+	public void highlight(Graphics2D g2){
 		Ellipse2D e = new Ellipse2D.Double(x_cord - 1, y_cord - 1, 22, 22);
-		gPiece.setStroke(new BasicStroke(3));
-	    gPiece.setColor(Color.yellow);
-	    gPiece.draw(e);
+		g2.setStroke(new BasicStroke(3));
+	    g2.setColor(Color.yellow);
+	    g2.draw(e);
 	}
 	
-	public boolean isMovable(){
-		return true;
-	}
-	
-	public boolean isRemovable(){
-		return true;
+	public void setHighlight(boolean b){
+		isHighlighted = b;
 	}
 	
 }
