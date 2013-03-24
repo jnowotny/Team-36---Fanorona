@@ -1,9 +1,13 @@
 import java.awt.EventQueue;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+
 import java.awt.Window.Type;
 //import java.awt.Frame;
 import java.awt.Button;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Panel;
@@ -15,6 +19,7 @@ import java.awt.Color;
 public class PauseMenu {
 	private JFrame frmPause;
 	private static Fanorona fan;
+	private JLabel gameInfoText;
 
 	/**
 	 * Launch the application.
@@ -84,7 +89,7 @@ public class PauseMenu {
 				Welcome_Menu win = new Welcome_Menu();
 				win.setVisible(true);
 				frmPause.dispose();
-				fan.dispose();
+				f.dispose();
 				//Launch Menu
 			}
 		});		
@@ -106,13 +111,20 @@ public class PauseMenu {
 		panel.setBounds(0, 0, 444, 271);
 		frmPause.getContentPane().add(panel);
 		
-		JTextPane txtpnBlack = new JTextPane();
-		txtpnBlack.setAlignmentY(Component.BOTTOM_ALIGNMENT);
-		txtpnBlack.setPreferredSize(new Dimension(120, 33));
-		txtpnBlack.setVerifyInputWhenFocusTarget(false);
-		txtpnBlack.setText("Black: \tWhite: \nMoves Remaining: " + String.valueOf(50 - fan.board.getTurnCount()));
-		txtpnBlack.setEditable(false);
-		panel.add(txtpnBlack);
+		gameInfoText = new JLabel();
+		gameInfoText.setAlignmentY(Component.BOTTOM_ALIGNMENT);
+		gameInfoText.setPreferredSize(new Dimension(120, 33));
+		gameInfoText.setVerifyInputWhenFocusTarget(false);
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					gameInfoText.setText("Black: White: Moves Remaining: " + Integer.toString((f.board.getTurnCount())));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		panel.add(gameInfoText);
 	}
 
 

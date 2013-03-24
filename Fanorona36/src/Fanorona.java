@@ -22,9 +22,9 @@ public class Fanorona extends JFrame implements MouseListener {
 	private Timer countdown;
 	private Label label;
 	private int timeRemaining = 25;
+	protected Board board = new Board();
 	private PauseMenu pause = new PauseMenu(this);
 	private SwitchPlayers swap = new SwitchPlayers();
-	protected Board board = new Board();
 
 	/**
 	 * Launch the application.

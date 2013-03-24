@@ -5,7 +5,7 @@ public class BoardState {
 	private int[][] boardGrid = new int [5][9];
 	private int p1Score;			//0-22
 	private int p2Score;			//0-22
-	private int turnCount;			//1-50
+	private int turnCount = 50;			//1-50
 	private int currentPlayer;		//1 or 2 (player), 0: error
 
 	public BoardState(){
@@ -22,10 +22,14 @@ public class BoardState {
 		 * 		1 1 1 1 1 1 1 1 1		
 		 */
 		
-		for(int i = 0; i < 5; i++){
-			for(int j = 0; j < 9; j++){
-				boardGrid[i][j] = 2;
-				boardGrid[i+3][j] = 1;
+		for(int i = 0; i < 5; ++i){
+			for(int j = 0; j < 9; ++j){
+				if (i < 2) {
+					boardGrid[i][j] = 2;
+				}
+				else if (i > 2) {
+					boardGrid[i][j] = 1;
+				}
 			}
 		}
 		

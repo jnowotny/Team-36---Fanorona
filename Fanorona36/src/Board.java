@@ -26,6 +26,8 @@ public class Board extends JPanel {
 	public Board() {
 		//Row-by-row initialization of pieces at start positions on board
 		
+		boardState = new BoardState();
+		
 		//Row 0
 	    boardPieces[0][0] = new Piece(155, 90, 2);
 	    boardPieces[0][1] = new Piece(211, 90, 2);
