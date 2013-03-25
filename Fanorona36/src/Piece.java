@@ -19,10 +19,16 @@ public class Piece extends JComponent implements MouseListener{
 	private Color maroon = new Color(80,0,30);
 	private int pieceState;
 	private boolean isHighlighted = false;
+	private Board brd;
+	private int x_pos;
+	private int y_pos;
 	
-	public Piece(int x, int y, int pieceSt){
+	public Piece(int x, int y, int pieceSt, Board b, int xpos, int ypos){
+		brd = b;
 		x_cord = x;
 		y_cord = y;
+		x_pos = xpos;
+		y_pos = ypos;
 		pieceState = pieceSt;
 		setBounds(x_cord-3,y_cord-3,26,26);
 		setVisible(true);
@@ -77,6 +83,7 @@ public class Piece extends JComponent implements MouseListener{
 		else {
 			setHighlight(true);
 		}
+		brd.checkMovable(x_pos, y_pos);
 		super.repaint();
 	}
 

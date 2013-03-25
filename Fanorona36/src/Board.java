@@ -29,55 +29,55 @@ public class Board extends JPanel {
 		boardState = new BoardState();
 		
 		//Row 0
-	    boardPieces[0][0] = new Piece(155, 90, 2);
-	    boardPieces[0][1] = new Piece(211, 90, 2);
-	    boardPieces[0][2] = new Piece(268, 90, 2);
-	    boardPieces[0][3] = new Piece(324, 90, 2);
-	    boardPieces[0][4] = new Piece(380, 90, 2);
-	    boardPieces[0][5] = new Piece(436, 90, 2);
-	    boardPieces[0][6] = new Piece(493, 90, 2);
-	    boardPieces[0][7] = new Piece(549, 90, 2);
-	    boardPieces[0][8] = new Piece(605, 90, 2);
+	    boardPieces[0][0] = new Piece(155, 90, 2, this, 0, 0);
+	    boardPieces[0][1] = new Piece(211, 90, 2, this, 0, 1);
+	    boardPieces[0][2] = new Piece(268, 90, 2, this, 0, 2);
+	    boardPieces[0][3] = new Piece(324, 90, 2, this, 0, 3);
+	    boardPieces[0][4] = new Piece(380, 90, 2, this, 0, 4);
+	    boardPieces[0][5] = new Piece(436, 90, 2, this, 0, 5);
+	    boardPieces[0][6] = new Piece(493, 90, 2, this, 0, 6);
+	    boardPieces[0][7] = new Piece(549, 90, 2, this, 0, 7);
+	    boardPieces[0][8] = new Piece(605, 90, 2, this, 0, 8);
 	    //Row 1
-	    boardPieces[1][0] = new Piece(155, 152, 2);
-	    boardPieces[1][1] = new Piece(211, 152, 2);
-	    boardPieces[1][2] = new Piece(268, 152, 2);
-	    boardPieces[1][3] = new Piece(324, 152, 2);
-	    boardPieces[1][4] = new Piece(380, 152, 2);
-	    boardPieces[1][5] = new Piece(436, 152, 2);
-	    boardPieces[1][6] = new Piece(493, 152, 2);
-	    boardPieces[1][7] = new Piece(549, 152, 2);
-	    boardPieces[1][8] = new Piece(605, 152, 2);
+	    boardPieces[1][0] = new Piece(155, 152, 2, this, 1, 0);
+	    boardPieces[1][1] = new Piece(211, 152, 2, this, 1, 1);
+	    boardPieces[1][2] = new Piece(268, 152, 2, this, 1, 2);
+	    boardPieces[1][3] = new Piece(324, 152, 2, this, 1, 3);
+	    boardPieces[1][4] = new Piece(380, 152, 2, this, 1, 4);
+	    boardPieces[1][5] = new Piece(436, 152, 2, this, 1, 5);
+	    boardPieces[1][6] = new Piece(493, 152, 2, this, 1, 6);
+	    boardPieces[1][7] = new Piece(549, 152, 2, this, 1, 7);
+	    boardPieces[1][8] = new Piece(605, 152, 2, this, 1, 8);
 	    //Row 2
-	    boardPieces[2][0] = new Piece(155, 215, 2);
-	    boardPieces[2][1] = new Piece(211, 215, 1);
-	    boardPieces[2][2] = new Piece(268, 215, 2);
-	    boardPieces[2][3] = new Piece(324, 215, 1);
-	    boardPieces[2][4] = new Piece(380, 215, 0);
-	    boardPieces[2][5] = new Piece(436, 215, 2);
-	    boardPieces[2][6] = new Piece(493, 215, 1);
-	    boardPieces[2][7] = new Piece(549, 215, 2);
-	    boardPieces[2][8] = new Piece(605, 215, 1);
+	    boardPieces[2][0] = new Piece(155, 215, 2, this, 2, 0);
+	    boardPieces[2][1] = new Piece(211, 215, 1, this, 2, 1);
+	    boardPieces[2][2] = new Piece(268, 215, 2, this, 2, 2);
+	    boardPieces[2][3] = new Piece(324, 215, 1, this, 2, 3);
+	    boardPieces[2][4] = new Piece(380, 215, 0, this, 2, 4);
+	    boardPieces[2][5] = new Piece(436, 215, 2, this, 2, 5);
+	    boardPieces[2][6] = new Piece(493, 215, 1, this, 2, 6);
+	    boardPieces[2][7] = new Piece(549, 215, 2, this, 2, 7);
+	    boardPieces[2][8] = new Piece(605, 215, 1, this, 2, 8);
 	    //Row 3
-	    boardPieces[3][0] = new Piece(155, 277, 1);
-	    boardPieces[3][1] = new Piece(211, 277, 1);
-	    boardPieces[3][2] = new Piece(268, 277, 1);
-	    boardPieces[3][3] = new Piece(324, 277, 1);
-	    boardPieces[3][4] = new Piece(380, 277, 1);
-	    boardPieces[3][5] = new Piece(436, 277, 1);
-	    boardPieces[3][6] = new Piece(493, 277, 1);
-	    boardPieces[3][7] = new Piece(549, 277, 1);
-	    boardPieces[3][8] = new Piece(605, 277, 1);
+	    boardPieces[3][0] = new Piece(155, 277, 1, this, 3, 0);
+	    boardPieces[3][1] = new Piece(211, 277, 1, this, 3, 1);
+	    boardPieces[3][2] = new Piece(268, 277, 1, this, 3, 2);
+	    boardPieces[3][3] = new Piece(324, 277, 1, this, 3, 3);
+	    boardPieces[3][4] = new Piece(380, 277, 1, this, 3, 4);
+	    boardPieces[3][5] = new Piece(436, 277, 1, this, 3, 5);
+	    boardPieces[3][6] = new Piece(493, 277, 1, this, 3, 6);
+	    boardPieces[3][7] = new Piece(549, 277, 1, this, 3, 7);
+	    boardPieces[3][8] = new Piece(605, 277, 1, this, 3, 8);
 	    //Row 4
-	    boardPieces[4][0] = new Piece(155, 340, 1);
-	    boardPieces[4][1] = new Piece(211, 340, 1);
-	    boardPieces[4][2] = new Piece(268, 340, 1);
-	    boardPieces[4][3] = new Piece(324, 340, 1);
-	    boardPieces[4][4] = new Piece(380, 340, 1);
-	    boardPieces[4][5] = new Piece(436, 340, 1);
-	    boardPieces[4][6] = new Piece(493, 340, 1);
-	    boardPieces[4][7] = new Piece(549, 340, 1);
-	    boardPieces[4][8] = new Piece(605, 340, 1);
+	    boardPieces[4][0] = new Piece(155, 340, 1, this, 4, 0);
+	    boardPieces[4][1] = new Piece(211, 340, 1, this, 4, 1);
+	    boardPieces[4][2] = new Piece(268, 340, 1, this, 4, 2);
+	    boardPieces[4][3] = new Piece(324, 340, 1, this, 4, 3);
+	    boardPieces[4][4] = new Piece(380, 340, 1, this, 4, 4);
+	    boardPieces[4][5] = new Piece(436, 340, 1, this, 4, 5);
+	    boardPieces[4][6] = new Piece(493, 340, 1, this, 4, 6);
+	    boardPieces[4][7] = new Piece(549, 340, 1, this, 4, 7);
+	    boardPieces[4][8] = new Piece(605, 340, 1, this, 4, 8);
 	    
 	    for(int i = 0; i < 5; i++){
 	    	for(int j = 0; j < 9; j++){
@@ -167,6 +167,289 @@ public class Board extends JPanel {
 	public void nextTurn(){
 		boardState.nextCurrentPlayer();
 		boardState.updateTurnCount();
+	}
+	
+	//For a position [i][j] checks for empty spot (0) in surrounding positions
+	public void checkMovable(int i, int j){
+		//boardPieces[0][0].setHighlight(true);
+		//this.repaint();
+		if(i >= 0 && i <= 4 && j >= 0 && j <=8){
+			//if(boardState.getCurrentPlayer() == boardState.getBoardGrid()[i][j]){
+				if( (i == 1 && j == 1) || (i == 1 && j == 3) || (i == 1 && j == 5) ||
+					(i == 1 && j == 7) || (i == 2 && j == 2) || (i == 2 && j == 4) ||
+					(i == 2 && j == 6) || (i == 3 && j == 1) || (i == 3 && j == 3) ||
+					(i == 3 && j == 5) || (i == 3 && j == 7) ){
+					//NW
+					if(boardState.getBoardGrid()[i-1][j-1] == 0){
+						boardPieces[i-1][j-1].setHighlight(true);
+					}
+					//N
+					if(boardState.getBoardGrid()[i-1][j] == 0){
+						boardPieces[i-1][j].setHighlight(true);
+					}
+					//NE
+					if(boardState.getBoardGrid()[i-1][j+1] == 0){
+						boardPieces[i-1][j+1].setHighlight(true);
+					}
+					//E
+					if(boardState.getBoardGrid()[i][j+1] == 0){
+						boardPieces[i][j+1].setHighlight(true);
+					}
+					//SE
+					if(boardState.getBoardGrid()[i+1][j+1] == 0){
+						boardPieces[i+1][j+1].setHighlight(true);
+					}
+					//S
+					if(boardState.getBoardGrid()[i+1][j] == 0){
+						boardPieces[i+1][j].setHighlight(true);
+					}
+					//SW
+					if(boardState.getBoardGrid()[i+1][j-1] == 0){
+						boardPieces[i+1][j-1].setHighlight(true);
+					}
+					//W
+					if(boardState.getBoardGrid()[i][j-1] == 0){
+						boardPieces[i][j-1].setHighlight(true);
+					}
+				}
+				
+				if( (i == 1 && j== 2) ||  (i == 1 && j == 4) || (i == 1 && j == 6) ||
+					(i == 2 && j== 1) ||  (i == 2 && j == 3) || (i == 2 && j == 5) ||
+					(i == 2 && j== 7) ||  (i == 3 && j == 2) || (i == 3 && j == 4) ||
+					(i == 3 && j== 6) ){
+					//N
+					if(boardState.getBoardGrid()[i-1][j] == 0){
+						boardPieces[i-1][j].setHighlight(true);
+					}
+					//E
+					if(boardState.getBoardGrid()[i][j+1] == 0){
+						boardPieces[i][j+1].setHighlight(true);
+					}
+					//S
+					if(boardState.getBoardGrid()[i+1][j] == 0){
+						boardPieces[i+1][j].setHighlight(true);
+					}
+					//W
+					if(boardState.getBoardGrid()[i][j-1] == 0){
+						boardPieces[i][j-1].setHighlight(true);
+					}
+				}
+				
+				if( (i == 0 && j == 2) ||  (i == 0 && j == 4) || (i == 0 && j == 6) ){
+					//E
+					if(boardState.getBoardGrid()[i][j+1] == 0){
+						boardPieces[i][j+1].setHighlight(true);
+					}
+					//SE
+					if(boardState.getBoardGrid()[i+1][j+1] == 0){
+						boardPieces[i+1][j+1].setHighlight(true);
+					}
+					//S
+					if(boardState.getBoardGrid()[i+1][j] == 0){
+						boardPieces[i+1][j].setHighlight(true);
+					}
+					//SW
+					if(boardState.getBoardGrid()[i+1][j-1] == 0){
+						boardPieces[i+1][j-1].setHighlight(true);
+					}
+					//W
+					if(boardState.getBoardGrid()[i][j-1] == 0){
+						boardPieces[i][j-1].setHighlight(true);
+					}
+				}
+				
+				if( (i == 4 && j == 2) ||  (i == 4 && j == 4) || (i == 4 && j == 6) ){
+					//NW
+					if(boardState.getBoardGrid()[i-1][j-1] == 0){
+						boardPieces[i-1][j-1].setHighlight(true);
+					}
+					//N
+					if(boardState.getBoardGrid()[i-1][j] == 0){
+						boardPieces[i-1][j].setHighlight(true);
+					}
+					//NE
+					if(boardState.getBoardGrid()[i-1][j+1] == 0){
+						boardPieces[i-1][j+1].setHighlight(true);
+					}
+					//E
+					if(boardState.getBoardGrid()[i][j+1] == 0){
+						boardPieces[i][j+1].setHighlight(true);
+					}
+					//W
+					if(boardState.getBoardGrid()[i][j-1] == 0){
+						boardPieces[i][j-1].setHighlight(true);
+					}
+				}
+				
+				if( (i == 2 && j == 0) ){
+					//N
+					if(boardState.getBoardGrid()[i-1][j] == 0){
+						boardPieces[i-1][j].setHighlight(true);
+					}
+					//NE
+					if(boardState.getBoardGrid()[i-1][j+1] == 0){
+						boardPieces[i-1][j+1].setHighlight(true);
+					}
+					//E
+					if(boardState.getBoardGrid()[i][j+1] == 0){
+						boardPieces[i][j+1].setHighlight(true);
+					}
+					//SE
+					if(boardState.getBoardGrid()[i+1][j+1] == 0){
+						boardPieces[i+1][j+1].setHighlight(true);
+					}
+					//S
+					if(boardState.getBoardGrid()[i+1][j] == 0){
+						boardPieces[i+1][j].setHighlight(true);
+					}
+				}
+				
+				if( (i == 2 && j == 8) ){
+					//NW
+					if(boardState.getBoardGrid()[i-1][j-1] == 0){
+						boardPieces[i-1][j-1].setHighlight(true);
+					}
+					//N
+					if(boardState.getBoardGrid()[i-1][j] == 0){
+						boardPieces[i-1][j].setHighlight(true);
+					}
+					//S
+					if(boardState.getBoardGrid()[i+1][j] == 0){
+						boardPieces[i+1][j].setHighlight(true);
+					}
+					//SW
+					if(boardState.getBoardGrid()[i+1][j-1] == 0){
+						boardPieces[i+1][j-1].setHighlight(true);
+					}
+					//W
+					if(boardState.getBoardGrid()[i][j-1] == 0){
+						boardPieces[i][j-1].setHighlight(true);
+					}
+				}
+				
+				if( (i == 0 && j == 1) || (i == 0 && j == 3) || (i == 0 && j == 5) || (i == 0 && j == 7) ){					
+					//E
+					if(boardState.getBoardGrid()[i][j+1] == 0){
+						boardPieces[i][j+1].setHighlight(true);
+					}
+					//S
+					if(boardState.getBoardGrid()[i+1][j] == 0){
+						boardPieces[i+1][j].setHighlight(true);
+					}
+					//W
+					if(boardState.getBoardGrid()[i][j-1] == 0){
+						boardPieces[i][j-1].setHighlight(true);
+					}
+				}
+				
+				if( (i == 4 && j == 1) || (i == 4 && j == 3) || (i == 4 && j == 5) || (i == 4 && j == 7) ){
+					//N
+					if(boardState.getBoardGrid()[i-1][j] == 0){
+						boardPieces[i-1][j].setHighlight(true);
+					}
+					//E
+					if(boardState.getBoardGrid()[i][j+1] == 0){
+						boardPieces[i][j+1].setHighlight(true);
+					}
+					
+					//W
+					if(boardState.getBoardGrid()[i][j-1] == 0){
+						boardPieces[i][j-1].setHighlight(true);
+					}
+				}
+				
+				if( (i == 1 && j == 0) || (i == 3 && j == 0) ){
+					//N
+					if(boardState.getBoardGrid()[i-1][j] == 0){
+						boardPieces[i-1][j].setHighlight(true);
+					}
+					//E
+					if(boardState.getBoardGrid()[i][j+1] == 0){
+						boardPieces[i][j+1].setHighlight(true);
+					}
+					//S
+					if(boardState.getBoardGrid()[i+1][j] == 0){
+						boardPieces[i+1][j].setHighlight(true);
+					}					
+				}
+				
+				if( (i == 1 && j == 8) || (i == 3 && j == 8) ){
+					//N
+					if(boardState.getBoardGrid()[i-1][j] == 0){
+						boardPieces[i-1][j].setHighlight(true);
+					}
+					//S
+					if(boardState.getBoardGrid()[i+1][j] == 0){
+						boardPieces[i+1][j].setHighlight(true);
+					}
+					//W
+					if(boardState.getBoardGrid()[i][j-1] == 0){
+						boardPieces[i][j-1].setHighlight(true);
+					}							
+				}
+				
+				if(i == 0 && j == 0){
+					//E
+					if(boardState.getBoardGrid()[i][j+1] == 0){
+						boardPieces[i][j+1].setHighlight(true);
+					}
+					//SE
+					if(boardState.getBoardGrid()[i+1][j+1] == 0){
+						boardPieces[i+1][j+1].setHighlight(true);
+					}
+					//S
+					if(boardState.getBoardGrid()[i+1][j] == 0){
+						boardPieces[i+1][j].setHighlight(true);
+					}
+				}
+				
+				if(i == 0 && j == 8){
+					//S
+					if(boardState.getBoardGrid()[i+1][j] == 0){
+						boardPieces[i+1][j].setHighlight(true);
+					}
+					//SW
+					if(boardState.getBoardGrid()[i+1][j-1] == 0){
+						boardPieces[i+1][j-1].setHighlight(true);
+					}
+					//W
+					if(boardState.getBoardGrid()[i][j-1] == 0){
+						boardPieces[i][j-1].setHighlight(true);
+					}
+				}
+				
+				if(i == 4 && j == 0){
+					//N
+					if(boardState.getBoardGrid()[i-1][j] == 0){
+						boardPieces[i-1][j].setHighlight(true);
+					}
+					//NE
+					if(boardState.getBoardGrid()[i-1][j+1] == 0){
+						boardPieces[i-1][j+1].setHighlight(true);
+					}
+					//E
+					if(boardState.getBoardGrid()[i][j+1] == 0){
+						boardPieces[i][j+1].setHighlight(true);
+					}
+				}
+				
+				if(i == 4 && j == 8){
+					//NW
+					if(boardState.getBoardGrid()[i-1][j-1] == 0){
+						boardPieces[i-1][j-1].setHighlight(true);
+					}
+					//N
+					if(boardState.getBoardGrid()[i-1][j] == 0){
+						boardPieces[i-1][j].setHighlight(true);
+					}
+					//W
+					if(boardState.getBoardGrid()[i][j-1] == 0){
+						boardPieces[i][j-1].setHighlight(true);
+					}
+				}
+			//}
+		}
+		this.repaint();
 	}
 	
 	public void highlightMovablePieces(){
