@@ -1,4 +1,3 @@
-import java.awt.Component;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -9,7 +8,6 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.FlowLayout;
 
 
 public class EndMenu extends JFrame {
@@ -20,6 +18,7 @@ public class EndMenu extends JFrame {
 	private static final long serialVersionUID = 5569512002788537335L;
 	private JPanel contentPane;
 	private JLabel lblScoreLabel;
+	private JLabel lblWinnerLabel;
 	private static Fanorona fan;
 
 	/**
@@ -92,13 +91,13 @@ public class EndMenu extends JFrame {
 		JPanel panel = new JPanel();
 		panel.setBounds(0, 0, 434, 261);
 		contentPane.add(panel);
-		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
 //		JLabel lblNewLabel = new JLabel("New Label");
 //		lblNewLabel.setBounds(193, 60, 61, 16);
 //		contentPane.add(lblNewLabel);
 		lblScoreLabel = new JLabel();
-		lblScoreLabel.setAlignmentY(Component.BOTTOM_ALIGNMENT);
+		lblScoreLabel.setBounds(166, 78, 118, 16);
+		//lblScoreLabel.setAlignmentY(Component.BOTTOM_ALIGNMENT);
 		lblScoreLabel.setVerifyInputWhenFocusTarget(false);
 		final int curP1Score = f.board.getP1Score();
 		final int curP2Score = f.board.getP2Score();
@@ -111,7 +110,26 @@ public class EndMenu extends JFrame {
 				}
 			}
 		});
+		panel.setLayout(null);
 		panel.add(lblScoreLabel);
+		
+		lblWinnerLabel = new JLabel();
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					if (curP1Score != 0 && curP2Score != 0)
+						lblWinnerLabel.setText("Draw!");
+					else if (curP1Score == 0)
+						lblWinnerLabel.setText("Player 1 is the winner!");
+					else if (curP1Score == 0)
+						lblWinnerLabel.setText("Player 2 is the winner!");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		lblWinnerLabel.setBounds(192, 50, 61, 16);
+		panel.add(lblWinnerLabel);
 		
 	}
 }
