@@ -22,6 +22,7 @@ public class Fanorona extends JFrame {
 	private Timer countdown;
 	private Timer gameLoop;
 	private Label label;
+	private Label label_1;
 	private JLabel p1Score;
 	private JLabel p2Score;
 	private int timeRemaining = 25;
@@ -133,12 +134,12 @@ public class Fanorona extends JFrame {
 		
 		p1Score = new JLabel();
 		p1Score.setBackground(Color.LIGHT_GRAY);
-		p1Score.setBounds(223, 428, 60, 14);
+		p1Score.setBounds(223, 428, 64, 14);
 		board.add(p1Score);
 		
 		p2Score = new JLabel();
 		p2Score.setBackground(Color.LIGHT_GRAY);
-		p2Score.setBounds(455, 428, 60, 14);
+		p2Score.setBounds(455, 428, 64, 14);
 		board.add(p2Score);
 		
 		
@@ -168,6 +169,15 @@ public class Fanorona extends JFrame {
 		board.add(skipbutton);
 		
 		
+
+		label_1 = new Label();
+		label_1.setText("NO!");
+		label_1.setBackground(Color.RED);
+		label_1.setForeground(Color.BLACK);
+		label_1.setBounds(213, 418, 281, 108);
+		
+		board.add(label_1);
+		
 		
 		countdown = new Timer(1000, new CountdownTimerListener());
 		countdown.start();
@@ -178,5 +188,4 @@ public class Fanorona extends JFrame {
 		swap.setVisible(false);
 
 	}
-
 }
