@@ -22,6 +22,8 @@ public class Piece extends JComponent implements MouseListener{
 	private Board brd;
 	private int x_pos;
 	private int y_pos;
+	private int x_movedFrom;
+	private int y_movedFrom;
 	
 	public Piece(int x, int y, int pieceSt, Board b, int xpos, int ypos){
 		brd = b;
@@ -68,9 +70,30 @@ public class Piece extends JComponent implements MouseListener{
 		isHighlighted = b;
 	}
 
+	public boolean getHighlight(){
+		return isHighlighted;
+	}
+	
 	public void setPieceState(int pieceSt){
 		if(pieceSt == 0 || pieceSt == 1 || pieceSt == 2){
 			pieceState = pieceSt;
+		}
+	}
+	
+	public int getPieceState(){
+		return pieceState;
+	}
+	
+	public void findMovedFrom(){
+		for(int i = 0; i < 5; i++){
+			for(int j = 0; j < 9; j++){
+				if( (brd.getBoardPieces()[i][j].getHighlight()) && 
+					(brd.getBoardState().getBoardGrid()[i][j] == brd.getBoardState().getCurrentPlayer()) &&
+					(brd.getBoardPieces()[i][j].getPieceState() == brd.getBoardState().getCurrentPlayer()) ){
+						x_movedFrom = i;
+						y_movedFrom = j;
+				}
+			}
 		}
 	}
 	
@@ -78,12 +101,29 @@ public class Piece extends JComponent implements MouseListener{
 	public void mouseClicked(MouseEvent arg0) {
 		// TODO Auto-generated method stub
 		if (isHighlighted){
-			setHighlight(false);
+			
+			if(pieceState == brd.getBoardState().getCurrentPlayer()){
+				brd.setHighlightAll(false);
+				setHighlight(true);
+				brd.checkMovable(x_pos, y_pos, true);
+			}
+			else if(pieceState == 0){
+				findMovedFrom();
+				brd.removeHighlightedPieces();
+				brd.setHighlightAll(false);
+				brd.getBoardState().setBoardGrid(x_pos, y_pos, brd.getBoardState().getCurrentPlayer());
+				pieceState = brd.getBoardState().getCurrentPlayer();
+				brd.checkRemovable(x_movedFrom, y_movedFrom, x_pos, y_pos, true, true);
+			}
+			else{
+				brd.unHighlight_and_Remove(x_pos, y_pos);
+				brd.removeAdjacentHighlighted(x_pos, y_pos);
+				brd.setHighlightAll(false);
+			}
+			
 		}
-		else {
-			setHighlight(true);
-		}
-		brd.checkMovable(x_pos, y_pos);
+		
+		
 		super.repaint();
 	}
 

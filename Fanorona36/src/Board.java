@@ -84,7 +84,9 @@ public class Board extends JPanel {
 	    		this.add(boardPieces[i][j]);
 	    	}
 	    }
+	    
 	}
+	
 	@Override
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
@@ -165,51 +167,76 @@ public class Board extends JPanel {
 	}
 	
 	public void nextTurn(){
+		setHighlightAll(false);
 		boardState.nextCurrentPlayer();
 		boardState.updateTurnCount();
+		highlightMovablePieces();
 	}
 	
 	//For a position [i][j] checks for empty spot (0) in surrounding positions
-	public void checkMovable(int i, int j){
-		//boardPieces[0][0].setHighlight(true);
-		//this.repaint();
+	public boolean checkMovable(int i, int j, boolean doHighlight){
+		boolean isMovable = false;
 		if(i >= 0 && i <= 4 && j >= 0 && j <=8){
-			//if(boardState.getCurrentPlayer() == boardState.getBoardGrid()[i][j]){
+			if(boardState.getCurrentPlayer() == boardState.getBoardGrid()[i][j]){
 				if( (i == 1 && j == 1) || (i == 1 && j == 3) || (i == 1 && j == 5) ||
 					(i == 1 && j == 7) || (i == 2 && j == 2) || (i == 2 && j == 4) ||
 					(i == 2 && j == 6) || (i == 3 && j == 1) || (i == 3 && j == 3) ||
 					(i == 3 && j == 5) || (i == 3 && j == 7) ){
 					//NW
 					if(boardState.getBoardGrid()[i-1][j-1] == 0){
+						if(doHighlight){
 						boardPieces[i-1][j-1].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//N
 					if(boardState.getBoardGrid()[i-1][j] == 0){
-						boardPieces[i-1][j].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i-1][j].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//NE
 					if(boardState.getBoardGrid()[i-1][j+1] == 0){
-						boardPieces[i-1][j+1].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i-1][j+1].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//E
 					if(boardState.getBoardGrid()[i][j+1] == 0){
-						boardPieces[i][j+1].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i][j+1].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//SE
 					if(boardState.getBoardGrid()[i+1][j+1] == 0){
-						boardPieces[i+1][j+1].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i+1][j+1].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//S
 					if(boardState.getBoardGrid()[i+1][j] == 0){
-						boardPieces[i+1][j].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i+1][j].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//SW
 					if(boardState.getBoardGrid()[i+1][j-1] == 0){
-						boardPieces[i+1][j-1].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i+1][j-1].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//W
 					if(boardState.getBoardGrid()[i][j-1] == 0){
-						boardPieces[i][j-1].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i][j-1].setHighlight(true);
+						}
+						isMovable = true;
 					}
 				}
 				
@@ -219,268 +246,508 @@ public class Board extends JPanel {
 					(i == 3 && j== 6) ){
 					//N
 					if(boardState.getBoardGrid()[i-1][j] == 0){
-						boardPieces[i-1][j].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i-1][j].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//E
 					if(boardState.getBoardGrid()[i][j+1] == 0){
-						boardPieces[i][j+1].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i][j+1].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//S
 					if(boardState.getBoardGrid()[i+1][j] == 0){
-						boardPieces[i+1][j].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i+1][j].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//W
 					if(boardState.getBoardGrid()[i][j-1] == 0){
-						boardPieces[i][j-1].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i][j-1].setHighlight(true);
+						}
+						isMovable = true;
 					}
 				}
 				
 				if( (i == 0 && j == 2) ||  (i == 0 && j == 4) || (i == 0 && j == 6) ){
 					//E
 					if(boardState.getBoardGrid()[i][j+1] == 0){
-						boardPieces[i][j+1].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i][j+1].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//SE
 					if(boardState.getBoardGrid()[i+1][j+1] == 0){
-						boardPieces[i+1][j+1].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i+1][j+1].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//S
 					if(boardState.getBoardGrid()[i+1][j] == 0){
-						boardPieces[i+1][j].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i+1][j].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//SW
 					if(boardState.getBoardGrid()[i+1][j-1] == 0){
-						boardPieces[i+1][j-1].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i+1][j-1].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//W
 					if(boardState.getBoardGrid()[i][j-1] == 0){
-						boardPieces[i][j-1].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i][j-1].setHighlight(true);
+						}
+						isMovable = true;
 					}
 				}
 				
 				if( (i == 4 && j == 2) ||  (i == 4 && j == 4) || (i == 4 && j == 6) ){
 					//NW
 					if(boardState.getBoardGrid()[i-1][j-1] == 0){
-						boardPieces[i-1][j-1].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i-1][j-1].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//N
 					if(boardState.getBoardGrid()[i-1][j] == 0){
-						boardPieces[i-1][j].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i-1][j].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//NE
 					if(boardState.getBoardGrid()[i-1][j+1] == 0){
-						boardPieces[i-1][j+1].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i-1][j+1].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//E
 					if(boardState.getBoardGrid()[i][j+1] == 0){
-						boardPieces[i][j+1].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i][j+1].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//W
 					if(boardState.getBoardGrid()[i][j-1] == 0){
-						boardPieces[i][j-1].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i][j-1].setHighlight(true);
+						}
+						isMovable = true;
 					}
 				}
 				
 				if( (i == 2 && j == 0) ){
 					//N
 					if(boardState.getBoardGrid()[i-1][j] == 0){
-						boardPieces[i-1][j].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i-1][j].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//NE
 					if(boardState.getBoardGrid()[i-1][j+1] == 0){
-						boardPieces[i-1][j+1].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i-1][j+1].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//E
 					if(boardState.getBoardGrid()[i][j+1] == 0){
-						boardPieces[i][j+1].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i][j+1].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//SE
 					if(boardState.getBoardGrid()[i+1][j+1] == 0){
-						boardPieces[i+1][j+1].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i+1][j+1].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//S
 					if(boardState.getBoardGrid()[i+1][j] == 0){
-						boardPieces[i+1][j].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i+1][j].setHighlight(true);
+						}
+						isMovable = true;
 					}
 				}
 				
 				if( (i == 2 && j == 8) ){
 					//NW
 					if(boardState.getBoardGrid()[i-1][j-1] == 0){
-						boardPieces[i-1][j-1].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i-1][j-1].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//N
 					if(boardState.getBoardGrid()[i-1][j] == 0){
-						boardPieces[i-1][j].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i-1][j].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//S
 					if(boardState.getBoardGrid()[i+1][j] == 0){
-						boardPieces[i+1][j].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i+1][j].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//SW
 					if(boardState.getBoardGrid()[i+1][j-1] == 0){
-						boardPieces[i+1][j-1].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i+1][j-1].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//W
 					if(boardState.getBoardGrid()[i][j-1] == 0){
-						boardPieces[i][j-1].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i][j-1].setHighlight(true);
+						}
+						isMovable = true;
 					}
 				}
 				
 				if( (i == 0 && j == 1) || (i == 0 && j == 3) || (i == 0 && j == 5) || (i == 0 && j == 7) ){					
 					//E
 					if(boardState.getBoardGrid()[i][j+1] == 0){
-						boardPieces[i][j+1].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i][j+1].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//S
 					if(boardState.getBoardGrid()[i+1][j] == 0){
-						boardPieces[i+1][j].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i+1][j].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//W
 					if(boardState.getBoardGrid()[i][j-1] == 0){
-						boardPieces[i][j-1].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i][j-1].setHighlight(true);
+						}
+						isMovable = true;
 					}
 				}
 				
 				if( (i == 4 && j == 1) || (i == 4 && j == 3) || (i == 4 && j == 5) || (i == 4 && j == 7) ){
 					//N
 					if(boardState.getBoardGrid()[i-1][j] == 0){
-						boardPieces[i-1][j].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i-1][j].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//E
 					if(boardState.getBoardGrid()[i][j+1] == 0){
-						boardPieces[i][j+1].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i][j+1].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					
 					//W
 					if(boardState.getBoardGrid()[i][j-1] == 0){
-						boardPieces[i][j-1].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i][j-1].setHighlight(true);
+						}
+						isMovable = true;
 					}
 				}
 				
 				if( (i == 1 && j == 0) || (i == 3 && j == 0) ){
 					//N
 					if(boardState.getBoardGrid()[i-1][j] == 0){
-						boardPieces[i-1][j].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i-1][j].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//E
 					if(boardState.getBoardGrid()[i][j+1] == 0){
-						boardPieces[i][j+1].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i][j+1].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//S
 					if(boardState.getBoardGrid()[i+1][j] == 0){
-						boardPieces[i+1][j].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i+1][j].setHighlight(true);
+						}
+						isMovable = true;
 					}					
 				}
 				
 				if( (i == 1 && j == 8) || (i == 3 && j == 8) ){
 					//N
 					if(boardState.getBoardGrid()[i-1][j] == 0){
-						boardPieces[i-1][j].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i-1][j].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//S
 					if(boardState.getBoardGrid()[i+1][j] == 0){
-						boardPieces[i+1][j].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i+1][j].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//W
 					if(boardState.getBoardGrid()[i][j-1] == 0){
-						boardPieces[i][j-1].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i][j-1].setHighlight(true);
+						}
+						isMovable = true;
 					}							
 				}
 				
 				if(i == 0 && j == 0){
 					//E
 					if(boardState.getBoardGrid()[i][j+1] == 0){
-						boardPieces[i][j+1].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i][j+1].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//SE
 					if(boardState.getBoardGrid()[i+1][j+1] == 0){
-						boardPieces[i+1][j+1].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i+1][j+1].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//S
 					if(boardState.getBoardGrid()[i+1][j] == 0){
-						boardPieces[i+1][j].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i+1][j].setHighlight(true);
+						}
+						isMovable = true;
 					}
 				}
 				
 				if(i == 0 && j == 8){
 					//S
 					if(boardState.getBoardGrid()[i+1][j] == 0){
-						boardPieces[i+1][j].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i+1][j].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//SW
 					if(boardState.getBoardGrid()[i+1][j-1] == 0){
-						boardPieces[i+1][j-1].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i+1][j-1].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//W
 					if(boardState.getBoardGrid()[i][j-1] == 0){
-						boardPieces[i][j-1].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i][j-1].setHighlight(true);
+						}
+						isMovable = true;
 					}
 				}
 				
 				if(i == 4 && j == 0){
 					//N
 					if(boardState.getBoardGrid()[i-1][j] == 0){
-						boardPieces[i-1][j].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i-1][j].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//NE
 					if(boardState.getBoardGrid()[i-1][j+1] == 0){
-						boardPieces[i-1][j+1].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i-1][j+1].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//E
 					if(boardState.getBoardGrid()[i][j+1] == 0){
-						boardPieces[i][j+1].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i][j+1].setHighlight(true);
+						}
+						isMovable = true;
 					}
 				}
 				
 				if(i == 4 && j == 8){
 					//NW
 					if(boardState.getBoardGrid()[i-1][j-1] == 0){
-						boardPieces[i-1][j-1].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i-1][j-1].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//N
 					if(boardState.getBoardGrid()[i-1][j] == 0){
-						boardPieces[i-1][j].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i-1][j].setHighlight(true);
+						}
+						isMovable = true;
 					}
 					//W
 					if(boardState.getBoardGrid()[i][j-1] == 0){
-						boardPieces[i][j-1].setHighlight(true);
+						if(doHighlight){
+							boardPieces[i][j-1].setHighlight(true);
+						}
+						isMovable = true;
 					}
 				}
-			//}
+			}
 		}
 		this.repaint();
+		return isMovable;
 	}
 	
-	public void highlightMovablePieces(){
-		/*
-		 * This should highlight all Pieces that can be moved for the current player's turn
-		 */
+	public boolean checkRemovable(int x1, int y1, int x2, int y2, boolean isInitial, boolean doHighlight){
+		boolean hasRemovable = false;
+		int xDelta = x2 - x1;
+		int yDelta = y2 - y1;
 		
-		/*
-		 for(int i = 0; i < 5; i++){
-	    	for(int j = 0; j < 9; j++){
-	    		if(boardPieces[i][j].isMovable())
-	    			boardPieces[i][j].highlight();
-	    	}
-	     }
-		 */
+		if( (x1 - xDelta >= 0) && (x1 - xDelta <= 4) && (y1 - yDelta >= 0) && (y1 - yDelta <= 8) && (isInitial)){
+			if( (boardState.getBoardGrid()[x1-xDelta][y1-yDelta] != 0) && (boardState.getBoardGrid()[x1-xDelta][y1-yDelta] != boardState.getCurrentPlayer())){
+				hasRemovable = true;
+				boardPieces[x1-xDelta][y1-yDelta].setHighlight(true);
+				checkRemovable(x1, y1, x1-xDelta, y1-yDelta, false, doHighlight);
+			}
+		}
+		
+		if( (x2 + xDelta >= 0) && (x2 + xDelta <= 4) && (y2 + yDelta >= 0) && (y2 + yDelta <= 8) ){
+			if( (boardState.getBoardGrid()[x2+xDelta][y2+yDelta] != 0) && (boardState.getBoardGrid()[x2+xDelta][y2+yDelta] != boardState.getCurrentPlayer())){
+				hasRemovable = true;
+				boardPieces[x2+xDelta][y2+yDelta].setHighlight(true);
+				checkRemovable(x2, y2, x2+xDelta, y2+yDelta, false, doHighlight);
+			}
+		}
+		
+		return hasRemovable;
 	}
 	
-	public void highlightRemovablePieces(){
-		/*
-		 * This function should highlight all sets of Pieces that can be chosen to be removed
-		 * as a result of a valid move.
-		 */
+	public void removeAdjacentHighlighted(int x, int y){
+		if( (x >= 0) && (x <= 4) && (y >= 0) && (y <= 8)){
+			//NW
+			if( (x > 0) && (y > 0) ){
+				if (boardPieces[x-1][y-1].getHighlight() ){
+					unHighlight_and_Remove(x-1, y-1);
+					removeAdjacentHighlighted(x-1, y-1);
+				}
+			}
+			//N
+			if(x > 0){
+				if (boardPieces[x-1][y].getHighlight() ){
+					unHighlight_and_Remove(x-1, y);
+					removeAdjacentHighlighted(x-1, y);
+				}
+			}
+			//NE
+			if( (x > 0) && (y < 8)){
+				if (boardPieces[x-1][y+1].getHighlight() ){
+					unHighlight_and_Remove(x-1, y+1);
+					removeAdjacentHighlighted(x-1, y+1);
+				}
+			}
+			//E
+			if(y < 8){
+				if (boardPieces[x][y+1].getHighlight() ){
+					unHighlight_and_Remove(x, y+1);
+					removeAdjacentHighlighted(x, y+1);
+				}
+			}
+			//SE
+			if( (x < 4) && (y < 8)){
+				if (boardPieces[x+1][y+1].getHighlight() ){
+					unHighlight_and_Remove(x+1, y+1);
+					removeAdjacentHighlighted(x+1, y+1);
+				}
+			}
+			//S
+			if(x < 4){
+				if (boardPieces[x+1][y].getHighlight() ){
+					unHighlight_and_Remove(x+1, y);
+					removeAdjacentHighlighted(x+1, y);
+				}
+			}
+			//SW
+			if( (x < 4) && (y > 0) ){
+				if (boardPieces[x+1][y-1].getHighlight() ){
+					unHighlight_and_Remove(x+1, y-1);
+					removeAdjacentHighlighted(x+1, y-1);
+				}
+			}
+			//W
+			if(y > 0){
+				if (boardPieces[x][y-1].getHighlight() ){
+					unHighlight_and_Remove(x, y-1);
+					removeAdjacentHighlighted(x, y-1);
+				}
+			}
+		}
+			
 		
-		/*
+	}
+	
+	public void unHighlight_and_Remove(int x, int y){
+		boardPieces[x][y].setHighlight(false);
+		boardPieces[x][y].setPieceState(0);
+		boardState.setBoardGrid(x, y, 0);
+		repaint();
+	}
+	
+	public void setHighlightAll(boolean isHighlight){
 		for(int i = 0; i < 5; i++){
 	    	for(int j = 0; j < 9; j++){
-	    		if(boardPieces[i][j].isRemovable())
-	    			boardPieces[i][j].highlight();
+	    		boardPieces[i][j].setHighlight(isHighlight);
 	    	}
-	    }
-	    */
+		}
 	}
+	
+	public void removeHighlightedPieces(){
+		for(int i = 0; i < 5; i++){
+	    	for(int j = 0; j < 9; j++){
+	    		if(boardPieces[i][j].getHighlight()){
+	    			boardPieces[i][j].setPieceState(0);
+	    			boardState.setBoardGrid(i, j, 0);
+	    			repaint();
+	    		}
+	    	}
+		}
+	}
+	
+	public void highlightMovablePieces(){		
+		 for(int i = 0; i < 5; i++){
+	    	for(int j = 0; j < 9; j++){
+	    		if(checkMovable(i, j, false)){
+	    			boardPieces[i][j].setHighlight(true);
+	    		}
+	    	}
+	     }
+	}
+	
+	
 	
 }
