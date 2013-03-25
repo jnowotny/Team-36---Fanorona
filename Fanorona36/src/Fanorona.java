@@ -166,8 +166,7 @@ public class Fanorona extends JFrame {
 			}
 		});
 		board.add(skipbutton);
-		
-		
+
 		
 		countdown = new Timer(1000, new CountdownTimerListener());
 		countdown.start();
@@ -176,6 +175,13 @@ public class Fanorona extends JFrame {
 		gameLoop.start();
 
 		swap.setVisible(false);
+		
+		//TODO some kind of gameLogicLoop for the game's moves/turns
+		//TODO reset timer if another move is allowed in a given turn as a result of capturing 
+		
+		//nextTurn should be called by the gameLogicLoop at the start 
+		board.nextTurn();
+		
 
 	}
 
