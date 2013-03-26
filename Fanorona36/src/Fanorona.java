@@ -73,6 +73,8 @@ public class Fanorona extends JFrame {
 		public void actionPerformed(ActionEvent e) {
         	final int maxTurn = 50;
         	
+        	fan.board.updateScores();
+        	
     		curP1Score = fan.board.getP1Score();
     		curP2Score = fan.board.getP2Score();
     		
@@ -133,12 +135,12 @@ public class Fanorona extends JFrame {
 		
 		p1Score = new JLabel();
 		p1Score.setBackground(Color.LIGHT_GRAY);
-		p1Score.setBounds(223, 428, 60, 14);
+		p1Score.setBounds(223, 428, 64, 14);
 		board.add(p1Score);
 		
 		p2Score = new JLabel();
 		p2Score.setBackground(Color.LIGHT_GRAY);
-		p2Score.setBounds(455, 428, 60, 14);
+		p2Score.setBounds(455, 428, 64, 14);
 		board.add(p2Score);
 		
 		

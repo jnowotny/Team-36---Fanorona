@@ -2,11 +2,14 @@
 
 
 public class BoardState {
-	private int[][] boardGrid = new int [5][9];
+	private int boardHeight = 5;
+	private int boardWidth = 9;
+	private int[][] boardGrid = new int [boardHeight][boardWidth];
 	private int p1Score = 22;			//0-22
 	private int p2Score = 22;			//0-22
-	private int turnCount = 0;		//1-50
+	private int turnCount = 0;			//1-50
 	private int currentPlayer = 2;		//1 or 2 (player), 0: error
+
 
 	public BoardState(){
 		/*	Below demonstrates the initial piece layout on the board
@@ -21,23 +24,34 @@ public class BoardState {
 		 * 		1 1 1 1 1 1 1 1 1 
 		 * 		1 1 1 1 1 1 1 1 1		
 		 */
-		
-		for(int i = 0; i < 2; ++i){
-			for(int j = 0; j < 9; ++j){
-				boardGrid[i][j] = 2;
-				boardGrid[i+3][j] = 1;
+		if (boardHeight != 1) {
+			for(int i = 0; i < 2; ++i){
+				for(int j = 0; j < 9; ++j){
+					boardGrid[i][j] = 2;
+					boardGrid[i+3][j] = 1;
+				}
 			}
+			boardGrid[boardHeight/2][0] = 2;
+			boardGrid[boardHeight/2][1] = 1;
+			boardGrid[boardHeight/2][2] = 2;
+			boardGrid[boardHeight/2][3] = 1;
+			boardGrid[boardHeight/2][4] = 0;
+			boardGrid[boardHeight/2][5] = 2;
+			boardGrid[boardHeight/2][6] = 1;
+			boardGrid[boardHeight/2][7] = 2;
+			boardGrid[boardHeight/2][8] = 1;
 		}
-		
-		boardGrid[2][0] = 2;
-		boardGrid[2][1] = 1;
-		boardGrid[2][2] = 2;
-		boardGrid[2][3] = 1;
-		boardGrid[2][4] = 0;
-		boardGrid[2][5] = 2;
-		boardGrid[2][6] = 1;
-		boardGrid[2][7] = 2;
-		boardGrid[2][8] = 1;
+		else {
+			boardGrid[0][0] = 2;
+			boardGrid[0][1] = 1;
+			boardGrid[0][2] = 2;
+			boardGrid[0][3] = 1;
+			boardGrid[0][4] = 0;
+			boardGrid[0][5] = 2;
+			boardGrid[0][6] = 1;
+			boardGrid[0][7] = 2;
+			boardGrid[0][8] = 1;
+		}
 	}
 	
 	
@@ -67,12 +81,27 @@ public class BoardState {
 	public int getCurrentPlayer(){
 		return currentPlayer;
 	}
-
 	public void setP1Score(int newP1Score){
 		p1Score = newP1Score;
 	}
 	public void setP2Score(int newP2Score){
 		p2Score = newP2Score;
+	}
+	public void updateScores(){
+		int p1Count = 0;
+		int p2Count = 0;
+		for(int i = 0; i < boardHeight; ++i){
+			for(int j = 0; j < boardWidth; ++j){
+				if (boardGrid[i][j] == 2) {
+					p2Count++;
+				}
+				if (boardGrid[i][j] == 1) {
+					p1Count++;
+				}
+			}
+		}
+		p2Score = p2Count;
+		p1Score = p1Count;
 	}
 	public void updateTurnCount(){
 		turnCount++;

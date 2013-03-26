@@ -8,6 +8,7 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.SwingConstants;
 
 
 public class EndMenu extends JFrame {
@@ -84,6 +85,7 @@ public class EndMenu extends JFrame {
 		contentPane.add(btnNewButton);
 		
 		JLabel lblGameOver = new JLabel("Game Over!");
+		lblGameOver.setHorizontalAlignment(SwingConstants.CENTER);
 		lblGameOver.setFont(new Font("Lucida Grande", Font.PLAIN, 22));
 		lblGameOver.setBounds(163, 19, 124, 29);
 		contentPane.add(lblGameOver);
@@ -92,12 +94,9 @@ public class EndMenu extends JFrame {
 		panel.setBounds(0, 0, 434, 261);
 		contentPane.add(panel);
 		
-//		JLabel lblNewLabel = new JLabel("New Label");
-//		lblNewLabel.setBounds(193, 60, 61, 16);
-//		contentPane.add(lblNewLabel);
 		lblScoreLabel = new JLabel();
-		lblScoreLabel.setBounds(166, 78, 118, 16);
-		//lblScoreLabel.setAlignmentY(Component.BOTTOM_ALIGNMENT);
+		lblScoreLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblScoreLabel.setBounds(166, 78, 120, 16);
 		lblScoreLabel.setVerifyInputWhenFocusTarget(false);
 		final int curP1Score = f.board.getP1Score();
 		final int curP2Score = f.board.getP2Score();
@@ -114,6 +113,7 @@ public class EndMenu extends JFrame {
 		panel.add(lblScoreLabel);
 		
 		lblWinnerLabel = new JLabel();
+		lblWinnerLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -128,7 +128,7 @@ public class EndMenu extends JFrame {
 				}
 			}
 		});
-		lblWinnerLabel.setBounds(192, 50, 61, 16);
+		lblWinnerLabel.setBounds(166, 50, 120, 16);
 		panel.add(lblWinnerLabel);
 		
 	}

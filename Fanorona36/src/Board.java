@@ -165,6 +165,9 @@ public class Board extends JPanel {
 	public int getP2Score(){
 		return boardState.getP2Score();
 	}
+	public void updateScores(){
+		boardState.updateScores();
+	}
 	
 	public void nextTurn(){
 		setHighlightAll(false);
