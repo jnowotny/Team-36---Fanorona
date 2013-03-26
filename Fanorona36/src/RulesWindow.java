@@ -1,13 +1,17 @@
 import java.awt.EventQueue;
+
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+
 import java.awt.Window.Type;
-import java.awt.TextArea;
-import java.awt.Font;
+import java.io.IOException;
 
 
 public class RulesWindow {
 
 	private JFrame frmHowToPlay;
+
 
 	/**
 	 * Launch the application.
@@ -24,6 +28,23 @@ public class RulesWindow {
 			}
 		});
 	}
+	
+    private JEditorPane createEditorPane() {
+        JEditorPane editorPane = new JEditorPane();
+        editorPane.setEditable(false);
+        java.net.URL rulesURL = RulesWindow.class.getResource("/Rules/fanorona_rules.html");
+        if (rulesURL != null) {
+            try {
+                editorPane.setPage(rulesURL);
+            } catch (IOException e) {
+                System.err.println("Attempted to read a bad URL: " + rulesURL);
+            }
+        } else {
+            System.err.println("Couldn't find file: TextSampleDemoHelp.html");
+        }
+ 
+        return editorPane;
+    }
 
 	/**
 	 * Create the application.
@@ -43,16 +64,17 @@ public class RulesWindow {
 		frmHowToPlay = new JFrame();
 		frmHowToPlay.setType(Type.POPUP);
 		frmHowToPlay.setTitle("-How To Play Fanorona-");
-		frmHowToPlay.setBounds(100, 100, 600, 400);
+		frmHowToPlay.setBounds(0, 0, 720, 480);
 		frmHowToPlay.setLocationRelativeTo(null);
 		frmHowToPlay.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmHowToPlay.getContentPane().setLayout(null);
 		
-		TextArea textArea = new TextArea();
-		textArea.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		textArea.setBounds(0, 0, 584, 359);
-		frmHowToPlay.getContentPane().add(textArea);
-		textArea.setText("Rules Go Here - Fanarona Rules - ");
-		textArea.setEditable(false);
+		 //Create an editor pane.
+        JEditorPane editorPane = createEditorPane();
+        JScrollPane editorScrollPane = new JScrollPane(editorPane);
+        editorScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		editorScrollPane.setBounds(0, 0, 704, 441);
+        frmHowToPlay.getContentPane().add(editorScrollPane);
+        
 	}
 }

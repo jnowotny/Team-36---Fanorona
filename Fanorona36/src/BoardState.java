@@ -5,7 +5,7 @@ public class BoardState {
 	private int[][] boardGrid = new int [5][9];
 	private int p1Score = 22;			//0-22
 	private int p2Score = 22;			//0-22
-	private int turnCount = 1;		//1-50
+	private int turnCount = 0;		//1-50
 	private int currentPlayer = 2;		//1 or 2 (player), 0: error
 
 	public BoardState(){
@@ -47,6 +47,12 @@ public class BoardState {
 
 	public void setBoardGrid(int[][] boardGrid) {
 		this.boardGrid = boardGrid;
+	}
+	
+	public void setBoardGrid(int i, int j, int pieceSt){
+		if(pieceSt == 0 || pieceSt == 1 || pieceSt == 2){
+			this.boardGrid[i][j] = pieceSt;
+		}
 	}
 	
 	public int getP1Score(){
