@@ -14,6 +14,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JLabel;
 import java.awt.Color;
+import java.awt.Font;
 
 public class Fanorona extends JFrame {
 
@@ -134,12 +135,14 @@ public class Fanorona extends JFrame {
 		
 		p1Score = new JLabel();
 		p1Score.setBackground(Color.LIGHT_GRAY);
-		p1Score.setBounds(223, 428, 64, 14);
+		int p1ScoreX = ((width/4)-(64/2));
+		p1Score.setBounds(p1ScoreX, 428, 64, 14);
 		board.add(p1Score);
 		
 		p2Score = new JLabel();
 		p2Score.setBackground(Color.LIGHT_GRAY);
-		p2Score.setBounds(455, 428, 64, 14);
+		int p2ScoreX = (3*(width/4)-(64/2));
+		p2Score.setBounds(p2ScoreX, 428, 64, 14);
 		board.add(p2Score);
 		
 		
@@ -171,11 +174,12 @@ public class Fanorona extends JFrame {
 		
 
 		label_1 = new Label();
+		label_1.setFont(new Font("Arial", Font.PLAIN, 16));
 		label_1.setText("NO!");
 		label_1.setBackground(Color.RED);
 		label_1.setForeground(Color.BLACK);
-		label_1.setBounds(213, 418, 281, 108);
-		
+		int labelx = ((width/2)-(170/2));
+		label_1.setBounds(labelx, 475, 170, 90);
 		board.add(label_1);
 		
 		
