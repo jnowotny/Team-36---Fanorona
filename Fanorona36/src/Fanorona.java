@@ -31,6 +31,11 @@ public class Fanorona extends JFrame {
 	private PauseMenu pause = new PauseMenu(this);
 	private SwitchPlayers swap = new SwitchPlayers(this);
 	private EndMenu endMenu = new EndMenu(this);
+	
+	private static int gameType;
+	private static int numRows;
+	private static int numCols;
+	private static int timerLength;
 
 	/**
 	 * Launch the application.
@@ -39,7 +44,7 @@ public class Fanorona extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Fanorona frame = new Fanorona();
+					Fanorona frame = new Fanorona(gameType, numRows, numCols, timerLength);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -102,7 +107,14 @@ public class Fanorona extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Fanorona() {
+	public Fanorona(int game, int rows, int columns, int timer) {
+///////////////
+		gameType = game;
+		numRows = rows;
+		numCols = columns;
+		timerLength = timer;
+//////////////
+		
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		int width = 800;
