@@ -17,11 +17,6 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JSpinner;
 import javax.swing.JRadioButton;
-import javax.swing.JTextField;
-//import com.jgoodies.forms.layout.FormLayout;
-//import com.jgoodies.forms.layout.ColumnSpec;
-//import com.jgoodies.forms.factories.FormFactory;
-//import com.jgoodies.forms.layout.RowSpec;
 
 
 public class NewGameWin extends JFrame {
@@ -35,10 +30,10 @@ public class NewGameWin extends JFrame {
 	private JComboBox<String> comboBox;
 	private JSpinner spinnerRows;
 	private JSpinner spinnerCols;
-	private JTextField textField;
 	private JLabel lblSetTime;
 	private JLabel lblMilliseconds;
-	private boolean timerButtonSelected = false;
+	private int timerButtonSelected = -1;
+	private JSpinner spinnerTimer;
 
 	/**
 	 * Launch the application.
@@ -140,11 +135,11 @@ public class NewGameWin extends JFrame {
 		contentPane.add(lblSetTime);
 		lblSetTime.setVisible(false);
 		
-		textField = new JTextField();
-		textField.setBounds(218, 196, 85, 28);
-		contentPane.add(textField);
-		textField.setColumns(10);
-		textField.setVisible(false);
+		SpinnerNumberModel modelTimer = new SpinnerNumberModel(25000,1000,null,1);
+		spinnerTimer = new JSpinner(modelTimer);
+		spinnerTimer.setBounds(218, 196, 79, 28);
+		contentPane.add(spinnerTimer);
+		spinnerTimer.setVisible(false);
 		
 		lblMilliseconds = new JLabel("milliseconds");
 		lblMilliseconds.setBounds(305, 202, 85, 16);
@@ -155,9 +150,9 @@ public class NewGameWin extends JFrame {
 		noTimerButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				lblSetTime.setVisible(false);
-				textField.setVisible(false);
+				spinnerTimer.setVisible(false);
 				lblMilliseconds.setVisible(false);
-				timerButtonSelected = true;
+				timerButtonSelected = 0;
 			}
 		});
 		noTimerButton.setBounds(84, 167, 60, 23);
@@ -168,9 +163,9 @@ public class NewGameWin extends JFrame {
 		yesTimerButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				lblSetTime.setVisible(true);
-				textField.setVisible(true);
+				spinnerTimer.setVisible(true);
 				lblMilliseconds.setVisible(true);
-				timerButtonSelected = true;
+				timerButtonSelected = 1;
 			}
 		});
 		yesTimerButton.setBounds(157, 167, 60, 23);
@@ -183,21 +178,30 @@ public class NewGameWin extends JFrame {
 		JButton btnCreateNewGame = new JButton("Create New Game");
 		btnCreateNewGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (timerButtonSelected) {
+				if (timerButtonSelected > -1) {
 					int game = comboBox.getSelectedIndex(); //0 - PvP; 1 - PvC; 2 - CvC
 					int numRows = (int) spinnerRows.getValue();
 					int numCols = (int) spinnerCols.getValue();
 					int timerLength = -1;
-					if (textField.isVisible() && textField.getText() != "")
-						timerLength = Integer.parseInt(textField.getText());
-					Fanorona newGame = new Fanorona(game, numRows, numCols, timerLength);
-					newGame.setVisible(true);
+					if (timerButtonSelected == 0) {
+						Fanorona newGame = new Fanorona(game, numRows, numCols, timerLength);
+						newGame.setVisible(true);
+					}
+					else if (timerButtonSelected == 1) {
+						if (spinnerTimer.isVisible() && (int) spinnerTimer.getValue() > 0) {
+							timerLength = (int) spinnerTimer.getValue();
+							Fanorona newGame = new Fanorona(game, numRows, numCols, timerLength);
+							newGame.setVisible(true);
+						}
+					}
 				}
 				
 			}
 		});
 		btnCreateNewGame.setBounds(71, 246, 319, 56);
 		contentPane.add(btnCreateNewGame);
+		
+		
 		
 	}
 }
