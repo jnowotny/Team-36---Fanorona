@@ -1,6 +1,7 @@
 import javax.swing.JPanel;
 import java.awt.*;
 import java.awt.geom.*;
+import java.util.Stack;
 
 
 public class Board extends JPanel {
@@ -8,6 +9,7 @@ public class Board extends JPanel {
 	private static final long serialVersionUID = -9165633611662257140L;
 	
 	private BoardState boardState;
+	private Stack<Move> moveList = new Stack<Move>();
 	
 	private Piece[][] boardPieces = new Piece[5][9];
 	/*	Below demonstrates the initial piece layout on the board
@@ -134,6 +136,158 @@ public class Board extends JPanel {
 	    g2.drawLine(165, 225, 615, 225);
 	    g2.drawLine(165, 287, 615, 287);
 	}
+	
+	class PiecePosition {
+		int xPos;
+		int yPos;
+	}
+	
+	class Move {
+		Move n;
+		Move s;
+		Move e;
+		Move w;
+		Move nw;
+		Move ne;
+		Move sw;
+		Move se;
+	}
+	
+	private int utilityEval(PiecePosition pos, int curr_removed, int alt_removed, int player) {
+		int other = (player == 1) ? 2 : 1;
+		int util = (getPlayerScore(player)-curr_removed)-(getPlayerScore(other)-alt_removed);
+		return util;
+	}
+	
+	protected int makeMoveList(PiecePosition pos, Stack<Move> moveList) {
+		int moveCount = 0;
+		Move moves = new Move();
+		if (checkMovable(pos.xPos,pos.yPos-1,false)) {
+			moveList.push(moves.n);
+			moveCount++;
+		}
+		if (checkMovable(pos.xPos,pos.yPos+1,false)) {
+			moveList.push(moves.s);
+			moveCount++;
+		}
+		if (checkMovable(pos.xPos+1,pos.yPos,false)) {
+			moveList.push(moves.e);
+			moveCount++;
+		}
+		if (checkMovable(pos.xPos-1,pos.yPos,false)) {
+			moveList.push(moves.w);
+			moveCount++;
+		}
+		if (checkMovable(pos.xPos-1,pos.yPos-1,false)) {
+			moveList.push(moves.nw);
+			moveCount++;
+		}
+		if (checkMovable(pos.xPos+1,pos.yPos-1,false)) {
+			moveList.push(moves.ne);
+			moveCount++;
+		}
+		if (checkMovable(pos.xPos+1,pos.yPos+1,false)) {
+			moveList.push(moves.se);
+			moveCount++;
+		}
+		if (checkMovable(pos.xPos-1,pos.yPos+1,false)) {
+			moveList.push(moves.sw);
+			moveCount++;
+		}
+		return moveCount;
+	}
+	
+	private int max (int num1, int num2){
+		return ((num1 > num2) ? num1 : num2);
+	}
+	
+	private int min (int num1, int num2){
+		return ((num1 < num2) ? num1 : num2);
+	}
+	
+	private void doMove(Move moves, PiecePosition pos){
+		
+	}
+	
+	private void undoMove(Move moves, PiecePosition pos){
+		
+	}
+	
+	int minimax(PiecePosition pos, int depth, int player)
+	{
+		//MOVE list[MAXMOVES];
+		int i,n,bestvalue,value;
+
+//		if(checkwin(pos)) 
+//		{
+//			if (pos->color == WHITE) 
+//				return -INFINITY;
+//			else 
+//				return INFINITY;)
+//		}
+
+		if(depth == 0)	
+			return utilityEval(pos,0,0,player);
+
+//		if(pos->color==WHITE) 
+//			bestvalue = -INFINITY;
+//		else 
+//			bestvalue = INFINITY;
+//
+//		n = makeMoveList(pos,moveList);
+//		if(n == 0) 
+//			return handlenomove(pos);
+
+//		for(i=0; i<n; i++)
+//		{
+//			doMove(&list[i],pos);
+//			value = minimax(pos,d-1,player);
+//			undoMove(&list[i],pos);
+//			if(color == WHITE) 
+//				bestvalue = max(value,bestvalue);
+//			else 
+//				bestvalue = min(value,bestvalue);
+//		}
+
+		return bestvalue = 0;
+	}
+	
+	class Node {
+		int player;
+		int turns;
+		Node n;
+		Node s;
+		Node w;
+		Node e;
+		Node nw;
+		Node ne;
+		Node sw;
+		Node se;
+		int curPlayerScore;
+		int altPlayerScore;
+	}
+	
+	//TODO Have the makeGameTree function recursively build the tree
+	protected Node makeGameTree(int curPlayer, int turns, int curPlayerScore, int altPlayerScore) {
+		Node n = new Node();
+		n.player = curPlayer;
+		n.turns = turns;
+		n.curPlayerScore = curPlayerScore;
+		n.altPlayerScore = altPlayerScore;
+		if (turns >= 1) {
+			n.n = makeGameTree(turns-1,(curPlayer == 1) ? 2 : 1,0,0);
+			
+		}
+		//checkMovable()
+		return n;
+	}
+	
+	//TODO Have minMax recursively evaluate the children from its given node for alpha values
+	@SuppressWarnings("unused")
+	private int minMax(Node node, int depth) {
+		
+		return (0);
+	}
 
 	public void drawPieces(Graphics2D g2){
 		for(int i = 0; i < 5; i++){
@@ -157,6 +311,14 @@ public class Board extends JPanel {
 	
 	public int getTurnCount(){
 		return boardState.getTurnCount();
+	}
+	
+	public int getPlayerScore(int player){
+		if (player == 1)
+			return getP1Score();
+		else if (player == 2)
+			return getP2Score();
+		else return 0;
 	}
 	
 	public int getP1Score(){
