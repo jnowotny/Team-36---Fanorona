@@ -75,15 +75,21 @@ public class Worker implements Runnable {
 				else if ((comm.getType().equals("capture_move"))&&(workType.equals("client"))){
 					client.movePiece(comm.getContent());
 				}
+				if ((comm.getType().equals("paika_move"))&&(workType.equals("server"))){
+					server.movePiece(comm.getContent());
+				}
+				else if ((comm.getType().equals("paika_move"))&&(workType.equals("client"))){
+					client.movePiece(comm.getContent());
+				}
+				if ((comm.getType().equals("sacrifice_move"))&&(workType.equals("server"))){
+					server.movePiece(comm.getContent());
+				}
+				else if ((comm.getType().equals("sacrifice_move"))&&(workType.equals("client"))){
+					client.movePiece(comm.getContent());
+				}
 //				if (comm.getType().equals("ack")){
-//				    Command ok = new Command("OK", "Connection terminated..."); 
+//				    Command ok = new Command("ack", "OK"); 
 //				    ok.send(outStream);	
-//				}
-//				else {
-//				    //System.out.println("Connection terminated..."); 
-//				    Command ack = new Command("ack", "Connection terminated..."); 
-//				    ack.send(outStream);
-//				    break;
 //				}
 				if (comm.getType().equals("ack")){
 					if(comm.getContent().equals("ILLEGAL")) {

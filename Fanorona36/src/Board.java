@@ -313,12 +313,6 @@ public class Board extends JPanel {
 		this.boardPieces = boardPieces;
 	}
 	public void updateScores(){
-		if(boardState.getCurrentPlayer() == 2){
-			setBackground(maroon);
-		}
-		else{
-			setBackground(Color.white);
-		}
 		boardState.updateScores();
 		repaint();
 	}
@@ -329,7 +323,14 @@ public class Board extends JPanel {
 		select(null);
 		visited.clear();
 		capturedThisTurn = 0;
-		setHighlightAll(false, false);
+		if(boardState.getCurrentPlayer() == 2){
+			setBackground(maroon);
+		}
+		else{
+			setBackground(Color.white);
+		}
+		setHighlightAll(false, true);
+		
 	}
 	public void updateRemoveAvailable() {
 		if( !(boardState.getRemovables().isEmpty()) ){

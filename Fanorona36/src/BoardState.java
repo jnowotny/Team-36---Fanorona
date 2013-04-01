@@ -221,7 +221,7 @@ public class BoardState {
 			if(xPos == 0){
 				//N:1
 				if(checkAdjacent(p,1) == 0){
-					destinations[1] = new Pair(xPos-1, yPos-1);
+					destinations[1] = new Pair(xPos, yPos-1);
 				}
 				//NE:2
 				if(checkAdjacent(p,2) == 0){
@@ -251,7 +251,7 @@ public class BoardState {
 			else if((xPos & 1) != 0){
 				//N:1
 				if(checkAdjacent(p,1) == 0){
-					destinations[1] = new Pair(xPos-1, yPos-1);
+					destinations[1] = new Pair(xPos, yPos-1);
 				}
 				//E:3
 				if(checkAdjacent(p,3) == 0){
