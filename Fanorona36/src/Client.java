@@ -7,6 +7,7 @@ public class Client {
 	public boolean recv = true;
 	protected int portNum;
 	protected String hostName;
+	Socket inSock;
 	Fanorona fan;
 	
 	/**
@@ -26,8 +27,9 @@ public class Client {
 		fan = f;
 		try {
 			final Socket clientSocket = new Socket(hostName, portNum);
+			setSocket(clientSocket);
 		    /* assert:  Socket successfully created */
-			Thread tClient = new Thread(new Worker(clientSocket, "client", this));
+			Thread tClient = new Thread(new Worker(inSock, "client", this));
 			tClient.start();
 //		    while(recv){
 //	    		EventQueue.invokeLater(new Runnable() {
@@ -59,8 +61,52 @@ public class Client {
 	}
 
 	public void startGame() {
+		//TODO Make function which starts a game with the selected config
 //		fan.startGame();
 		
+	}
+	
+	public void setSocket(Socket sock) {
+		inSock = sock;
+	}
+	
+	public void sendMove(Pair p, Pair q, String type){
+		if (type.equals("A")) {
+			try {
+				OutputStream outStream = inSock.getOutputStream();
+				Command move = new Command("capture_move", "A"+p.getFirst()+p.getSecond()+q.getFirst()+q.getSecond());
+				move.send(outStream);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		if (type.equals("W")) {
+			try {
+				OutputStream outStream = inSock.getOutputStream();
+				Command move = new Command("capture_move", "W"+p.getFirst()+p.getSecond()+q.getFirst()+q.getSecond());
+				move.send(outStream);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		if (type.equals("P")) {
+			try {
+				OutputStream outStream = inSock.getOutputStream();
+				Command move = new Command("paika_move", "P"+p.getFirst()+p.getSecond()+q.getFirst()+q.getSecond());
+				move.send(outStream);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		if (type.equals("S")) {
+			try {
+				OutputStream outStream = inSock.getOutputStream();
+				Command move = new Command("sacrifice_move", "S"+p.getFirst()+p.getSecond()+q.getFirst()+q.getSecond());
+				move.send(outStream);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public void configGame(String content) {
@@ -89,6 +135,11 @@ public class Client {
 		if (end == 4) {
 			//TIME
 		}
+		
+	}
+
+	public void movePiece(String content) {
+		//TODO move piece on board
 		
 	}
 

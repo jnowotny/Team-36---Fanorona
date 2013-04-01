@@ -45,20 +45,35 @@ public class Worker implements Runnable {
 			}
 			//Send server info
 			if (workType.equals("server")) {
-				Command info = new Command("info","WELCOME");
+				Command info = new Command("info",server.getConfigGame());
 				info.send(outStream);
 			}
 			while(true){
-//				System.out.println("\nWorker waiting...");
 				Command comm = new Command(inStream);
 
 				if (comm.getType().equals("info")){
 					if(!comm.getContent().equals("BEGIN")) {
 						client.startGame();
 					}
-					else { 
+					else {
+						//game_config is being passed
 						client.configGame(comm.getContent());
+					    Command ready = new Command("ack", "READY"); 
+					    ready.send(outStream);	
 					}
+				}
+				if (comm.getType().equals("ack")){
+					if(!comm.getContent().equals("READY")) {
+						server.startGame();
+						Command begin = new Command("info", "BEGIN"); 
+						begin.send(outStream);
+					}
+				}
+				if ((comm.getType().equals("capture_move"))&&(workType.equals("server"))){
+					server.movePiece(comm.getContent());
+				}
+				else if ((comm.getType().equals("capture_move"))&&(workType.equals("client"))){
+					client.movePiece(comm.getContent());
 				}
 //				if (comm.getType().equals("ack")){
 //				    Command ok = new Command("OK", "Connection terminated..."); 
@@ -72,9 +87,11 @@ public class Worker implements Runnable {
 //				}
 				if (comm.getType().equals("ack")){
 					if(comm.getContent().equals("ILLEGAL")) {
+						client.setEndCond(3);
 						break;
 					}
 					if(comm.getContent().equals("TIME")) {
+						client.setEndCond(4);
 						break;
 					}
 					if(comm.getContent().equals("WINNER")) {

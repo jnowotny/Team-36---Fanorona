@@ -19,7 +19,7 @@ public class Server {
 	
     /**
 	@param f The game the client will command.
-	@param host The Hostname of the server.*/
+	@param port The port for the server to listen on.*/
 	public Server (Fanorona f, int port) {
 		portNum = port;
 		try {
@@ -51,10 +51,53 @@ public class Server {
 		}	
 	}
 	public void startGame() {
+		//TODO Make function which starts a game with the selected config
 //		fan.startGame();
 	}
 	
 	public void setSocket(Socket sock) {
 		inSock = sock;
+	}
+
+	public String getConfigGame() {
+		String config = null;
+		//TODO make function in fanorona which returns the selected config
+//		config = fan.getConfig();
+		return config;
+	}
+	
+	public void sendMove(Pair p, Pair q, String type){
+		if (type.equals("capture")) {
+			try {
+				OutputStream outStream = inSock.getOutputStream();
+				Command move = new Command("capture_move", "A"+p.getFirst()+p.getSecond()+q.getFirst()+q.getSecond());
+				move.send(outStream);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		if (type.equals("paika")) {
+			try {
+				OutputStream outStream = inSock.getOutputStream();
+				Command move = new Command("paika_move", "P"+p.getFirst()+p.getSecond()+q.getFirst()+q.getSecond());
+				move.send(outStream);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		if (type.equals("sacrifice")) {
+			try {
+				OutputStream outStream = inSock.getOutputStream();
+				Command move = new Command("sacrifice_move", "S"+p.getFirst()+p.getSecond()+q.getFirst()+q.getSecond());
+				move.send(outStream);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public void movePiece(String content) {
+		//TODO move piece on board
+		
 	}
 }

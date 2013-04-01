@@ -464,12 +464,12 @@ public class BoardState {
 		capturables = getCaptures_Move(p1,p2);
 		if( !(capturables.get(0).isEmpty()) ){
 			//TODO remove this line. HOWEVER, it demonstrated some odd behavior of the program not closing from certain windows
-			System.out.println("Array1  x: " + capturables.get(0).get(0).getFirst() + "  y: " + capturables.get(0).get(0).getSecond());
+//			System.out.println("Array1  x: " + capturables.get(0).get(0).getFirst() + "  y: " + capturables.get(0).get(0).getSecond());
 			return true;
 		}
 		else if( !(capturables.get(1).isEmpty()) ) {
 			//TODO remove this line. HOWEVER, it demonstrated some odd behavior of the program not closing from certain windows
-			System.out.println("Array2  x: " + capturables.get(1).get(0).getFirst() + "  y: "+capturables.get(1).get(0).getSecond());
+//			System.out.println("Array2  x: " + capturables.get(1).get(0).getFirst() + "  y: "+capturables.get(1).get(0).getSecond());
 			return true;
 		}
 		else {
