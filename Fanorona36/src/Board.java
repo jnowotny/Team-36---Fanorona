@@ -2,141 +2,81 @@ import javax.swing.JPanel;
 import java.awt.*;
 import java.awt.geom.*;
 import java.util.Stack;
-
+import java.util.ArrayList;
 
 public class Board extends JPanel {
-
 	private static final long serialVersionUID = -9165633611662257140L;
+//Data members
 	
+	//Basic data-types
+	private int numRows;
+	private int numCols;
+	private int xStartCoord;
+	private int yStartCoord;
+	private int sqSideLen;
+	private boolean removeAvailable;
+	private int capturedThisTurn;
+	//Objects
 	private BoardState boardState;
-	private Stack<Move> moveList = new Stack<Move>();
+//	private Stack<Move> moveList = new Stack<Move>();
+	private Piece[][] boardPieces;
+	private Pair selected;
+	private Pair nextSelected;
+	private ArrayList<Pair> visited;
+	private Color maroon = new Color(80,0,30);
 	
-	private Piece[][] boardPieces = new Piece[5][9];
-	/*	Below demonstrates the initial piece layout on the board
-	 *  x = maroon piece
-	 *  o = white piece
-	 *  e = empty space 
-	 * 		(empty spaces not currently represented as a piece object..so nothing is in matrix at [2][4])
-	 * 
-	 *		x x x x x x x x x
-	 *		x x x x x x x x x
-	 * 		x o x o e x o x o
-	 * 		o o o o o o o o o 
-	 * 		o o o o o o o o o		
-	 */
-	
-	public Board() {
-		//Row-by-row initialization of pieces at start positions on board
-		this.setLayout(null);
-		boardState = new BoardState();
+//Constructor
+	public Board(int rows, int columns) {
 		
-		//Row 0
-	    boardPieces[0][0] = new Piece(155, 90, 2, this, 0, 0);
-	    boardPieces[0][1] = new Piece(211, 90, 2, this, 0, 1);
-	    boardPieces[0][2] = new Piece(268, 90, 2, this, 0, 2);
-	    boardPieces[0][3] = new Piece(324, 90, 2, this, 0, 3);
-	    boardPieces[0][4] = new Piece(380, 90, 2, this, 0, 4);
-	    boardPieces[0][5] = new Piece(436, 90, 2, this, 0, 5);
-	    boardPieces[0][6] = new Piece(493, 90, 2, this, 0, 6);
-	    boardPieces[0][7] = new Piece(549, 90, 2, this, 0, 7);
-	    boardPieces[0][8] = new Piece(605, 90, 2, this, 0, 8);
-	    //Row 1
-	    boardPieces[1][0] = new Piece(155, 152, 2, this, 1, 0);
-	    boardPieces[1][1] = new Piece(211, 152, 2, this, 1, 1);
-	    boardPieces[1][2] = new Piece(268, 152, 2, this, 1, 2);
-	    boardPieces[1][3] = new Piece(324, 152, 2, this, 1, 3);
-	    boardPieces[1][4] = new Piece(380, 152, 2, this, 1, 4);
-	    boardPieces[1][5] = new Piece(436, 152, 2, this, 1, 5);
-	    boardPieces[1][6] = new Piece(493, 152, 2, this, 1, 6);
-	    boardPieces[1][7] = new Piece(549, 152, 2, this, 1, 7);
-	    boardPieces[1][8] = new Piece(605, 152, 2, this, 1, 8);
-	    //Row 2
-	    boardPieces[2][0] = new Piece(155, 215, 2, this, 2, 0);
-	    boardPieces[2][1] = new Piece(211, 215, 1, this, 2, 1);
-	    boardPieces[2][2] = new Piece(268, 215, 2, this, 2, 2);
-	    boardPieces[2][3] = new Piece(324, 215, 1, this, 2, 3);
-	    boardPieces[2][4] = new Piece(380, 215, 0, this, 2, 4);
-	    boardPieces[2][5] = new Piece(436, 215, 2, this, 2, 5);
-	    boardPieces[2][6] = new Piece(493, 215, 1, this, 2, 6);
-	    boardPieces[2][7] = new Piece(549, 215, 2, this, 2, 7);
-	    boardPieces[2][8] = new Piece(605, 215, 1, this, 2, 8);
-	    //Row 3
-	    boardPieces[3][0] = new Piece(155, 277, 1, this, 3, 0);
-	    boardPieces[3][1] = new Piece(211, 277, 1, this, 3, 1);
-	    boardPieces[3][2] = new Piece(268, 277, 1, this, 3, 2);
-	    boardPieces[3][3] = new Piece(324, 277, 1, this, 3, 3);
-	    boardPieces[3][4] = new Piece(380, 277, 1, this, 3, 4);
-	    boardPieces[3][5] = new Piece(436, 277, 1, this, 3, 5);
-	    boardPieces[3][6] = new Piece(493, 277, 1, this, 3, 6);
-	    boardPieces[3][7] = new Piece(549, 277, 1, this, 3, 7);
-	    boardPieces[3][8] = new Piece(605, 277, 1, this, 3, 8);
-	    //Row 4
-	    boardPieces[4][0] = new Piece(155, 340, 1, this, 4, 0);
-	    boardPieces[4][1] = new Piece(211, 340, 1, this, 4, 1);
-	    boardPieces[4][2] = new Piece(268, 340, 1, this, 4, 2);
-	    boardPieces[4][3] = new Piece(324, 340, 1, this, 4, 3);
-	    boardPieces[4][4] = new Piece(380, 340, 1, this, 4, 4);
-	    boardPieces[4][5] = new Piece(436, 340, 1, this, 4, 5);
-	    boardPieces[4][6] = new Piece(493, 340, 1, this, 4, 6);
-	    boardPieces[4][7] = new Piece(549, 340, 1, this, 4, 7);
-	    boardPieces[4][8] = new Piece(605, 340, 1, this, 4, 8);
+		this.setLayout(null);
+		
+		numRows = rows;
+		numCols = columns;
+		xStartCoord = 350-50*(numCols/2);
+		yStartCoord = 50;
+		sqSideLen = 50;
+		removeAvailable = false;
+		capturedThisTurn = 0;
+
+		boardState = new BoardState(numRows, numCols,this);
+		boardPieces = new Piece[numRows][numCols];
+		selected = null;
+		nextSelected = null;
+		visited = new ArrayList<Pair>(20);
+		visited.clear();
+		
+		//Row-by-row initialization of pieces at start positions on board
+		for(int i = 0; i < numRows/2; i++){
+			for(int j = 0; j < numCols; j++){
+				int xCoord = xStartCoord + sqSideLen*(j+1) - 10;
+				int yCoord = yStartCoord + sqSideLen*(i+1) - 10;
+				boardPieces[i][j] = new Piece(xCoord, yCoord, 2, this, j, i);
+				boardPieces[i + numRows/2 + 1][j] = new Piece(xCoord, yCoord+sqSideLen*(numRows/2 + 1), 1, this, j, i + numRows/2 + 1);
+			}
+		}
+		for(int j = 0; j < numCols/2; j+=2){
+			int yCoord = yStartCoord + sqSideLen*(numRows/2 + 1) - 10;
+			int xCoord = xStartCoord + sqSideLen*(j+1) - 10;
+			boardPieces[numRows/2][j] = new Piece(xCoord, yCoord, 2, this, j, numRows/2);
+			boardPieces[numRows/2][j+1] = new Piece(xCoord + sqSideLen, yCoord, 1, this, j+1, numRows/2);
+		}
+		for(int j = numCols - 1; j > numCols/2; j -= 2){
+			int yCoord = yStartCoord + sqSideLen*(numRows/2 + 1) - 10;
+			int xCoord = xStartCoord + sqSideLen*(j+1) - 10;
+			boardPieces[numRows/2][j] = new Piece(xCoord, yCoord, 1, this, j, numRows/2);
+			boardPieces[numRows/2][j-1] = new Piece(xCoord - sqSideLen, yCoord, 2, this, j-1, numRows/2);
+		}
+		boardPieces[numRows/2][numCols/2] = new Piece(xStartCoord + sqSideLen*(numCols/2 + 1) - 10, yStartCoord + sqSideLen*(numRows/2 + 1) - 10, 0, this, numCols/2, numRows/2);
+		
 	    
-	    for(int i = 0; i < 5; i++){
-	    	for(int j = 0; j < 9; j++){
+	    for(int i = 0; i < numRows; i++){
+	    	for(int j = 0; j < numCols; j++){
 	    		this.add(boardPieces[i][j]);
 	    	}
 	    }
 	    
 	}
-	
-	@Override
-	public void paintComponent(Graphics g){
-		super.paintComponent(g);
-
-		Graphics2D g2 = (Graphics2D) g;
-	    
-		drawBoard(g2);
-		drawPieces(g2);
-    }
-	
-	public void drawBoard(Graphics2D g2){
-		Rectangle2D backdrop = new Rectangle2D.Double(0, 0, 800, 600);
-		g2.setStroke(new BasicStroke(1));
-	    g2.setColor(Color.gray);
-	    g2.fill(backdrop);
-
-	    Rectangle2D boardBase = new Rectangle2D.Double(165, 100, 450, 250);
-	    g2.setStroke(new BasicStroke(3));
-	    Color maroon = new Color(80,0,30);
-	    g2.setColor(maroon);
-	    g2.draw(boardBase);
-
-	    //diagonal (slant down left->right)
-	    g2.drawLine(165, 225, 278, 350);
-	    g2.drawLine(165, 100, 390, 350);
-	    g2.drawLine(278, 100, 503, 350);
-	    g2.drawLine(390, 100, 615, 350);
-	    g2.drawLine(503, 100, 615, 225);
-	    //diagonal (slant up left->right)
-	    g2.drawLine(165, 225, 278, 100);
-	    g2.drawLine(390, 350, 615, 100);
-	    g2.drawLine(278, 350, 503, 100);
-	    g2.drawLine(165, 350, 390, 100);
-	    g2.drawLine(503, 350, 615, 225);
-	    //vertical
-	    g2.drawLine(221, 100, 221, 350);
-	    g2.drawLine(278, 100, 278, 350);
-	    g2.drawLine(334, 100, 334, 350);
-	    g2.drawLine(390, 100, 390, 350);
-	    g2.drawLine(446, 100, 446, 350);
-	    g2.drawLine(503, 100, 503, 350);
-	    g2.drawLine(559, 100, 559, 350);
-	    //horizontal
-	    g2.drawLine(165, 162, 615, 162);
-	    g2.drawLine(165, 225, 615, 225);
-	    g2.drawLine(165, 287, 615, 287);
-	}
-	
+		
 	class PiecePosition {
 		int xPos;
 		int yPos;
@@ -159,43 +99,43 @@ public class Board extends JPanel {
 		return util;
 	}
 	
-	protected int makeMoveList(PiecePosition pos, Stack<Move> moveList) {
-		int moveCount = 0;
-		Move moves = new Move();
-		if (checkMovable(pos.xPos,pos.yPos-1,false)) {
-			moveList.push(moves.n);
-			moveCount++;
-		}
-		if (checkMovable(pos.xPos,pos.yPos+1,false)) {
-			moveList.push(moves.s);
-			moveCount++;
-		}
-		if (checkMovable(pos.xPos+1,pos.yPos,false)) {
-			moveList.push(moves.e);
-			moveCount++;
-		}
-		if (checkMovable(pos.xPos-1,pos.yPos,false)) {
-			moveList.push(moves.w);
-			moveCount++;
-		}
-		if (checkMovable(pos.xPos-1,pos.yPos-1,false)) {
-			moveList.push(moves.nw);
-			moveCount++;
-		}
-		if (checkMovable(pos.xPos+1,pos.yPos-1,false)) {
-			moveList.push(moves.ne);
-			moveCount++;
-		}
-		if (checkMovable(pos.xPos+1,pos.yPos+1,false)) {
-			moveList.push(moves.se);
-			moveCount++;
-		}
-		if (checkMovable(pos.xPos-1,pos.yPos+1,false)) {
-			moveList.push(moves.sw);
-			moveCount++;
-		}
-		return moveCount;
-	}
+//	protected int makeMoveList(PiecePosition pos, Stack<Move> moveList) {
+//		int moveCount = 0;
+//		Move moves = new Move();
+//		if (checkMovable(pos.xPos,pos.yPos-1,false)) {
+//			moveList.push(moves.n);
+//			moveCount++;
+//		}
+//		if (checkMovable(pos.xPos,pos.yPos+1,false)) {
+//			moveList.push(moves.s);
+//			moveCount++;
+//		}
+//		if (checkMovable(pos.xPos+1,pos.yPos,false)) {
+//			moveList.push(moves.e);
+//			moveCount++;
+//		}
+//		if (checkMovable(pos.xPos-1,pos.yPos,false)) {
+//			moveList.push(moves.w);
+//			moveCount++;
+//		}
+//		if (checkMovable(pos.xPos-1,pos.yPos-1,false)) {
+//			moveList.push(moves.nw);
+//			moveCount++;
+//		}
+//		if (checkMovable(pos.xPos+1,pos.yPos-1,false)) {
+//			moveList.push(moves.ne);
+//			moveCount++;
+//		}
+//		if (checkMovable(pos.xPos+1,pos.yPos+1,false)) {
+//			moveList.push(moves.se);
+//			moveCount++;
+//		}
+//		if (checkMovable(pos.xPos-1,pos.yPos+1,false)) {
+//			moveList.push(moves.sw);
+//			moveCount++;
+//		}
+//		return moveCount;
+//	}
 	
 	private int max (int num1, int num2){
 		return ((num1 > num2) ? num1 : num2);
@@ -287,32 +227,58 @@ public class Board extends JPanel {
 	private int minMax(Node node, int depth) {
 		
 		return (0);
+		
 	}
-
-	public void drawPieces(Graphics2D g2){
-		for(int i = 0; i < 5; i++){
-	    	for(int j = 0; j < 9; j++){
-    			boardPieces[i][j].paintComponent(g2);
+	//Graphical Methods
+		@Override
+		public void paintComponent(Graphics g){
+			super.paintComponent(g);
+			Graphics2D g2 = (Graphics2D) g;
+		    
+			drawBoard(g2);
+			drawPieces(g2);
+	    }
+		
+		public void drawBoard(Graphics2D g2){
+			
+			Rectangle2D backdrop = new Rectangle2D.Double(xStartCoord+sqSideLen-20, yStartCoord+sqSideLen-20, 40+50*(numCols-1), 40+50*(numRows-1));
+			g2.setStroke(new BasicStroke(1));
+		    g2.setColor(Color.gray);
+		    g2.fill(backdrop);
+		    
+		    g2.setStroke(new BasicStroke(3));
+		    g2.setColor(maroon);
+		
+	    for(int i = 1; i < numRows; i++){
+	    	for(int j = 1; j < numCols; j ++){
+	    		g2.drawRect(xStartCoord + sqSideLen*(j), yStartCoord + sqSideLen*(i), sqSideLen, sqSideLen);
+	    		if( ((i & 1) == 0 && (j & 1) == 0) || ((i & 1) != 0 && (j & 1) != 0) ){
+	    			g2.drawLine(xStartCoord + sqSideLen*(j), yStartCoord + sqSideLen*(i), xStartCoord + sqSideLen*(j+1), yStartCoord + sqSideLen*(i+1));
+	    		}
+	    		else{
+	    			g2.drawLine(xStartCoord + sqSideLen*(j), yStartCoord + sqSideLen*(i+1), xStartCoord + sqSideLen*(j+1), yStartCoord + sqSideLen*(i));
+	    		}
 	    	}
 	    }
 	}
+	public void drawPieces(Graphics2D g2){
+		for(int i = 0; i < numRows; i++){
+			for(int j = 0; j < numCols; j++){
+				boardPieces[i][j].paintComponent(g2);
+			}
+		}
+	}
 
+//Get-methods
 	public Piece[][] getBoardPieces() {
 		return boardPieces;
 	}
-
-	public void setBoardPieces(Piece[][] boardPieces) {
-		this.boardPieces = boardPieces;
-	}
-	
 	public BoardState getBoardState(){
 		return boardState;
 	}
-	
 	public int getTurnCount(){
 		return boardState.getTurnCount();
 	}
-	
 	public int getPlayerScore(int player){
 		if (player == 1)
 			return getP1Score();
@@ -320,580 +286,153 @@ public class Board extends JPanel {
 			return getP2Score();
 		else return 0;
 	}
-	
 	public int getP1Score(){
 		return boardState.getP1Score();
 	}
 	public int getP2Score(){
 		return boardState.getP2Score();
 	}
+	public Pair getSelected(){
+		return selected;
+	}
+	public ArrayList<Pair> getVisited(){
+		return visited;
+	}
+	public boolean isRemoveAvailable() {
+		return removeAvailable;
+	}
+	public int getCapturedThisTurn(){
+		return capturedThisTurn;
+	}
+	
+//Update-methods
+	public void select(Pair p){
+		selected = p;
+	}
+	public void setBoardPieces(Piece[][] boardPieces) {
+		this.boardPieces = boardPieces;
+	}
 	public void updateScores(){
+		if(boardState.getCurrentPlayer() == 2){
+			setBackground(maroon);
+		}
+		else{
+			setBackground(Color.white);
+		}
 		boardState.updateScores();
-	}
-	
-	public void nextTurn(){
-		setHighlightAll(false);
-		boardState.nextCurrentPlayer();
-		boardState.updateTurnCount();
-		highlightMovablePieces();
-	}
-	
-	//For a position [i][j] checks for empty spot (0) in surrounding positions
-	public boolean checkMovable(int i, int j, boolean doHighlight){
-		boolean isMovable = false;
-		if(i >= 0 && i <= 4 && j >= 0 && j <=8){
-			if(boardState.getCurrentPlayer() == boardState.getBoardGrid()[i][j]){
-				if( (i == 1 && j == 1) || (i == 1 && j == 3) || (i == 1 && j == 5) ||
-					(i == 1 && j == 7) || (i == 2 && j == 2) || (i == 2 && j == 4) ||
-					(i == 2 && j == 6) || (i == 3 && j == 1) || (i == 3 && j == 3) ||
-					(i == 3 && j == 5) || (i == 3 && j == 7) ){
-					//NW
-					if(boardState.getBoardGrid()[i-1][j-1] == 0){
-						if(doHighlight){
-						boardPieces[i-1][j-1].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//N
-					if(boardState.getBoardGrid()[i-1][j] == 0){
-						if(doHighlight){
-							boardPieces[i-1][j].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//NE
-					if(boardState.getBoardGrid()[i-1][j+1] == 0){
-						if(doHighlight){
-							boardPieces[i-1][j+1].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//E
-					if(boardState.getBoardGrid()[i][j+1] == 0){
-						if(doHighlight){
-							boardPieces[i][j+1].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//SE
-					if(boardState.getBoardGrid()[i+1][j+1] == 0){
-						if(doHighlight){
-							boardPieces[i+1][j+1].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//S
-					if(boardState.getBoardGrid()[i+1][j] == 0){
-						if(doHighlight){
-							boardPieces[i+1][j].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//SW
-					if(boardState.getBoardGrid()[i+1][j-1] == 0){
-						if(doHighlight){
-							boardPieces[i+1][j-1].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//W
-					if(boardState.getBoardGrid()[i][j-1] == 0){
-						if(doHighlight){
-							boardPieces[i][j-1].setHighlight(true);
-						}
-						isMovable = true;
-					}
-				}
-				
-				if( (i == 1 && j== 2) ||  (i == 1 && j == 4) || (i == 1 && j == 6) ||
-					(i == 2 && j== 1) ||  (i == 2 && j == 3) || (i == 2 && j == 5) ||
-					(i == 2 && j== 7) ||  (i == 3 && j == 2) || (i == 3 && j == 4) ||
-					(i == 3 && j== 6) ){
-					//N
-					if(boardState.getBoardGrid()[i-1][j] == 0){
-						if(doHighlight){
-							boardPieces[i-1][j].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//E
-					if(boardState.getBoardGrid()[i][j+1] == 0){
-						if(doHighlight){
-							boardPieces[i][j+1].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//S
-					if(boardState.getBoardGrid()[i+1][j] == 0){
-						if(doHighlight){
-							boardPieces[i+1][j].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//W
-					if(boardState.getBoardGrid()[i][j-1] == 0){
-						if(doHighlight){
-							boardPieces[i][j-1].setHighlight(true);
-						}
-						isMovable = true;
-					}
-				}
-				
-				if( (i == 0 && j == 2) ||  (i == 0 && j == 4) || (i == 0 && j == 6) ){
-					//E
-					if(boardState.getBoardGrid()[i][j+1] == 0){
-						if(doHighlight){
-							boardPieces[i][j+1].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//SE
-					if(boardState.getBoardGrid()[i+1][j+1] == 0){
-						if(doHighlight){
-							boardPieces[i+1][j+1].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//S
-					if(boardState.getBoardGrid()[i+1][j] == 0){
-						if(doHighlight){
-							boardPieces[i+1][j].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//SW
-					if(boardState.getBoardGrid()[i+1][j-1] == 0){
-						if(doHighlight){
-							boardPieces[i+1][j-1].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//W
-					if(boardState.getBoardGrid()[i][j-1] == 0){
-						if(doHighlight){
-							boardPieces[i][j-1].setHighlight(true);
-						}
-						isMovable = true;
-					}
-				}
-				
-				if( (i == 4 && j == 2) ||  (i == 4 && j == 4) || (i == 4 && j == 6) ){
-					//NW
-					if(boardState.getBoardGrid()[i-1][j-1] == 0){
-						if(doHighlight){
-							boardPieces[i-1][j-1].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//N
-					if(boardState.getBoardGrid()[i-1][j] == 0){
-						if(doHighlight){
-							boardPieces[i-1][j].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//NE
-					if(boardState.getBoardGrid()[i-1][j+1] == 0){
-						if(doHighlight){
-							boardPieces[i-1][j+1].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//E
-					if(boardState.getBoardGrid()[i][j+1] == 0){
-						if(doHighlight){
-							boardPieces[i][j+1].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//W
-					if(boardState.getBoardGrid()[i][j-1] == 0){
-						if(doHighlight){
-							boardPieces[i][j-1].setHighlight(true);
-						}
-						isMovable = true;
-					}
-				}
-				
-				if( (i == 2 && j == 0) ){
-					//N
-					if(boardState.getBoardGrid()[i-1][j] == 0){
-						if(doHighlight){
-							boardPieces[i-1][j].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//NE
-					if(boardState.getBoardGrid()[i-1][j+1] == 0){
-						if(doHighlight){
-							boardPieces[i-1][j+1].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//E
-					if(boardState.getBoardGrid()[i][j+1] == 0){
-						if(doHighlight){
-							boardPieces[i][j+1].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//SE
-					if(boardState.getBoardGrid()[i+1][j+1] == 0){
-						if(doHighlight){
-							boardPieces[i+1][j+1].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//S
-					if(boardState.getBoardGrid()[i+1][j] == 0){
-						if(doHighlight){
-							boardPieces[i+1][j].setHighlight(true);
-						}
-						isMovable = true;
-					}
-				}
-				
-				if( (i == 2 && j == 8) ){
-					//NW
-					if(boardState.getBoardGrid()[i-1][j-1] == 0){
-						if(doHighlight){
-							boardPieces[i-1][j-1].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//N
-					if(boardState.getBoardGrid()[i-1][j] == 0){
-						if(doHighlight){
-							boardPieces[i-1][j].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//S
-					if(boardState.getBoardGrid()[i+1][j] == 0){
-						if(doHighlight){
-							boardPieces[i+1][j].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//SW
-					if(boardState.getBoardGrid()[i+1][j-1] == 0){
-						if(doHighlight){
-							boardPieces[i+1][j-1].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//W
-					if(boardState.getBoardGrid()[i][j-1] == 0){
-						if(doHighlight){
-							boardPieces[i][j-1].setHighlight(true);
-						}
-						isMovable = true;
-					}
-				}
-				
-				if( (i == 0 && j == 1) || (i == 0 && j == 3) || (i == 0 && j == 5) || (i == 0 && j == 7) ){					
-					//E
-					if(boardState.getBoardGrid()[i][j+1] == 0){
-						if(doHighlight){
-							boardPieces[i][j+1].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//S
-					if(boardState.getBoardGrid()[i+1][j] == 0){
-						if(doHighlight){
-							boardPieces[i+1][j].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//W
-					if(boardState.getBoardGrid()[i][j-1] == 0){
-						if(doHighlight){
-							boardPieces[i][j-1].setHighlight(true);
-						}
-						isMovable = true;
-					}
-				}
-				
-				if( (i == 4 && j == 1) || (i == 4 && j == 3) || (i == 4 && j == 5) || (i == 4 && j == 7) ){
-					//N
-					if(boardState.getBoardGrid()[i-1][j] == 0){
-						if(doHighlight){
-							boardPieces[i-1][j].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//E
-					if(boardState.getBoardGrid()[i][j+1] == 0){
-						if(doHighlight){
-							boardPieces[i][j+1].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					
-					//W
-					if(boardState.getBoardGrid()[i][j-1] == 0){
-						if(doHighlight){
-							boardPieces[i][j-1].setHighlight(true);
-						}
-						isMovable = true;
-					}
-				}
-				
-				if( (i == 1 && j == 0) || (i == 3 && j == 0) ){
-					//N
-					if(boardState.getBoardGrid()[i-1][j] == 0){
-						if(doHighlight){
-							boardPieces[i-1][j].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//E
-					if(boardState.getBoardGrid()[i][j+1] == 0){
-						if(doHighlight){
-							boardPieces[i][j+1].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//S
-					if(boardState.getBoardGrid()[i+1][j] == 0){
-						if(doHighlight){
-							boardPieces[i+1][j].setHighlight(true);
-						}
-						isMovable = true;
-					}					
-				}
-				
-				if( (i == 1 && j == 8) || (i == 3 && j == 8) ){
-					//N
-					if(boardState.getBoardGrid()[i-1][j] == 0){
-						if(doHighlight){
-							boardPieces[i-1][j].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//S
-					if(boardState.getBoardGrid()[i+1][j] == 0){
-						if(doHighlight){
-							boardPieces[i+1][j].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//W
-					if(boardState.getBoardGrid()[i][j-1] == 0){
-						if(doHighlight){
-							boardPieces[i][j-1].setHighlight(true);
-						}
-						isMovable = true;
-					}							
-				}
-				
-				if(i == 0 && j == 0){
-					//E
-					if(boardState.getBoardGrid()[i][j+1] == 0){
-						if(doHighlight){
-							boardPieces[i][j+1].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//SE
-					if(boardState.getBoardGrid()[i+1][j+1] == 0){
-						if(doHighlight){
-							boardPieces[i+1][j+1].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//S
-					if(boardState.getBoardGrid()[i+1][j] == 0){
-						if(doHighlight){
-							boardPieces[i+1][j].setHighlight(true);
-						}
-						isMovable = true;
-					}
-				}
-				
-				if(i == 0 && j == 8){
-					//S
-					if(boardState.getBoardGrid()[i+1][j] == 0){
-						if(doHighlight){
-							boardPieces[i+1][j].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//SW
-					if(boardState.getBoardGrid()[i+1][j-1] == 0){
-						if(doHighlight){
-							boardPieces[i+1][j-1].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//W
-					if(boardState.getBoardGrid()[i][j-1] == 0){
-						if(doHighlight){
-							boardPieces[i][j-1].setHighlight(true);
-						}
-						isMovable = true;
-					}
-				}
-				
-				if(i == 4 && j == 0){
-					//N
-					if(boardState.getBoardGrid()[i-1][j] == 0){
-						if(doHighlight){
-							boardPieces[i-1][j].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//NE
-					if(boardState.getBoardGrid()[i-1][j+1] == 0){
-						if(doHighlight){
-							boardPieces[i-1][j+1].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//E
-					if(boardState.getBoardGrid()[i][j+1] == 0){
-						if(doHighlight){
-							boardPieces[i][j+1].setHighlight(true);
-						}
-						isMovable = true;
-					}
-				}
-				
-				if(i == 4 && j == 8){
-					//NW
-					if(boardState.getBoardGrid()[i-1][j-1] == 0){
-						if(doHighlight){
-							boardPieces[i-1][j-1].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//N
-					if(boardState.getBoardGrid()[i-1][j] == 0){
-						if(doHighlight){
-							boardPieces[i-1][j].setHighlight(true);
-						}
-						isMovable = true;
-					}
-					//W
-					if(boardState.getBoardGrid()[i][j-1] == 0){
-						if(doHighlight){
-							boardPieces[i][j-1].setHighlight(true);
-						}
-						isMovable = true;
-					}
-				}
-			}
-		}
-		this.repaint();
-		return isMovable;
-	}
-	
-	public boolean checkRemovable(int x1, int y1, int x2, int y2, boolean isInitial, boolean doHighlight){
-		boolean hasRemovable = false;
-		int xDelta = x2 - x1;
-		int yDelta = y2 - y1;
-		
-		if( (x1 - xDelta >= 0) && (x1 - xDelta <= 4) && (y1 - yDelta >= 0) && (y1 - yDelta <= 8) && (isInitial)){
-			if( (boardState.getBoardGrid()[x1-xDelta][y1-yDelta] != 0) && (boardState.getBoardGrid()[x1-xDelta][y1-yDelta] != boardState.getCurrentPlayer())){
-				hasRemovable = true;
-				boardPieces[x1-xDelta][y1-yDelta].setHighlight(true);
-				checkRemovable(x1, y1, x1-xDelta, y1-yDelta, false, doHighlight);
-			}
-		}
-		
-		if( (x2 + xDelta >= 0) && (x2 + xDelta <= 4) && (y2 + yDelta >= 0) && (y2 + yDelta <= 8) ){
-			if( (boardState.getBoardGrid()[x2+xDelta][y2+yDelta] != 0) && (boardState.getBoardGrid()[x2+xDelta][y2+yDelta] != boardState.getCurrentPlayer())){
-				hasRemovable = true;
-				boardPieces[x2+xDelta][y2+yDelta].setHighlight(true);
-				checkRemovable(x2, y2, x2+xDelta, y2+yDelta, false, doHighlight);
-			}
-		}
-		
-		return hasRemovable;
-	}
-	
-	public void removeAdjacentHighlighted(int x, int y){
-		if( (x >= 0) && (x <= 4) && (y >= 0) && (y <= 8)){
-			//NW
-			if( (x > 0) && (y > 0) ){
-				if (boardPieces[x-1][y-1].getHighlight() ){
-					unHighlight_and_Remove(x-1, y-1);
-					removeAdjacentHighlighted(x-1, y-1);
-				}
-			}
-			//N
-			if(x > 0){
-				if (boardPieces[x-1][y].getHighlight() ){
-					unHighlight_and_Remove(x-1, y);
-					removeAdjacentHighlighted(x-1, y);
-				}
-			}
-			//NE
-			if( (x > 0) && (y < 8)){
-				if (boardPieces[x-1][y+1].getHighlight() ){
-					unHighlight_and_Remove(x-1, y+1);
-					removeAdjacentHighlighted(x-1, y+1);
-				}
-			}
-			//E
-			if(y < 8){
-				if (boardPieces[x][y+1].getHighlight() ){
-					unHighlight_and_Remove(x, y+1);
-					removeAdjacentHighlighted(x, y+1);
-				}
-			}
-			//SE
-			if( (x < 4) && (y < 8)){
-				if (boardPieces[x+1][y+1].getHighlight() ){
-					unHighlight_and_Remove(x+1, y+1);
-					removeAdjacentHighlighted(x+1, y+1);
-				}
-			}
-			//S
-			if(x < 4){
-				if (boardPieces[x+1][y].getHighlight() ){
-					unHighlight_and_Remove(x+1, y);
-					removeAdjacentHighlighted(x+1, y);
-				}
-			}
-			//SW
-			if( (x < 4) && (y > 0) ){
-				if (boardPieces[x+1][y-1].getHighlight() ){
-					unHighlight_and_Remove(x+1, y-1);
-					removeAdjacentHighlighted(x+1, y-1);
-				}
-			}
-			//W
-			if(y > 0){
-				if (boardPieces[x][y-1].getHighlight() ){
-					unHighlight_and_Remove(x, y-1);
-					removeAdjacentHighlighted(x, y-1);
-				}
-			}
-		}
-			
-		
-	}
-	
-	public void unHighlight_and_Remove(int x, int y){
-		boardPieces[x][y].setHighlight(false);
-		boardPieces[x][y].setPieceState(0);
-		boardState.setBoardGrid(x, y, 0);
 		repaint();
 	}
+	public void nextTurn(){
+		boardState.nextCurrentPlayer();
+		boardState.updateTurnCount();
+		boardState.deactivateRemovables();
+		select(null);
+		visited.clear();
+		capturedThisTurn = 0;
+		setHighlightAll(false, false);
+	}
+	public void updateRemoveAvailable() {
+		if( !(boardState.getRemovables().isEmpty()) ){
+			for(int i = 0; i < boardState.getRemovables().size(); i++){
+				if( !(boardState.getRemovables().get(i).isEmpty()) ){
+					removeAvailable = true;
+					break;					
+				}
+			}
+		}
+		else{
+			removeAvailable = false;
+		}
+	}
+	public void updateSelected(){
+		selected = nextSelected;
+		nextSelected = null;
+	}
+
+//Game-logic methods
+	//Make a moveType move from position p1 to p2
+	public void move(Pair p1, Pair p2, String moveType){
+		int xPos1 = p1.getFirst();
+		int yPos1 = p1.getSecond();
+		int xPos2 = p2.getFirst();
+		int yPos2 = p2.getSecond();
+		
+		if(moveType == "paika"){
+			//P1 becomes empty
+			boardState.setBoardGrid(yPos1, xPos1, 0);
+			boardPieces[yPos1][xPos1].setPieceState(0);
+			//P2 becomes current player's piece
+			boardState.setBoardGrid(yPos2, xPos2, boardState.getCurrentPlayer());
+			boardPieces[yPos2][xPos2].setPieceState(boardState.getCurrentPlayer());
+			nextTurn();
+			
+		}
+		
+		else if (moveType == "capture"){
+			//P1 becomes empty
+			boardState.setBoardGrid(yPos1, xPos1, 0);
+			boardPieces[yPos1][xPos1].setPieceState(0);
+			boardPieces[yPos1][xPos1].setHighlight(false);
+			visited.add(p1);
+			//P2 becomes current player's piece
+			boardState.setBoardGrid(yPos2, xPos2, boardState.getCurrentPlayer());
+			boardPieces[yPos2][xPos2].setPieceState(boardState.getCurrentPlayer());
+			//select(p2);
+			nextSelected = p2;
+			boardState.activateRemovables(p1, p2);
+			setHighlightAll(false, true);
+			highlightRemovables();
+			repaint();
+		}
+		
+	}
 	
-	public void setHighlightAll(boolean isHighlight){
-		for(int i = 0; i < 5; i++){
-	    	for(int j = 0; j < 9; j++){
+	//TODO implement sacrifice move
+	public void sacrifice(Pair p){
+		
+	}
+	
+	
+//Graphical Game-logic methods
+	
+	//TODO find use for this or delete it...might be useful for sacrifice
+	public void unHighlight_and_Remove(Pair p){
+		int xPos = p.getFirst();
+		int yPos = p.getSecond();
+		boardPieces[yPos][xPos].setHighlight(false);
+		boardPieces[yPos][xPos].setPieceState(0);
+		boardState.setBoardGrid(yPos, xPos, 0);
+		repaint();
+	}
+	//Remove pieces found in removable.get(i)
+	public void removeRemovables(int i){
+		if( (i == 0) || (i == 1)){
+			for(int j = 0; j < boardState.getRemovables().get(i).size(); j++){
+				int xPos = boardState.getRemovables().get(i).get(j).getFirst();
+				int yPos = boardState.getRemovables().get(i).get(j).getSecond();
+				boardState.setBoardGrid(yPos, xPos, 0);
+				boardPieces[yPos][xPos].setPieceState(0);
+				capturedThisTurn++;
+			}
+			setHighlightAll(false, true);
+			boardState.deactivateRemovables();
+		}
+	}
+	//Change the highlight status of all pieces, optionally call repaint()
+	public void setHighlightAll(boolean isHighlight, boolean doRepaint){
+		for(int i = 0; i < numRows; i++){
+	    	for(int j = 0; j < numCols; j++){
 	    		boardPieces[i][j].setHighlight(isHighlight);
 	    	}
 		}
+		if(doRepaint){
+			repaint();
+		}
 	}
-	
+	//Remove all pieces that have isHighlighted set to true
 	public void removeHighlightedPieces(){
-		for(int i = 0; i < 5; i++){
-	    	for(int j = 0; j < 9; j++){
+		for(int i = 0; i < numRows; i++){
+	    	for(int j = 0; j < numCols; j++){
 	    		if(boardPieces[i][j].getHighlight()){
 	    			boardPieces[i][j].setPieceState(0);
 	    			boardState.setBoardGrid(i, j, 0);
@@ -902,17 +441,81 @@ public class Board extends JPanel {
 	    	}
 		}
 	}
-	
-	public void highlightMovablePieces(){		
-		 for(int i = 0; i < 5; i++){
-	    	for(int j = 0; j < 9; j++){
-	    		if(checkMovable(i, j, false)){
+	//Highlight all pieces that can make a capture move this turn
+	public void highlightCaptureMovable(){
+		for(int i = 0; i < numRows; i++){
+			for(int j = 0; j < numCols; j++){
+				if( (boardState.getBoardGrid()[i][j] == boardState.getCurrentPlayer()) && (boardState.hasCaptureDestinations(new Pair(j,i))) ){
+					boardPieces[i][j].setHighlight(true);
+				}
+			}
+		}
+		repaint();
+	}
+	//Highlight all pieces that can make a paika move this turn
+	public void highlightPaikaMovable(){		
+		 for(int i = 0; i < numRows; i++){
+	    	for(int j = 0; j < numCols; j++){
+	    		if( (boardState.getBoardGrid()[i][j] == boardState.getCurrentPlayer()) && (boardState.hasDestinations(new Pair(j,i))) ){
 	    			boardPieces[i][j].setHighlight(true);
 	    		}
 	    	}
 	     }
+		 repaint();
 	}
-	
-	
+	//Highlight all empty spots adjacent to p
+	public void highlightDestinations(Pair p){
+		Pair[] destinations = boardState.checkDestinations(p);
+		for(int i = 0; i < 8; i++){
+			if(destinations[i] != null){
+				boolean notVisited = true;
+				for(int j = 0; j < visited.size(); j++){
+					if( destinations[i].isEqualTo(visited.get(j)) ){
+						notVisited = false;
+						break;
+					}
+				}
+				if(notVisited){
+					int xPos = destinations[i].getFirst();
+					int yPos = destinations[i].getSecond();
+					boardPieces[yPos][xPos].setHighlight(true);
+				}
+			}
+		}	
+		repaint();
+	}
+	//Highlight all empty spots adjacent to p that can be used for a capture move
+	public void highlightCaptureDestinations(Pair p){
+		Pair[] destinations = boardState.checkCaptureDestinations(p);
+		for(int i = 0; i < 8; i++){
+			if(destinations[i] != null){
+				boolean notVisited = true;
+				for(int j = 0; j < visited.size(); j++){
+					if( destinations[i].isEqualTo(visited.get(j)) ){
+						notVisited = false;
+						break;
+					}
+				}
+				if(notVisited){
+					int xPos = destinations[i].getFirst();
+					int yPos = destinations[i].getSecond();
+					boardPieces[yPos][xPos].setHighlight(true);
+				}
+			}
+		}	
+		repaint();
+	}
+	//Highlight all pieces that are options to be removed as a result of a capture move
+	public void highlightRemovables(){
+		for(int i = 0; i < boardState.getRemovables().size(); i++){
+			for(int j = 0; j < boardState.getRemovables().get(i).size(); j++){
+				int xPos = boardState.getRemovables().get(i).get(j).getFirst();
+				int yPos = boardState.getRemovables().get(i).get(j).getSecond();
+				boardPieces[yPos][xPos].setHighlight(true);
+			}
+		}
+		repaint();
+	}
+
 	
 }

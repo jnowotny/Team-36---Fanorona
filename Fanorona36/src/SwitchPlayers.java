@@ -1,5 +1,3 @@
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 //import javax.swing.JInternalFrame;
 import javax.swing.JButton;
@@ -23,20 +21,7 @@ public class SwitchPlayers extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			private Fanorona f;
-
-			public void run() {
-				try {
-					SwitchPlayers frame = new SwitchPlayers(f);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	
 
 	/**
 	 * Create the frame.

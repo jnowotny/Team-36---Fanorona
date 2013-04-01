@@ -9,34 +9,32 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 
 public class Piece extends JComponent implements MouseListener{
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -7913822887443560796L;
+//Data members
+	private boolean isHighlighted = false;
+	private Color maroon = new Color(80,0,30);
 	
 	private int x_cord;
 	private int y_cord;
-	private Color maroon = new Color(80,0,30);
 	private int pieceState;
-	private boolean isHighlighted = false;
 	private Board brd;
-	private int x_pos;
-	private int y_pos;
-	private int x_movedFrom;
-	private int y_movedFrom;
-	
-	public Piece(int x, int y, int pieceSt, Board b, int xpos, int ypos){
+	private int xPos;
+	private int yPos;
+
+//Constructor	
+	public Piece(int x, int y, int pieceSt, Board b, int x_pos, int y_pos){
 		brd = b;
 		x_cord = x;
 		y_cord = y;
-		x_pos = xpos;
-		y_pos = ypos;
+		xPos = x_pos;
+		yPos = y_pos;
 		pieceState = pieceSt;
 		setBounds(x_cord-3,y_cord-3,26,26);
 		setVisible(true);
 		this.addMouseListener(this);
 	}
-	
+
+//Graphical methods
 	public void paintComponent(Graphics2D g2){
 		super.paintComponent(g2);
 		
@@ -58,97 +56,97 @@ public class Piece extends JComponent implements MouseListener{
 			highlight(g2);
 		}
 	}
-	
 	public void highlight(Graphics2D g2){
 		Ellipse2D e = new Ellipse2D.Double(this.getLocation().x+2, this.getLocation().y+2, 22, 22);
 		g2.setStroke(new BasicStroke(3));
 	    g2.setColor(Color.yellow);
 	    g2.draw(e);
 	}
-	
-	public void setHighlight(boolean b){
-		isHighlighted = b;
-	}
 
+//Get-methods
 	public boolean getHighlight(){
 		return isHighlighted;
 	}
+	public int getPieceState(){
+		return pieceState;
+	}
+			
 	
+//Update-methods
+	public void setHighlight(boolean b){
+		isHighlighted = b;
+	}
 	public void setPieceState(int pieceSt){
 		if(pieceSt == 0 || pieceSt == 1 || pieceSt == 2){
 			pieceState = pieceSt;
 		}
 	}
-	
-	public int getPieceState(){
-		return pieceState;
-	}
-	
-	public void findMovedFrom(){
-		for(int i = 0; i < 5; i++){
-			for(int j = 0; j < 9; j++){
-				if( (brd.getBoardPieces()[i][j].getHighlight()) && 
-					(brd.getBoardState().getBoardGrid()[i][j] == brd.getBoardState().getCurrentPlayer()) &&
-					(brd.getBoardPieces()[i][j].getPieceState() == brd.getBoardState().getCurrentPlayer()) ){
-						x_movedFrom = i;
-						y_movedFrom = j;
+
+
+//MouseListener overridden methods
+	@Override
+	public void mouseClicked(MouseEvent arg0) {
+		if (isHighlighted){
+			//If no piece selected at time of click, select the clicked piece
+			if(brd.getSelected() == null){
+				brd.setHighlightAll(false, true);
+				setHighlight(true);
+				brd.select(new Pair(xPos,yPos));
+			}
+			//If clicked piece matches selected piece , deselect it
+			else if((xPos == brd.getSelected().getFirst()) && (yPos == brd.getSelected().getSecond())){
+				brd.setHighlightAll(false, true);
+				brd.select(null);
+			}
+			//If clicked piece is empty, move selected piece there
+			else if(pieceState == 0){
+				//If the Move has capture options, make a "capture" move
+				if(brd.getBoardState().hasCaptures_Move(brd.getSelected(), new Pair(xPos, yPos))){
+					brd.move(brd.getSelected(), new Pair(xPos, yPos), "capture");
+				}
+				//If the Move does not have capture options, make a "paika" move
+				else {
+					brd.move(brd.getSelected(), new Pair(xPos, yPos), "paika");					
+				}
+			}
+			//If clicked piece belongs to currentPlayer's opponent
+			else if(pieceState == brd.getBoardState().getNextPlayer()){
+				//Find a matching pair in ArrayList removables, then remove all pieces in that ArrayList
+				for(int i = 0; i < brd.getBoardState().getRemovables().size(); i++){
+					for(int j = 0; j < brd.getBoardState().getRemovables().get(i).size(); j++){
+						if(	brd.getBoardState().getRemovables().get(i).get(j).isEqualTo(new Pair(xPos, yPos))){
+							brd.removeRemovables(i);
+							brd.updateSelected();
+							brd.setHighlightAll(false,true);
+							break;
+						}
+					}
 				}
 			}
 		}
+		/*	If clicked piece is ( (NOT highlighted) && (no moves have been made this turn) )
+		 *		deselect the selected piece
+		 */
+		
+		else if(brd.getVisited().isEmpty()){
+			
+			brd.setHighlightAll(false, true);
+			brd.select(null);
+		}
+		super.repaint();
 	}
 	
 	@Override
-	public void mouseClicked(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		if (isHighlighted){
-			
-			if(pieceState == brd.getBoardState().getCurrentPlayer()){
-				brd.setHighlightAll(false);
-				setHighlight(true);
-				brd.checkMovable(x_pos, y_pos, true);
-			}
-			else if(pieceState == 0){
-				findMovedFrom();
-				brd.removeHighlightedPieces();
-				brd.setHighlightAll(false);
-				brd.getBoardState().setBoardGrid(x_pos, y_pos, brd.getBoardState().getCurrentPlayer());
-				pieceState = brd.getBoardState().getCurrentPlayer();
-				brd.checkRemovable(x_movedFrom, y_movedFrom, x_pos, y_pos, true, true);
-			}
-			else{
-				brd.unHighlight_and_Remove(x_pos, y_pos);
-				brd.removeAdjacentHighlighted(x_pos, y_pos);
-				brd.setHighlightAll(false);
-			}
-			
-		}
-		
-		
-		super.repaint();
-	}
-
-	@Override
 	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
 	}
-
 	@Override
 	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
 	}
-
 	@Override
 	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
 	}
-
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 	
 }

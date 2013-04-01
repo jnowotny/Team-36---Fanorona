@@ -26,18 +26,7 @@ public class PauseMenu {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					PauseMenu window = new PauseMenu(fan);
-					window.frmPause.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	
 	
 	class UpdateTimerListener implements ActionListener {
 		private Fanorona fan;
