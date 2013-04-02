@@ -6,6 +6,7 @@ import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JToggleButton;
 import javax.swing.Timer;
 
 import java.awt.Button;
@@ -31,141 +32,31 @@ public class Fanorona extends JFrame {
 	private Button btnMainMenu;
 	private Button btnPause;
 	
+	protected JToggleButton sacrificeButton;
+	
 	protected Board board;
 	private PauseMenu pause;
 	private SwitchPlayers swap;
 	private Color maroon = new Color(80,0, 30);
 	
 	//private int timeRemaining = 25;//TODO make this value correspond to the timer value input by user in new game menu
+	private boolean timeOut;
 	private int curP1Score;
 	private int curP2Score;
+	private int timerSet;
+	private int maxTurns;
 	private static int gameType;
 	private static int numRows;
 	private static int numCols;
 	private static int timerLength;
-	private static String color;
 	private static int timeRemaining;
-	private int timerSet;
-	private boolean timeOut;
+	private static String color;
+	
+	
 
-//Internal Classes	
-	
-	//TODO reset timer when nextTurn() is called in board
-	
-	/*TODO add game condition: 
-	 * 	if( (unable to make a move) && (board.getVisited().isEmpty) ){
-	 * 		currentPlayer LOSES!
-	 * 	}
-	 */
-	
-	//creates the handler for updating the timer!
-	class CountdownTimerListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-        	if ((!pause.isVisible()) && (!swap.isVisible())) {
-        		if (--timeRemaining > 0) 
-	                timeLabel.setText("Time Remaining: " + String.valueOf(timeRemaining));
-	            else {
-	                timeLabel.setText("Time's up!");
-	                if (board.getVisited().size() > 0) {
-	                	swap.setVisible(true);
-	                	timeRemaining = timerSet + 1;//TODO make this value correspond to the timer value input by user in new game menu
-	                } else {
-	                	timeOut = true;
-	                	countdown.stop();
-	                	EndMenu end = new EndMenu(Fanorona.this, timeOut);
-	                	end.setVisible(true);
-	                	swap.dispose();
-	                	dispose();
-	                }
-	            }
-        	}
-        }
-    }
-	//creates the handler for updating the timer!
-	class GameLoopListener implements ActionListener {
-		private Fanorona fan;
-        public GameLoopListener(Fanorona f) {
-        	fan = f;
-        }
 
-		public void actionPerformed(ActionEvent e) {
-        	final int maxTurn = 50;
-        	
-        	fan.board.updateScores();
-    		curP1Score = fan.board.getP1Score();
-    		curP2Score = fan.board.getP2Score();
-    		board.updateRemoveAvailable();
-    		
-    		EventQueue.invokeLater(new Runnable() {
-    			public void run() {
-    				try {
-    					p2Score.setText(" Maroon: " + Integer.toString(curP2Score)); 
-    					p1Score.setText("   White: " + Integer.toString(curP1Score));
-    				} catch (Exception e) {
-    					e.printStackTrace();
-    				}
-    			}
-    		});
-        	
-        	//Any other Looping actions we need done here
-        	if ((fan.board.getP1Score() == 0) || (fan.board.getP2Score() == 0)) {
-        		EndMenu end = new EndMenu(Fanorona.this, timeOut);
-        		end.setVisible(true);
-        		dispose();
-        	}
-        	if (fan.board.getTurnCount() == maxTurn) {
-        		EndMenu end = new EndMenu(Fanorona.this, timeOut);
-        		end.setVisible(true);
-        		dispose();
-        	}
-        	
-        	//Enable player to end turn early with skipbutton if a capture has been made
-        	if (board.getCapturedThisTurn() > 0) {
-        		skipbutton.setVisible(true);
-        	}
-        	else{
-        		skipbutton.setVisible(false);
-        	}
-        	
-        	//If a piece is selected, show destinations to move to...if there aren't any remove choices that need to be made
-        	if(board.getSelected() != null) {
-	        	if( !(board.isRemoveAvailable()) ) {
-        			if(board.getBoardState().hasCaptureDestinations(board.getSelected())) {
-	        			board.highlightCaptureDestinations(board.getSelected());
-	        		}
-	        		else if(board.getBoardState().hasDestinations(board.getSelected())) {
-	        			board.highlightDestinations(board.getSelected());
-	        		}
-        		}
-        	}
-        	//Else show pieces that can be moved
-        	else{
-        		//If capture moves are available, show pieces that can make capture moves
-        		if(board.getBoardState().hasCaptureMoves()){
-        			board.highlightCaptureMovable();
-        		}
-        		//Else show pieces that can make paika moves, if any
-        		else{
-        			board.highlightPaikaMovable();
-        		}
-			}	
-        }
-    }
-	
-	/**
-	 * Create the frame.
-	 */
-	
-	public int getP1Score() {
-		return curP1Score;
-	}
-	
-	public int getP2Score() {
-		return curP2Score;
-	}
-	
-//Constructor
-	public Fanorona(int location, int gameType, int numRows, int numCols, int timer, int port, String address) {
+/**Constructor*/
+	public Fanorona(int location, int gameType, int rows, int cols, int timer, int port, String address) {
 	/*////////////////////////////////
 	LOCATION
 		- 1: local game
@@ -190,13 +81,14 @@ public class Fanorona extends JFrame {
 	ADDRESS
 		- "": not needed (local/server)
 	*///////////////////////////////
-		
-		
+		numRows = rows;
+		numCols = cols;
+		maxTurns = 10*numRows;
 	///////////////
 		timeRemaining = timer / 1000;
 		timerSet = timeRemaining;
 	//////////////
-		board = new Board(numRows, numCols);
+		board = new Board(numRows, numCols, this);
 		pause = new PauseMenu(this);
 		swap = new SwitchPlayers(this);
 		timeOut = false;
@@ -259,11 +151,6 @@ public class Fanorona extends JFrame {
 		});
 		board.add(btnPause);
 		
-		/*	TODO make SkipTurn available if( !(board.getCapturedThisTurn > 0 )
-		 * 		Player should be able to end turn early if they have made a capture.
-		 * 
-		 * 	SO KEEP THIS BUTTON ==> //This was just for testing, couldn't wait for all the turns to time out.
-		 */
 		skipbutton = new Button("Skip Turn");
 		skipbutton.setBounds(157, 23, 112, 29);
 		skipbutton.addActionListener(new ActionListener() {
@@ -273,6 +160,22 @@ public class Fanorona extends JFrame {
 		});
 		skipbutton.setVisible(false);
 		board.add(skipbutton);
+		
+		sacrificeButton = new JToggleButton("Sacrifice");
+		sacrificeButton.setBounds(157,23,112,29);
+		sacrificeButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JToggleButton sacBtn = (JToggleButton)e.getSource();
+				if(sacBtn.isSelected()){
+					board.setMakingSacrifice(true);
+				}
+				else {
+					board.setMakingSacrifice(false);
+				}
+			}
+		});
+		sacrificeButton.setVisible(true);
+		board.add(sacrificeButton);
 		
 		if (timerSet > 0) {
 			countdown = new Timer(1000, new CountdownTimerListener());
@@ -287,12 +190,126 @@ public class Fanorona extends JFrame {
 		board.nextTurn();
 	}
 
+/**Internal Classes*/	
+	//TODO reset timer when nextTurn() is called in board
+	/*TODO add game condition: 
+	 * 	if( (unable to make a move) && (board.getVisited().isEmpty) ){
+	 * 		currentPlayer LOSES!
+	 * 	}
+	 */
+	
+	//creates the handler for updating the timer!
+	class CountdownTimerListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+        	if ((!pause.isVisible()) && (!swap.isVisible())) {
+        		if (--timeRemaining > 0) 
+	                timeLabel.setText("Time Remaining: " + String.valueOf(timeRemaining));
+	            else {
+	                timeLabel.setText("Time's up!");
+	                if (board.getVisited().size() > 0) {
+	                	swap.setVisible(true);
+	                	timeRemaining = timerSet + 1;//TODO make this value correspond to the timer value input by user in new game menu
+	                } else {
+	                	timeOut = true;
+	                	countdown.stop();
+	                	EndMenu end = new EndMenu(Fanorona.this, timeOut);
+	                	end.setVisible(true);
+	                	swap.dispose();
+	                	dispose();
+	                }
+	            }
+        	}
+        }
+    }
+	//creates the handler for updating the timer!
+	class GameLoopListener implements ActionListener {
+		private Fanorona fan;
+        public GameLoopListener(Fanorona f) {
+        	fan = f;
+        }
+
+		public void actionPerformed(ActionEvent e) {
+//        	final int maxTurn = 10*numRows;
+        	
+        	fan.board.updateScores();
+    		curP1Score = fan.board.getP1Score();
+    		curP2Score = fan.board.getP2Score();
+    		board.updateRemoveAvailable();
+    		
+    		EventQueue.invokeLater(new Runnable() {
+    			public void run() {
+    				try {
+    					p2Score.setText(" Maroon: " + Integer.toString(curP2Score)); 
+    					p1Score.setText("   White: " + Integer.toString(curP1Score));
+    				} catch (Exception e) {
+    					e.printStackTrace();
+    				}
+    			}
+    		});
+        	
+        	//Any other Looping actions we need done here
+        	if ((fan.board.getP1Score() == 0) || (fan.board.getP2Score() == 0)) {
+        		EndMenu end = new EndMenu(Fanorona.this, timeOut);
+        		end.setVisible(true);
+        		dispose();
+        	}
+        	if (fan.board.getTurnCount() == maxTurns) {
+        		EndMenu end = new EndMenu(Fanorona.this, timeOut);
+        		end.setVisible(true);
+        		dispose();
+        	}
+        	
+        	//Enable player to end turn early with skipbutton if a capture has been made
+        	if (board.getCapturedThisTurn() > 0) {
+        		skipbutton.setVisible(true);
+        	}
+        	else{
+        		skipbutton.setVisible(false);
+        	}
+        	
+        	//If a piece is selected, show destinations to move to...if there aren't any remove choices that need to be made
+        	if(board.getSelected() != null) {
+	        	sacrificeButton.setVisible(false);
+        		if( !(board.isRemoveAvailable()) ) {
+        			if(board.getBoardState().hasCaptureDestinations(board.getSelected())) {
+	        			board.highlightCaptureDestinations(board.getSelected());
+	        		}
+	        		else if(board.getBoardState().hasDestinations(board.getSelected())) {
+	        			board.highlightDestinations(board.getSelected());
+	        		}
+        		}
+        	}
+        	//Else show pieces that can be moved
+        	else{
+        		sacrificeButton.setVisible(true);
+        		//If capture moves are available, show pieces that can make capture moves
+        		if(board.getBoardState().hasCaptureMoves()){
+        			board.highlightCaptureMovable();
+        		}
+        		//Else show pieces that can make paika moves, if any
+        		else{
+        			board.highlightPaikaMovable();
+        		}
+			}	
+        }
+    }
+	
+/**Get-Methods*/
+	public int getP1Score() {
+		return curP1Score;
+	}
+	public int getP2Score() {
+		return curP2Score;
+	}
 	public String getConfig() {
 		String conf;
 		conf = numRows + " " + numCols + " " + color + " " + timerLength;
  		return conf;
 	}
-
+	public int getMaxTurns() {
+		return maxTurns;
+	}
+/**Update-Methods*/
 	public void setConfig(int row, int col, String color2, int time) {
 		numRows = row;
 		numCols = col;

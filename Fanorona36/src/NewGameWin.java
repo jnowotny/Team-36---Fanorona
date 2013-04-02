@@ -40,11 +40,19 @@ public class NewGameWin extends JFrame {
 	private JSpinner spinnerCols;
 	private JRadioButton noTimerButton;
 	private JRadioButton yesTimerButton;
+	private JRadioButton hostAsP1Button;
+	private JRadioButton hostAsP2Button;
+	private JRadioButton hostAsHumanButton;
+	private JRadioButton hostAsCpuButton;
 	private ButtonGroup timerSelection;
+	private ButtonGroup playerSelection;
+	private ButtonGroup humanCpuSelection;
 	private JLabel lblTimer;
 	private JLabel lblSetTime;
 	private JLabel lblMilliseconds;
 	private int timerButtonSelected = -1;
+	private int playerNumber = 1;
+	private boolean isHuman = true;
 	private JSpinner spinnerTimer;
 	private JLabel lblPort;
 	private JSpinner spinnerPort;
@@ -69,7 +77,7 @@ public class NewGameWin extends JFrame {
 		setTitle("New Game");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);    
 		int width = 475;
-	    int height = 330;
+	    int height = 350;
 	    Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 	    int x = (screen.width - width) / 2;
 	    int y = (screen.height - height) / 2;
@@ -126,6 +134,8 @@ public class NewGameWin extends JFrame {
 					lblTimer.setVisible(false);
 					noTimerButton.setVisible(false);
 					yesTimerButton.setVisible(false);
+					hostAsP1Button.setVisible(false);
+					hostAsP2Button.setVisible(false);
 					lblSetTime.setVisible(false);
 					lblMilliseconds.setVisible(false);
 					spinnerTimer.setVisible(false);
@@ -148,6 +158,8 @@ public class NewGameWin extends JFrame {
 					lblTimer.setVisible(true);
 					noTimerButton.setVisible(true);
 					yesTimerButton.setVisible(true);
+					hostAsP1Button.setVisible(false);
+					hostAsP2Button.setVisible(false);
 					lblPort.setVisible(false);
 					spinnerPort.setVisible(false);
 					lblIpAddress.setVisible(false);
@@ -167,6 +179,8 @@ public class NewGameWin extends JFrame {
 					lblTimer.setVisible(false);
 					noTimerButton.setVisible(false);
 					yesTimerButton.setVisible(false);
+					hostAsP1Button.setVisible(false);
+					hostAsP2Button.setVisible(false);
 					lblSetTime.setVisible(false);
 					lblMilliseconds.setVisible(false);
 					spinnerTimer.setVisible(false);
@@ -190,6 +204,8 @@ public class NewGameWin extends JFrame {
 					lblTimer.setVisible(true);
 					noTimerButton.setVisible(true);
 					yesTimerButton.setVisible(true);
+					hostAsP1Button.setVisible(true);
+					hostAsP2Button.setVisible(true);
 					lblIpAddress.setVisible(false);
 					IP1.setVisible(false);
 					IP2.setVisible(false);
@@ -290,6 +306,16 @@ public class NewGameWin extends JFrame {
 		timerSelection.add(noTimerButton);
 		timerSelection.add(yesTimerButton);
 		
+		hostAsP1Button = new JRadioButton("Player 1");
+		
+		hostAsP2Button = new JRadioButton("Player 2");
+		
+		hostAsHumanButton = new JRadioButton("Human");
+		
+		hostAsCpuButton = new JRadioButton("CPU");
+		
+		
+		
 		JButton btnCreateNewGame = new JButton("Create New Game");
 		btnCreateNewGame.setBounds(71, 273, 319, 29);
 		btnCreateNewGame.addActionListener(new ActionListener() {
@@ -321,7 +347,7 @@ public class NewGameWin extends JFrame {
 						String address = IP1 + "." + IP2 + "." + IP3 + "." + IP4;
 						int port = (int) spinnerPort.getValue();
 						Fanorona newGame = new Fanorona(location, gameType, numRows, numCols, timerLength, port, address);
-						Client client = new Client(newGame, address, port); //HELP!!!!!!
+						Client client = new Client(newGame, address, port); //TODO HELP!!!!!!
 						newGame.setVisible(true);
 						dispose();
 					}
@@ -339,7 +365,7 @@ public class NewGameWin extends JFrame {
 							if (spinnerTimer.isVisible() && (int) spinnerTimer.getValue() > 0) 
 								timerLength = (int) spinnerTimer.getValue();
 						Fanorona newGame = new Fanorona(location, gameType, numRows, numCols, timerLength, port, address);
-						Server serv = new Server(newGame, port); //HELP!!!!!!!!!!
+						Server serv = new Server(newGame, port); //TODO HELP!!!!!!!!!!
 						newGame.setVisible(true);
 						dispose();
 					}
