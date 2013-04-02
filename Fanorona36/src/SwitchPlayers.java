@@ -10,6 +10,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 
 public class SwitchPlayers extends JFrame {
@@ -21,7 +23,6 @@ public class SwitchPlayers extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	
 
 	/**
 	 * Create the frame.
@@ -32,6 +33,13 @@ public class SwitchPlayers extends JFrame {
 		setBounds(100, 100, 450, 300);
 		this.setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
+		
+		addWindowListener(new WindowAdapter() {
+		      public void windowClosing(WindowEvent e) {
+		          f.board.nextTurn();
+		          setVisible(false);
+		      }
+		});
 		
 		JButton btnNewButton = new JButton("OK!");
 		btnNewButton.addMouseListener(new MouseAdapter() {
