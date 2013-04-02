@@ -22,15 +22,10 @@ public class PauseMenu {
 	protected int curP1Score;
 	protected int curP2Score;
 	private Timer updateText;
-
-	/**
-	 * Launch the application.
-	 */
-	
 	
 	class UpdateTimerListener implements ActionListener {
 		private Fanorona fan;
-        public UpdateTimerListener(Fanorona f) {
+        public UpdateTimerListener(Fanorona f) { //we want to be able to access Fanorona's stuff
         	fan = f;
         }
         public void actionPerformed(ActionEvent e) {
@@ -94,6 +89,7 @@ public class PauseMenu {
 			}
 		});
 		
+		//Main menu button
 		Button button = new Button("Return To Menu");
 		button.setBounds(75, 135, 300, 33);
 		button.addMouseListener(new MouseAdapter() {
@@ -105,7 +101,9 @@ public class PauseMenu {
 				f.dispose();
 				//Launch Menu
 			}
-		});		
+		});	
+		
+		//Rules button
 		Button button_2 = new Button("How To Play");
 		button_2.setBounds(75, 102, 300, 33);
 		button_2.addMouseListener(new MouseAdapter() {
@@ -139,6 +137,7 @@ public class PauseMenu {
 				}
 			}
 		});
+		//since Pause menu is not always shown, we want to continue to update as game goes on
 		updateText = new Timer(1000, new UpdateTimerListener(f));
 		updateText.start();
 		panel.add(gameInfoText);

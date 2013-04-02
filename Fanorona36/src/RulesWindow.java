@@ -10,15 +10,10 @@ public class RulesWindow {
 
 	private JFrame frmHowToPlay;
 
-
-	/**
-	 * Launch the application.
-	 */
-	
-	
     private JEditorPane createEditorPane() {
         JEditorPane editorPane = new JEditorPane();
         editorPane.setEditable(false);
+        //show Rules from cool site
         java.net.URL rulesURL = RulesWindow.class.getResource("/Rules/fanorona_rules.html");
         if (rulesURL != null) {
             try {
@@ -53,7 +48,7 @@ public class RulesWindow {
 		frmHowToPlay.setTitle("-How To Play Fanorona-");
 		frmHowToPlay.setBounds(0, 0, 720, 480);
 		frmHowToPlay.setLocationRelativeTo(null);
-		frmHowToPlay.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frmHowToPlay.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //Close window on X of window
 		frmHowToPlay.getContentPane().setLayout(null);
 		
 		 //Create an editor pane.

@@ -21,16 +21,11 @@ public class Welcome_Menu extends JFrame {
 	private final JButton btnRules = new JButton("Rules");
 
 	/**
-	 * Launch the application.
-	 */
-	
-
-	/**
 	 * Create the frame.
 	 */
 	public Welcome_Menu() {
 		setTitle("Fanorona");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	//quits application on window X
 		int width = 470;
 	    int height = 330;
 	    Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
@@ -42,8 +37,9 @@ public class Welcome_Menu extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+		//New game button
 		JButton btnStartANew = new JButton("Start a New Game");
-		btnStartANew.addActionListener(new ActionListener() {
+		btnStartANew.addActionListener(new ActionListener() { //opens newGame window and closes main menu
 			public void actionPerformed(ActionEvent e) {
 				NewGameWin win = new NewGameWin();
 				win.setVisible(true);
@@ -52,7 +48,9 @@ public class Welcome_Menu extends JFrame {
 		});
 		btnStartANew.setBounds(6, 140, 440, 29);
 		contentPane.add(btnStartANew);
-		btnRules.addActionListener(new ActionListener() {
+		
+		//Rules button
+		btnRules.addActionListener(new ActionListener() { //opens rules window
 			public void actionPerformed(ActionEvent arg0) {
 				RulesWindow win = new RulesWindow();
 				win.makeVisible();
@@ -61,8 +59,9 @@ public class Welcome_Menu extends JFrame {
 		btnRules.setBounds(6, 174, 440, 29);
 		contentPane.add(btnRules);
 		
+		//About button
 		JButton btnAbout = new JButton("About");
-		btnAbout.addActionListener(new ActionListener() {
+		btnAbout.addActionListener(new ActionListener() { //opens about window
 			public void actionPerformed(ActionEvent arg0) {
 				AboutWin win = new AboutWin();
 				win.setVisible(true);
@@ -71,8 +70,9 @@ public class Welcome_Menu extends JFrame {
 		btnAbout.setBounds(6, 209, 440, 29);
 		contentPane.add(btnAbout);
 		
+		//Quit button
 		JButton btnQuit = new JButton("Quit");
-		btnQuit.addActionListener(new ActionListener() {
+		btnQuit.addActionListener(new ActionListener() { //quits applications
 			public void actionPerformed(ActionEvent arg0) {
 				System.exit(0);
 			}
@@ -80,6 +80,7 @@ public class Welcome_Menu extends JFrame {
 		btnQuit.setBounds(6, 243, 440, 29);
 		contentPane.add(btnQuit);
 		
+		//Fanorona text
 		JTextPane txtpnFanorona = new JTextPane();
 		txtpnFanorona.setToolTipText("");
 		txtpnFanorona.setFont(new Font("Lucida Grande", Font.BOLD, 44));
