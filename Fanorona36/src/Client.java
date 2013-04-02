@@ -46,6 +46,7 @@ public class Client extends Thread{
 
 	public void startGame() {
 		Fanorona newGame = new Fanorona(locate, gameType, numRows, numCols, timerLen);
+		newGame.setVisible(true);
 	}
 	
 	public Pair transf2Cartesian(Pair p1) {

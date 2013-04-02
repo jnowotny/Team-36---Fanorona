@@ -56,8 +56,10 @@ public class Server extends Thread{
 			e.printStackTrace();
 		}
 	}
+	// Starts the Fanorona game
 	public void startGame() {
 		Fanorona newGame = new Fanorona(locate, gameType, numRows, numCols, timerLen);
+		newGame.setVisible(true);
 	}
 	
 	public String getConfig() {
