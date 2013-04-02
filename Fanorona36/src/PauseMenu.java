@@ -40,7 +40,7 @@ public class PauseMenu {
     		EventQueue.invokeLater(new Runnable() {
     			public void run() {
     				try {
-    					gameInfoText.setText("Maroon: " + Integer.toString(curP2Score) + " White: " + Integer.toString(curP1Score) + " Moves Remaining: " + Integer.toString(50 - curTurn));
+    					gameInfoText.setText("Maroon: " + Integer.toString(curP2Score) + " White: " + Integer.toString(curP1Score) + " Moves Remaining: " + Integer.toString(fan.getMaxTurns() - curTurn));
     				} catch (Exception e) {
     					e.printStackTrace();
     				}
