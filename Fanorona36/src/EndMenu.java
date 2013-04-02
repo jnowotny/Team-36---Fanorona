@@ -20,7 +20,6 @@ public class EndMenu extends JFrame {
 	private JPanel contentPane;
 	private JLabel lblScoreLabel;
 	private JLabel lblWinnerLabel;
-	private static Fanorona fan;
 
 	/**
 	 * Launch the application.
@@ -31,8 +30,7 @@ public class EndMenu extends JFrame {
 	 * Create the frame.
 	 */
 	
-	public EndMenu(Fanorona f) {
-		fan = f;
+	public EndMenu(final Fanorona f, final boolean timeOut) {
 		setTitle("End Game Menu");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -44,7 +42,7 @@ public class EndMenu extends JFrame {
 		JButton btnNewGame = new JButton("New Game");
 		btnNewGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				fan.dispose();
+				f.dispose();
 				NewGameWin win = new NewGameWin();
 				win.setVisible(true);
 				dispose();
@@ -85,7 +83,7 @@ public class EndMenu extends JFrame {
 		
 		lblScoreLabel = new JLabel();
 		lblScoreLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblScoreLabel.setBounds(166, 78, 120, 16);
+		lblScoreLabel.setBounds(166, 78, 140, 16);
 		lblScoreLabel.setVerifyInputWhenFocusTarget(false);
 		final int curP1Score = f.board.getP1Score();
 		final int curP2Score = f.board.getP2Score();
@@ -106,18 +104,22 @@ public class EndMenu extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					if (curP1Score != 0 && curP2Score != 0)
-						lblWinnerLabel.setText("Draw!");
-					else if (curP1Score == 0)
-						lblWinnerLabel.setText("Player 1 is the winner!");
-					else if (curP1Score == 0)
-						lblWinnerLabel.setText("Player 2 is the winner!");
+					if (timeOut)
+						lblWinnerLabel.setText("Player " + f.board.getBoardState().getNextPlayer() + " is the winnner!");
+					else {
+						if (curP1Score != 0 && curP2Score != 0)
+							lblWinnerLabel.setText("Draw!");
+						else if (curP1Score == 0)
+							lblWinnerLabel.setText("Player 2 is the winner!");
+						else if (curP2Score == 0)
+							lblWinnerLabel.setText("Player 1 is the winner!");
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
-		lblWinnerLabel.setBounds(166, 50, 120, 16);
+		lblWinnerLabel.setBounds(151, 50, 150, 16);
 		panel.add(lblWinnerLabel);
 		
 	}
