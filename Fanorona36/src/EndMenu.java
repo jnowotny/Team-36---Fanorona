@@ -22,11 +22,6 @@ public class EndMenu extends JFrame {
 	private JLabel lblWinnerLabel;
 
 	/**
-	 * Launch the application.
-	 */
-	
-
-	/**
 	 * Create the frame.
 	 */
 	
