@@ -51,7 +51,7 @@ public class NewGameWin extends JFrame {
 	private JLabel lblSetTime;
 	private JLabel lblMilliseconds;
 	private int timerButtonSelected = -1;
-	private int playerNumber = 1;
+	private int playerNumber = -1;
 	private boolean isHuman = true;
 	private JSpinner spinnerTimer;
 	private JLabel lblPort;
@@ -372,11 +372,21 @@ public class NewGameWin extends JFrame {
 		hostAsP1Button.setBounds(279, 114, 47, 18);
 		contentPane.add(hostAsP1Button);
 		hostAsP1Button.setVisible(false);
+		hostAsP1Button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				playerNumber = 1;
+			}
+		});
 		
 		hostAsP2Button = new JRadioButton("P2");
 		hostAsP2Button.setBounds(323, 108, 47, 29);
 		contentPane.add(hostAsP2Button);
 		hostAsP2Button.setVisible(false);
+		hostAsP2Button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				playerNumber = 2;
+			}
+		});
 		
 		playerSelection = new ButtonGroup(); 
 		playerSelection.add(hostAsP1Button);
@@ -386,11 +396,21 @@ public class NewGameWin extends JFrame {
 		hostAsHumanButton.setBounds(370, 113, 85, 20);
 		contentPane.add(hostAsHumanButton);
 		hostAsHumanButton.setVisible(false);
+		hostAsHumanButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				isHuman = true;
+			}
+		});
 		
 		hostAsCpuButton = new JRadioButton("CPU");
 		hostAsCpuButton.setBounds(370, 140, 69, 19);
 		contentPane.add(hostAsCpuButton);
 		hostAsCpuButton.setVisible(false);
+		hostAsCpuButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				isHuman = false;
+			}
+		});
 		
 		humanCpuSelection = new ButtonGroup();
 		humanCpuSelection.add(hostAsHumanButton);
@@ -425,7 +445,7 @@ public class NewGameWin extends JFrame {
 						int numCols = -1;		//numCols has already been decided
 						int timerLength = -1;	//length has already been decided
 						String address = IP1 + "." + IP2 + "." + IP3 + "." + IP4;
-						int port = (int) spinnerPort.getValue();
+						int port = (int) spinnerPort.getValue(); 
 						Fanorona newGame = new Fanorona(location, gameType, numRows, numCols, timerLength, port, address);
 						Client client = new Client(newGame, address, port); //TODO HELP!!!!!!
 						newGame.setVisible(true);
