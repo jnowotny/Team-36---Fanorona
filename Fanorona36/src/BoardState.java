@@ -442,6 +442,14 @@ public class BoardState {
 				if( !(hasCaptures_Move(p, destinations[i])) ){
 					destinations[i] = null;
 				}
+				else if (!(brd.getVisited().isEmpty())) {
+					for(int j = 0; j < brd.getVisited().size(); j++) {
+						if (destinations[i].isEqualTo(brd.getVisited().get(j)) ){
+							destinations[i] = null;
+							break;
+						}
+					}
+				}
 			}
 		}
 		return destinations;

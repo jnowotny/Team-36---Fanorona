@@ -44,6 +44,7 @@ public class Fanorona extends JFrame {
 	private static int numRows;
 	private static int numCols;
 	private static int timerLength;
+	private static String color;
 
 //Internal Classes	
 	
@@ -234,5 +235,18 @@ public class Fanorona extends JFrame {
 		swap.setVisible(false);
 		
 		board.nextTurn();
+	}
+
+	public String getConfig() {
+		String conf;
+		conf = numRows + " " + numCols + " " + color + " " + timerLength;
+ 		return conf;
+	}
+
+	public void setConfig(int row, int col, String color2, int time) {
+		numRows = row;
+		numCols = col;
+		color = color2;
+		timerLength = time;		
 	}
 }

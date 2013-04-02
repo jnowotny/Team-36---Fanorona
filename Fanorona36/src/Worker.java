@@ -52,7 +52,7 @@ public class Worker implements Runnable {
 				Command comm = new Command(inStream);
 
 				if (comm.getType().equals("info")){
-					if(!comm.getContent().equals("BEGIN")) {
+					if(comm.getContent().equals("BEGIN")) {
 						client.startGame();
 					}
 					else {
@@ -63,7 +63,7 @@ public class Worker implements Runnable {
 					}
 				}
 				if (comm.getType().equals("ack")){
-					if(!comm.getContent().equals("READY")) {
+					if(comm.getContent().equals("READY")) {
 						server.startGame();
 						Command begin = new Command("info", "BEGIN"); 
 						begin.send(outStream);

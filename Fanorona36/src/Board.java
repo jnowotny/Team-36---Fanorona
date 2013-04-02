@@ -286,6 +286,12 @@ public class Board extends JPanel {
 			return getP2Score();
 		else return 0;
 	}
+	public int getRows(){
+		return numRows;
+	}
+	public int getCols(){
+		return numCols;
+	}
 	public int getP1Score(){
 		return boardState.getP1Score();
 	}
@@ -303,6 +309,9 @@ public class Board extends JPanel {
 	}
 	public int getCapturedThisTurn(){
 		return capturedThisTurn;
+	}	
+	public void activateRemovables(Pair p1, Pair p2) {
+		boardState.activateRemovables(p1, p2);	
 	}
 	
 //Update-methods
@@ -517,6 +526,5 @@ public class Board extends JPanel {
 		}
 		repaint();
 	}
-
 	
 }
