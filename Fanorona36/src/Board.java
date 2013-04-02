@@ -284,12 +284,6 @@ public class Board extends JPanel {
 	}
 
 /**Get-methods*/
-	public Piece[][] getBoardPieces() {
-		return boardPieces;
-	}
-	public BoardState getBoardState(){
-		return boardState;
-	}
 	public int getTurnCount(){
 		return boardState.getTurnCount();
 	}
@@ -315,18 +309,25 @@ public class Board extends JPanel {
 	public int getCapturedThisTurn(){
 		return capturedThisTurn;
 	}
+	public Pair getSelected(){
+		return selected;
+	}
+	public Piece[][] getBoardPieces() {
+		return boardPieces;
+	}
+	public BoardState getBoardState(){
+		return boardState;
+	}
+	public ArrayList<Pair> getVisited(){
+		return visited;
+	}
 	public boolean isRemoveAvailable() {
 		return removeAvailable;
 	}	
 	public boolean isMakingSacrifice(){
 		return makingSacrifice;
 	}
-	public Pair getSelected(){
-		return selected;
-	}
-	public ArrayList<Pair> getVisited(){
-		return visited;
-	}
+	
 	
 	
 /**Update-methods*/
@@ -343,6 +344,24 @@ public class Board extends JPanel {
 		boardState.updateScores();
 		repaint();
 	}
+	public void updateRemoveAvailable() {
+		if( !(boardState.getRemovables().isEmpty()) ){
+			for(int i = 0; i < boardState.getRemovables().size(); i++){
+				if( !(boardState.getRemovables().get(i).isEmpty()) ){
+					removeAvailable = true;
+					break;					
+				}
+			}
+		}
+		else{
+			removeAvailable = false;
+		}
+	}
+	public void updateSelected(){
+		selected = nextSelected;
+		nextSelected = null;
+	}
+	/**Resets/updates the state of appropriate variables/objects, effectively starting the next turn*/
 	public void nextTurn(){
 		fan.sacrificeButton.setSelected(false);
 		makingSacrifice = false;
@@ -362,28 +381,13 @@ public class Board extends JPanel {
 		
 		removeSacrificed(boardState.getCurrentPlayer());
 		setHighlightAll(false, true);
-		if (this.getTurnCount() <= 1)
+		if (this.getTurnCount() <= 1) {
 			JOptionPane.showMessageDialog(new JFrame(), "The Game Will Begin Now!");
-		else JOptionPane.showMessageDialog(new JFrame(), "Next User's Turn!");
-	}
-	public void updateRemoveAvailable() {
-		if( !(boardState.getRemovables().isEmpty()) ){
-			for(int i = 0; i < boardState.getRemovables().size(); i++){
-				if( !(boardState.getRemovables().get(i).isEmpty()) ){
-					removeAvailable = true;
-					break;					
-				}
-			}
 		}
-		else{
-			removeAvailable = false;
+		else {
+			JOptionPane.showMessageDialog(new JFrame(), "Next User's Turn!");
 		}
 	}
-	public void updateSelected(){
-		selected = nextSelected;
-		nextSelected = null;
-	}
-
 /**Game-logic methods*/
 	/**Make a moveType move from position p1 to p2*/
 	public void move(Pair p1, Pair p2, String moveType){

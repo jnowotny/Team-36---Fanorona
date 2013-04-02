@@ -6,13 +6,13 @@ public class BoardState {
 	/**Basic data-types*/
 	private int numRows;
 	private int numCols;
-	private int[][] boardGrid;
 	private int p1Score;
 	private int p2Score;
 	private int turnCount = 0;
 	private int currentPlayer = 2;		//1 or 2 (player), 0: error
 
 	/**Objects*/
+	private int[][] boardGrid;
 	private Board brd;
 	ArrayList<ArrayList<Pair>> removables;
 	
@@ -21,24 +21,31 @@ public class BoardState {
 		brd = b;
 		numRows = rows;
 		numCols = columns;
+		turnCount = 0;
+		currentPlayer = 2;
 		boardGrid = new int[numRows][numCols];
 		removables = new ArrayList<ArrayList<Pair>>();
 		removables.clear();
 		
+		/*Initialize rows below the middle row to 1 (white)
+		 *Initialize rows above the middle row to 2 (maroon)*/
 		for(int i = 0; i < numRows/2; i++){
 			for(int j = 0; j < numCols; j++){
 				boardGrid[i][j] = 2;
 				boardGrid[i + numRows/2 + 1][j] = 1;
 			}
 		}
+		//Initialize the left half of the middle row alternating 2/1 from the left
 		for(int j = 0; j < numCols/2; j+=2){
 			boardGrid[numRows/2][j] = 2;
 			boardGrid[numRows/2][j+1] = 1;
 		}
+		//Initialize the right half of the middle row to alternating 1/2 from the right 
 		for(int j = numCols - 1; j > numCols/2; j -= 2){
 			boardGrid[numRows/2][j] = 1;
 			boardGrid[numRows/2][j-1] = 2;
 		}
+		//Initialize the middle-most position to 0 (empty)
 		boardGrid[numRows/2][numCols/2] = 0;
 	}
 	
@@ -88,6 +95,7 @@ public class BoardState {
 	public void setP2Score(int newP2Score){
 		p2Score = newP2Score;
 	}
+	/**Counts the number of pieces for each player and calculates their respective scores*/
 	public void updateScores(){
 		int p1Count = 0;
 		int p2Count = 0;
@@ -107,6 +115,7 @@ public class BoardState {
 	public void updateTurnCount(){
 		turnCount++;
 	}
+	/**Sets the current player to next player*/
 	public void nextCurrentPlayer(){
 		if(currentPlayer == 2){
 			currentPlayer = 1;
@@ -492,6 +501,7 @@ public class BoardState {
 		return false;
 	}
 
+	/**Finds available move destinations for p and returns the available move destinations that satisfy a capture move*/
 	public Pair[] checkCaptureDestinations(Pair p){
 		Pair[] destinations = checkDestinations(p);
 		for(int i = 0; i < 8; i++){
@@ -528,13 +538,9 @@ public class BoardState {
 		ArrayList<ArrayList<Pair>> capturables = new ArrayList<ArrayList<Pair>>();
 		capturables = getCaptures_Move(p1,p2);
 		if( !(capturables.get(0).isEmpty()) ){
-			//TODO remove this line. HOWEVER, it demonstrated some odd behavior of the program not closing from certain windows
-//			System.out.println("Array1  x: " + capturables.get(0).get(0).getFirst() + "  y: " + capturables.get(0).get(0).getSecond());
 			return true;
 		}
 		else if( !(capturables.get(1).isEmpty()) ) {
-			//TODO remove this line. HOWEVER, it demonstrated some odd behavior of the program not closing from certain windows
-//			System.out.println("Array2  x: " + capturables.get(1).get(0).getFirst() + "  y: "+capturables.get(1).get(0).getSecond());
 			return true;
 		}
 		else {

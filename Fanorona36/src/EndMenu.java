@@ -20,15 +20,7 @@ public class EndMenu extends JFrame {
 	private JPanel contentPane;
 	private JLabel lblScoreLabel;
 	private JLabel lblWinnerLabel;
-
-	/**
-	 * Launch the application.
-	 */
 	
-
-	/**
-	 * Create the frame.
-	 */
 	
 	public EndMenu(final Fanorona f, final boolean timeOut) {
 		setTitle("End Game Menu");

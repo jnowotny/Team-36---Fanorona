@@ -18,29 +18,11 @@ import javax.swing.JLabel;
 import java.awt.Color;
 
 public class Fanorona extends JFrame {
-//Data members
 	private static final long serialVersionUID = 3335293785778663915L;
-	private JPanel contentPane;
+
+/**Data members*/
 	
-	private Timer countdown;
-	private Timer gameLoop;
-	
-	private Label timeLabel;
-	private JLabel p1Score;
-	private JLabel p2Score;
-	
-	private Button skipbutton;
-	private Button btnMainMenu;
-	private Button btnPause;
-	
-	protected JToggleButton sacrificeButton;
-	
-	protected Board board;
-	private PauseMenu pause;
-	private JFrame swap;
-	private Color maroon = new Color(80,0, 30);
-	
-	//private int timeRemaining = 25;//TODO make this value correspond to the timer value input by user in new game menu
+	/**Basic data-types*/
 	private boolean timeOut;
 	private int curP1Score;
 	private int curP2Score;
@@ -53,7 +35,22 @@ public class Fanorona extends JFrame {
 	private static int timeRemaining;
 	private static String color;
 	
+	/**Objects*/
 	
+	private JPanel contentPane;
+	private Timer countdown;
+	private Timer gameLoop;
+	private Label timeLabel;
+	private JLabel p1Score;
+	private JLabel p2Score;
+	private Button skipbutton;
+	private Button btnMainMenu;
+	private Button btnPause;
+	protected JToggleButton sacrificeButton;
+	protected Board board;
+	private PauseMenu pause;
+	private JFrame swap;
+	private Color maroon = new Color(80,0, 30);
 
 
 /**Constructor*/
@@ -196,15 +193,8 @@ public class Fanorona extends JFrame {
 		}
 	}
 
-/**Internal Classes*/	
-	//TODO reset timer when nextTurn() is called in board
-	/*TODO add game condition: 
-	 * 	if( (unable to make a move) && (board.getVisited().isEmpty) ){
-	 * 		currentPlayer LOSES!
-	 * 	}
-	 */
-	
-	//creates the handler for updating the timer!
+/**Internal Classes*/		
+	/**Class that handles updating of the game timer!*/
 	class CountdownTimerListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
         	if ((!pause.isVisible()) && (!swap.isVisible())) {
@@ -213,10 +203,8 @@ public class Fanorona extends JFrame {
 	            else {
 	                timeLabel.setText("Time's up!");
 	                if (board.getVisited().size() > 0) {
-	                	//JOptionPane.showMessageDialog(swap, "Next User's Turn!");
-	                	//swap.setVisible(true);
 	                	countdown.stop();
-	                	timeRemaining = timerSet + 1;//TODO make this value correspond to the timer value input by user in new game menu
+	                	timeRemaining = timerSet + 1;
 	                	board.nextTurn();
 	                	countdown.start();
 	                } else {
@@ -231,7 +219,7 @@ public class Fanorona extends JFrame {
         	}
         }
     }
-	//creates the handler for updating the timer!
+	/**Class that handles game logic*/
 	class GameLoopListener implements ActionListener {
 		private Fanorona fan;
         public GameLoopListener(Fanorona f) {
@@ -239,13 +227,12 @@ public class Fanorona extends JFrame {
         }
 
 		public void actionPerformed(ActionEvent e) {
-//        	final int maxTurn = 10*numRows;
-        	
         	fan.board.updateScores();
     		curP1Score = fan.board.getP1Score();
     		curP2Score = fan.board.getP2Score();
     		board.updateRemoveAvailable();
     		
+    		//Set current scores for each player
     		EventQueue.invokeLater(new Runnable() {
     			public void run() {
     				try {
@@ -257,15 +244,16 @@ public class Fanorona extends JFrame {
     			}
     		});
         	
-        	//Any other Looping actions we need done here
+        	//Ends the game if either player has no pieces remaining
         	if ((fan.board.getP1Score() == 0) || (fan.board.getP2Score() == 0)) {
         		EndMenu end = new EndMenu(Fanorona.this, timeOut);
         		end.setVisible(true);
         		fan.gameLoop.stop();
         		fan.dispose();
         	}
+        	//Ends the game if 
         	if (fan.board.getTurnCount() == maxTurns) {
-        		EndMenu end = new EndMenu(Fanorona.this, timeOut);
+        		EndMenu end = new EndMenu(Fanorona.this, false);
         		end.setVisible(true);
         		fan.gameLoop.stop();
         		fan.dispose();
