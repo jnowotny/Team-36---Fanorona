@@ -44,6 +44,11 @@ public class Fanorona extends JFrame {
 	private static int numRows;
 	private static int numCols;
 	private static int timerLength;
+	private static int port;
+	private static String host;
+	
+	Server fanoServer = new Server(this, port);
+	Client fanoClient = new Client(this, host, port);
 
 //Internal Classes	
 	
