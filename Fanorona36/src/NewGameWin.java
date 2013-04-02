@@ -52,7 +52,7 @@ public class NewGameWin extends JFrame {
 	private JLabel lblMilliseconds;
 	private int timerButtonSelected = -1;
 	private int playerNumber = -1;
-	private boolean isHuman = true;
+	private int isHuman = -1;
 	private JSpinner spinnerTimer;
 	private JLabel lblPort;
 	private JSpinner spinnerPort;
@@ -398,7 +398,7 @@ public class NewGameWin extends JFrame {
 		hostAsHumanButton.setVisible(false);
 		hostAsHumanButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				isHuman = true;
+				isHuman = 1;
 			}
 		});
 		
@@ -408,7 +408,7 @@ public class NewGameWin extends JFrame {
 		hostAsCpuButton.setVisible(false);
 		hostAsCpuButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				isHuman = false;
+				isHuman = 0;
 			}
 		});
 		
@@ -421,7 +421,10 @@ public class NewGameWin extends JFrame {
 		btnCreateNewGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (comboLocation.getSelectedIndex() == 1) { //local game
-					if (timerButtonSelected > -1) {
+					boolean playerNeeded = true;
+					if (comboType.getSelectedIndex() == 2 && playerNumber == -1)
+						playerNeeded = false;
+					if (timerButtonSelected > -1 && comboType.getSelectedIndex() > 0 && playerNeeded) {
 						int location = 1; //LOCAL
 						int gameType = comboType.getSelectedIndex(); //0 - PvP; 1 - PvC; 2 - CvC
 						int numRows = (int) spinnerRows.getValue();
@@ -438,22 +441,23 @@ public class NewGameWin extends JFrame {
 					}
 				}
 				else if (comboLocation.getSelectedIndex() == 2) { //connect to game (client)
-					if (timerButtonSelected > -1) {
-						int location = 2; 		//CLIENT
-						int gameType = -1; 		//game type has already been decided
-						int numRows = -1; 		//numRows has already been decided
-						int numCols = -1;		//numCols has already been decided
-						int timerLength = -1;	//length has already been decided
-						String address = IP1 + "." + IP2 + "." + IP3 + "." + IP4;
-						int port = (int) spinnerPort.getValue(); 
-						Fanorona newGame = new Fanorona(location, gameType, numRows, numCols, timerLength, port, address);
-						Client client = new Client(newGame, address, port); //TODO HELP!!!!!!
-						newGame.setVisible(true);
-						dispose();
-					}
+					int location = 2; 		//CLIENT
+					int gameType = -1; 		//game type has already been decided
+					int numRows = -1; 		//numRows has already been decided
+					int numCols = -1;		//numCols has already been decided
+					int timerLength = -1;	//length has already been decided
+					String address = IP1 + "." + IP2 + "." + IP3 + "." + IP4;
+					int port = (int) spinnerPort.getValue(); 
+					Fanorona newGame = new Fanorona(location, gameType, numRows, numCols, timerLength, port, address);
+					Client client = new Client(newGame, address, port); //TODO HELP!!!!!!
+					newGame.setVisible(true);
+					dispose();
 				}
-				else if (comboLocation.getSelectedIndex() == 1) { //host a game (server)
-					if (timerButtonSelected > -1) {
+				else if (comboLocation.getSelectedIndex() == 3) { //host a game (server)
+					boolean humanCPUNeeded = true;
+					if (comboType.getSelectedIndex() == 2 && isHuman == -1)
+						humanCPUNeeded = false;
+					if (timerButtonSelected > -1 && comboType.getSelectedIndex() > 0 && playerNumber > -1 && humanCPUNeeded) {
 						int location = 3; //SERVER
 						int gameType = comboType.getSelectedIndex(); //0 - PvP; 1 - PvC; 2 - CvC
 						int numRows = (int) spinnerRows.getValue();

@@ -5,6 +5,7 @@ import java.awt.Label;
 import java.awt.Toolkit;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.Timer;
@@ -36,7 +37,7 @@ public class Fanorona extends JFrame {
 	
 	protected Board board;
 	private PauseMenu pause;
-	private SwitchPlayers swap;
+	private JFrame swap;
 	private Color maroon = new Color(80,0, 30);
 	
 	//private int timeRemaining = 25;//TODO make this value correspond to the timer value input by user in new game menu
@@ -90,7 +91,7 @@ public class Fanorona extends JFrame {
 	//////////////
 		board = new Board(numRows, numCols, this);
 		pause = new PauseMenu(this);
-		swap = new SwitchPlayers(this);
+		swap = new JFrame();
 		timeOut = false;
 	//////////////
 		setResizable(false);
@@ -155,7 +156,11 @@ public class Fanorona extends JFrame {
 		skipbutton.setBounds(157, 23, 112, 29);
 		skipbutton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				countdown.stop();
+				timeRemaining = timerSet + 1;
+				timeLabel.setText("Next Turn!");
 				board.nextTurn();
+				countdown.start();
 			}
 		});
 		skipbutton.setVisible(false);
@@ -177,17 +182,18 @@ public class Fanorona extends JFrame {
 		sacrificeButton.setVisible(true);
 		board.add(sacrificeButton);
 		
-		if (timerSet > 0) {
-			countdown = new Timer(1000, new CountdownTimerListener());
-			countdown.start();
-		}
-		
 		gameLoop = new Timer(100, new GameLoopListener(this));
 		gameLoop.start();
 
 		swap.setVisible(false);
 		
+		
 		board.nextTurn();
+		
+		if (timerSet > 0) {
+			countdown = new Timer(1000, new CountdownTimerListener());
+			countdown.start();
+		}
 	}
 
 /**Internal Classes*/	
@@ -207,8 +213,12 @@ public class Fanorona extends JFrame {
 	            else {
 	                timeLabel.setText("Time's up!");
 	                if (board.getVisited().size() > 0) {
-	                	swap.setVisible(true);
+	                	//JOptionPane.showMessageDialog(swap, "Next User's Turn!");
+	                	//swap.setVisible(true);
+	                	countdown.stop();
 	                	timeRemaining = timerSet + 1;//TODO make this value correspond to the timer value input by user in new game menu
+	                	board.nextTurn();
+	                	countdown.start();
 	                } else {
 	                	dispose();
 	                	timeOut = true;
@@ -281,6 +291,7 @@ public class Fanorona extends JFrame {
 	        		}
         		}
         	}
+        	
         	//Else show pieces that can be moved
         	else{
         		sacrificeButton.setVisible(true);
@@ -297,6 +308,12 @@ public class Fanorona extends JFrame {
     }
 	
 /**Get-Methods*/
+	public int getNumRows() {
+		return numRows;
+	}
+	public int getNumCols() {
+		return numCols;
+	}
 	public int getP1Score() {
 		return curP1Score;
 	}
