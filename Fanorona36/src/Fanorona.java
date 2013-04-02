@@ -165,7 +165,7 @@ public class Fanorona extends JFrame {
 	}
 	
 //Constructor
-	public Fanorona(int location, int gameType, int numRows, int numCols, int timer, int port, String address) {
+	public Fanorona(int location, int gameType, int numRows, int numCols, int timer) {
 	/*////////////////////////////////
 	LOCATION
 		- 1: local game
@@ -183,12 +183,7 @@ public class Fanorona extends JFrame {
 		
 	TIMER
 		- -1: no timer (local/server) OR you don't get to decide! (client)
-		
-	PORT
-		- -1: not needed (local)
-	
-	ADDRESS
-		- "": not needed (local/server)
+
 	*///////////////////////////////
 		
 		
@@ -285,12 +280,6 @@ public class Fanorona extends JFrame {
 		swap.setVisible(false);
 		
 		board.nextTurn();
-	}
-
-	public String getConfig() {
-		String conf;
-		conf = numRows + " " + numCols + " " + color + " " + timerLength;
- 		return conf;
 	}
 
 	public void setConfig(int row, int col, String color2, int time) {

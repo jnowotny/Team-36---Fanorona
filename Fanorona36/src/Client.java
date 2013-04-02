@@ -3,45 +3,35 @@ import java.net.*;
 import java.util.LinkedList;
 import java.util.StringTokenizer;
 
-public class Client {
+public class Client extends Thread{
 
 	public boolean recv = true;
 	protected int portNum;
 	protected String hostName;
-	Socket inSock;
-	Fanorona fan;
+	protected int gameType;
+	protected int timerLen;
+	protected int locate;
+	protected int numRows;
+	protected int numCols;
+	protected String color;
+	Socket clientSocket;
+	Fanorona newGame;
 		
     /**
-	@param f The game the client will command.
+	@param location The game the client will command.
 	@param host The Hostname of the server.
 	@param port The Port the server is using.*/
-	public Client(Fanorona f, String host, int port) {
-		hostName = host;
-		portNum = port;
-		fan = f;
+	public Client(int location, String host, int port) {
+//		hostName = host;
+//		portNum = port;
+		locate = location;
+		hostName = "127.0.0.1";
+		portNum = 11192;
 		try {
 			final Socket clientSocket = new Socket(InetAddress.getByName(hostName), portNum);
-			setSocket(clientSocket);
 		    /* assert:  Socket successfully created */
-			Thread tClient = new Thread(new Worker(inSock, "client", this));
+			Thread tClient = new Thread(new Worker(clientSocket, "client", this));
 			tClient.start();
-//		    while(recv){
-//	    		EventQueue.invokeLater(new Runnable() {
-//	    			public void run() {
-//	    				try {
-//	    					Thread tClient = new Thread(new Worker(clientSocket, "client", recv));
-//	    					tClient.start();
-//	    				} catch (Exception e) {
-//	    					System.exit(1);
-//	    					System.err.println("Accept failed.");
-//	    					e.printStackTrace();
-//	    				}
-//	    			}
-//	    		});
-//
-//		    }
-//		    if (clientSocket.isConnected())
-//		    clientSocket.close();
 		}
 		
 		catch (UnknownHostException e) {
@@ -55,13 +45,7 @@ public class Client {
 	}
 
 	public void startGame() {
-		//TODO Make function which starts a game with the selected config
-//		fan.startGame();
-		
-	}
-	
-	public void setSocket(Socket sock) {
-		inSock = sock;
+		Fanorona newGame = new Fanorona(locate, gameType, numRows, numCols, timerLen);
 	}
 	
 	public Pair transf2Cartesian(Pair p1) {
@@ -69,7 +53,7 @@ public class Client {
 		int x = p1.getFirst();
 		int y = p1.getSecond();
 		x++;
-		y = fan.board.getRows()-(p1.getSecond())+1;
+		y = newGame.board.getRows()-(p1.getSecond())+1;
 		fixed = new Pair(x,y);
 		return fixed;
 	}
@@ -79,7 +63,7 @@ public class Client {
 		int x = p1.getFirst();
 		int y = p1.getSecond();
 		x--;
-		y = fan.board.getRows()-(p1.getSecond())-1;
+		y = newGame.board.getRows()-(p1.getSecond())-1;
 		fixed = new Pair(x,y);
 		return fixed;
 	}
@@ -89,7 +73,7 @@ public class Client {
 		q = transf2Cartesian(q);
 		if (type.equals("A")) {
 			try {
-				OutputStream outStream = inSock.getOutputStream();
+				OutputStream outStream = clientSocket.getOutputStream();
 				Command move = new Command("capture_move", "A"+" "+p.getFirst()+" "+p.getSecond()+" "+q.getFirst()+" "+q.getSecond()+" ");
 				move.send(outStream);
 			} catch (IOException e) {
@@ -98,7 +82,7 @@ public class Client {
 		}
 		if (type.equals("W")) {
 			try {
-				OutputStream outStream = inSock.getOutputStream();
+				OutputStream outStream = clientSocket.getOutputStream();
 				Command move = new Command("capture_move", "W"+" "+p.getFirst()+" "+p.getSecond()+" "+q.getFirst()+" "+q.getSecond()+" ");
 				move.send(outStream);
 			} catch (IOException e) {
@@ -107,7 +91,7 @@ public class Client {
 		}
 		if (type.equals("P")) {
 			try {
-				OutputStream outStream = inSock.getOutputStream();
+				OutputStream outStream = clientSocket.getOutputStream();
 				Command move = new Command("paika_move", "P"+" "+p.getFirst()+" "+p.getSecond()+" "+q.getFirst()+" "+q.getSecond()+" ");
 				move.send(outStream);
 			} catch (IOException e) {
@@ -116,7 +100,7 @@ public class Client {
 		}
 		if (type.equals("S")) {
 			try {
-				OutputStream outStream = inSock.getOutputStream();
+				OutputStream outStream = clientSocket.getOutputStream();
 				Command move = new Command("sacrifice_move", "S"+" "+p.getFirst()+" "+p.getSecond()+" "+q.getFirst()+" "+q.getSecond()+" ");
 				move.send(outStream);
 			} catch (IOException e) {
@@ -127,17 +111,16 @@ public class Client {
 
 	public void configGame(String content) {
 	    StringTokenizer sToken = new StringTokenizer(content, " ");
-	    int row = Integer.parseInt(sToken.nextToken());
-	    int col  = Integer.parseInt(sToken.nextToken());
-	    String color  = sToken.nextToken();
-	    int time  = Integer.parseInt(sToken.nextToken());
-		fan.setConfig(row, col, color, time);
+	    numCols  = Integer.parseInt(sToken.nextToken());
+	    numRows = Integer.parseInt(sToken.nextToken());
+	    color  = sToken.nextToken();
+	    timerLen  = Integer.parseInt(sToken.nextToken());
 		
 	}
 
 	public void setEndCond(int end) {
 		if (end == 0) {
-			//WINNER
+			//WINNER;
 		}
 		if (end == 1) {
 			//TIE
@@ -169,16 +152,22 @@ public class Client {
 	    	p1 = transf2Matrix(p1);
 	    	p2 = new Pair(Integer.parseInt(parts.nextToken()),Integer.parseInt(parts.nextToken()));
 	    	p2 = transf2Matrix(p2);
-			fan.board.move(p1, p2, moveType);
+			newGame.board.move(p1, p2, moveType);
 			if ((moveType != "P") && (moveType != "S")) {
-				fan.board.activateRemovables(p1, p2);
+				newGame.board.activateRemovables(p1, p2);
 			}
 			if (moveType == "A") {
-				fan.board.removeRemovables(0); //0 for A; 1 for W
+				newGame.board.removeRemovables(0); //0 for A; 1 for W
 			}
 			else if (moveType == "W") {
-				fan.board.removeRemovables(1); //0 for A; 1 for W
+				newGame.board.removeRemovables(1); //0 for A; 1 for W
 			}
 	    }
+	}
+	
+	public void run() {
+		while (true) {
+			
+		}
 	}
 }

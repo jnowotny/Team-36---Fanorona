@@ -35,17 +35,23 @@ public class Worker implements Runnable {
     
 	@Override
 	public void run() {
-		try{
-			InputStream inStream = socket.getInputStream();
+		try {
 			OutputStream outStream = socket.getOutputStream();
+			outStream.flush();
+			InputStream inStream = socket.getInputStream();
 			//Send WELCOME command if server
-			if (workType.equals("server")) {
+			if ((workType.equals("server"))&&(socket.isBound())) {
 				Command welcome = new Command("ack","WELCOME");
 				welcome.send(outStream);
 			}
+			else if (!(workType.equals("client"))){
+				socket.close();
+				server.servSock.close();
+				return;
+			}
 			//Send server info
 			if (workType.equals("server")) {
-				Command info = new Command("info",server.getConfigGame());
+				Command info = new Command("info",server.getGameConfig());
 				info.send(outStream);
 			}
 			while(true){
@@ -108,16 +114,21 @@ public class Worker implements Runnable {
 						client.setEndCond(1);
 						break;
 					}
-					if(!comm.getContent().equals("LOSER")) {
+					if(comm.getContent().equals("LOSER")) {
 						client.setEndCond(2);
 						break;
 					}
 				}
 			}
 			socket.close();
-			server.servSock.close();
-			
-		} catch (IOException e) {System.err.println("Message error in Worker: " + e.getMessage());}
+			if (workType.equals("server")) {
+				server.servSock.close();
+			}
+		} 
+		
+		catch (IOException e) {
+			System.err.println("Message error in Worker: " + e.getMessage());
+		}
 	
 	}
 

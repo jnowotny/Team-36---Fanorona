@@ -1,5 +1,6 @@
 //import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.Toolkit;
 
 import javax.swing.ButtonGroup;
@@ -98,7 +99,7 @@ public class NewGameWin extends JFrame {
 		});
 		contentPane.add(btnNewButton_2);
 		
-		String[] gameTypes = new String[] {"Player 1 vs. Player 2", "Player vs. CPU", "CPU vs. CPU"};
+		String gameTypes[] = {"Player 1 vs. Player 2", "Player vs. CPU", "CPU vs. CPU"};
 		comboType = new JComboBox<String>(gameTypes);
 		comboType.setBounds(107, 111, 175, 27);
 		comboType.setToolTipText("");
@@ -110,12 +111,13 @@ public class NewGameWin extends JFrame {
 		lblGameLocation.setFont(new Font("Lucida Grande", Font.BOLD, 13));
 		contentPane.add(lblGameLocation);
 		
-		String[]gameLocations = new String[] {"--Select Game--", "New Local Game", "Connect to Game", "Host Game"};
+		String gameLocations[] = {"--Select Game--", "New Local Game", "Connect to Game", "Host Game"};
 		comboLocation = new JComboBox<String>(gameLocations);
 		comboLocation.setBounds(134, 76, 175, 27);
 		comboLocation.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (comboLocation.getSelectedIndex() == 0) {
+				int selInd = comboLocation.getSelectedIndex();
+				if (selInd == 0) {
 					lblGameType.setVisible(false);
 					comboType.setVisible(false);
 					lblNewLabel.setVisible(false);
@@ -137,7 +139,7 @@ public class NewGameWin extends JFrame {
 					IP3.setVisible(false);
 					IP4.setVisible(false);
 				}
-				else if (comboLocation.getSelectedIndex() == 1) { //local game
+				else if (selInd == 1) { //local game
 					lblGameType.setVisible(true);
 					comboType.setVisible(true);
 					lblNewLabel.setVisible(true);
@@ -156,7 +158,7 @@ public class NewGameWin extends JFrame {
 					IP3.setVisible(false);
 					IP4.setVisible(false);
 				}
-				else if (comboLocation.getSelectedIndex() == 2) { //connect to game
+				else if (selInd == 2) { //connect to game
 					lblGameType.setVisible(false);
 					comboType.setVisible(false);
 					lblNewLabel.setVisible(false);
@@ -179,7 +181,7 @@ public class NewGameWin extends JFrame {
 					lblPort.setVisible(true);
 					spinnerPort.setVisible(true);
 				}
-				else if (comboLocation.getSelectedIndex() == 3) { //host game
+				else if (selInd == 3) { //host game
 					lblGameType.setVisible(true);
 					comboType.setVisible(true);
 					lblNewLabel.setVisible(true);
@@ -294,7 +296,8 @@ public class NewGameWin extends JFrame {
 		btnCreateNewGame.setBounds(71, 273, 319, 29);
 		btnCreateNewGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (comboLocation.getSelectedIndex() == 1) { //local game
+				int selInd = comboLocation.getSelectedIndex();
+				if (selInd == 1) { //local game
 					if (timerButtonSelected > -1) {
 						int location = 1; //LOCAL
 						int gameType = comboType.getSelectedIndex(); //0 - PvP; 1 - PvC; 2 - CvC
@@ -306,43 +309,41 @@ public class NewGameWin extends JFrame {
 						if (timerButtonSelected == 1) 
 							if (spinnerTimer.isVisible() && (int) spinnerTimer.getValue() > 0) 
 								timerLength = (int) spinnerTimer.getValue();	
-						Fanorona newGame = new Fanorona(location, gameType, numRows, numCols, timerLength, port, address);
+						Fanorona newGame = new Fanorona(location, gameType, numRows, numCols, timerLength);
 						newGame.setVisible(true);
 						dispose();
 					}
 				}
-				else if (comboLocation.getSelectedIndex() == 2) { //connect to game (client)
-					if (timerButtonSelected > -1) {
-						int location = 2; 		//CLIENT
-						int gameType = -1; 		//game type has already been decided
-						int numRows = -1; 		//numRows has already been decided
-						int numCols = -1;		//numCols has already been decided
-						int timerLength = -1;	//length has already been decided
-						String address = IP1 + "." + IP2 + "." + IP3 + "." + IP4;
-						int port = (int) spinnerPort.getValue();
-						Fanorona newGame = new Fanorona(location, gameType, numRows, numCols, timerLength, port, address);
-						Client client = new Client(newGame, address, port); //HELP!!!!!!
-						newGame.setVisible(true);
-						dispose();
-					}
+				else if (selInd == 2) { //connect to game (client)
+					int location = 2; 		//CLIENT
+					String address = IP1.getText() + "." + IP2.getText() + "." + IP3.getText() + "." + IP4.getText();
+					int port = (int) spinnerPort.getValue();
+					Thread cliThread = new Thread(new Client(location, address, port));
+					cliThread.start();
+//					Client client = new Client(location, address, port);
+//					Fanorona newGame = new Fanorona(location, gameType, numRows, numCols, timerLength, port, address);
+//					Client client = new Client(newGame, address, port); //HELP!!!!!!
+//					newGame.setVisible(true);
+					dispose();
+				
 				}
-				else if (comboLocation.getSelectedIndex() == 1) { //host a game (server)
-					if (timerButtonSelected > -1) {
-						int location = 3; //SERVER
-						int gameType = comboType.getSelectedIndex(); //0 - PvP; 1 - PvC; 2 - CvC
-						int numRows = (int) spinnerRows.getValue();
-						int numCols = (int) spinnerCols.getValue();
-						int timerLength = -1;
-						String address = "";
-						int port = (int) spinnerPort.getValue();
-						if (timerButtonSelected == 1) 
-							if (spinnerTimer.isVisible() && (int) spinnerTimer.getValue() > 0) 
-								timerLength = (int) spinnerTimer.getValue();
-						Fanorona newGame = new Fanorona(location, gameType, numRows, numCols, timerLength, port, address);
-						Server serv = new Server(newGame, port); //HELP!!!!!!!!!!
-						newGame.setVisible(true);
-						dispose();
-					}
+				else if (selInd == 3) { //host a game (server)
+					int location = 3; //SERVER
+					int gameType = comboType.getSelectedIndex(); //0 - PvP; 1 - PvC; 2 - CvC
+					int numRows = (int) spinnerRows.getValue();
+					int numCols = (int) spinnerCols.getValue();
+					int timerLength = -1;
+					String address = "";
+					int port = (int) spinnerPort.getValue();
+					if (timerButtonSelected == 1) 
+						if (spinnerTimer.isVisible() && (int) spinnerTimer.getValue() > 0) 
+							timerLength = (int) spinnerTimer.getValue();
+					Thread serThread = new Thread(new Server(location, gameType, numRows, numCols, timerLength, port));
+//					Server serv = new Server(location, gameType, numRows, numCols, timerLength, port);
+//					Fanorona newGame = new Fanorona(location, gameType, numRows, numCols, timerLength, port, address);
+//			    	Server serv = new Server(newGame, port); //HELP!!!!!!!!!!
+//					newGame.setVisible(true);
+					dispose();
 				}
 			}
 		});

@@ -78,8 +78,8 @@ public class Command {
 			return s;
 	}
 	
-    /** Returns a byte array of the Message
-	@return The byte array of the Message */
+    /** Returns a byte array of the Command
+	@return The byte array of the Command */
     public byte[] getBytes(){
         String s = type + fieldTerminator + content + fieldTerminator;
 	return s.getBytes();
