@@ -210,12 +210,12 @@ public class Fanorona extends JFrame {
 	                	swap.setVisible(true);
 	                	timeRemaining = timerSet + 1;//TODO make this value correspond to the timer value input by user in new game menu
 	                } else {
+	                	dispose();
 	                	timeOut = true;
 	                	countdown.stop();
 	                	EndMenu end = new EndMenu(Fanorona.this, timeOut);
 	                	end.setVisible(true);
 	                	swap.dispose();
-	                	dispose();
 	                }
 	            }
         	}
@@ -251,12 +251,14 @@ public class Fanorona extends JFrame {
         	if ((fan.board.getP1Score() == 0) || (fan.board.getP2Score() == 0)) {
         		EndMenu end = new EndMenu(Fanorona.this, timeOut);
         		end.setVisible(true);
-        		dispose();
+        		fan.gameLoop.stop();
+        		fan.dispose();
         	}
         	if (fan.board.getTurnCount() == maxTurns) {
         		EndMenu end = new EndMenu(Fanorona.this, timeOut);
         		end.setVisible(true);
-        		dispose();
+        		fan.gameLoop.stop();
+        		fan.dispose();
         	}
         	
         	//Enable player to end turn early with skipbutton if a capture has been made

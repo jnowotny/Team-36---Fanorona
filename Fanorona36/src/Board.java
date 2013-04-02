@@ -253,6 +253,14 @@ public class Board extends JPanel {
 	    g2.setStroke(new BasicStroke(3));
 	    g2.setColor(maroon);
 		
+	    if( (numRows == 1) && (numCols != 1)) {
+	    	g2.drawLine(xStartCoord + sqSideLen, yStartCoord + sqSideLen, xStartCoord + sqSideLen*(numCols), yStartCoord + sqSideLen);
+	    }
+	    else if( (numCols == 1) && (numRows != 1)) {
+	    	g2.drawLine(xStartCoord + sqSideLen, yStartCoord + sqSideLen, xStartCoord + sqSideLen, yStartCoord + sqSideLen*(numRows));
+	    }
+	    
+	    //Draws the board
 	    for(int i = 1; i < numRows; i++){
 	    	for(int j = 1; j < numCols; j ++){
 	    		g2.drawRect(xStartCoord + sqSideLen*(j), yStartCoord + sqSideLen*(i), sqSideLen, sqSideLen);

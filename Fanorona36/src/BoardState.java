@@ -146,7 +146,64 @@ public class BoardState {
 		int xPos = p.getFirst();
 		int yPos = p.getSecond();
 		
-		if(yPos == 0){
+		//Special board case (numRows == 1)
+		if( numRows == 1 ) {
+			//Left-most 
+			if(xPos == 0) {
+				//E:3
+				if(checkAdjacent(p,3) == 0) {
+					destinations[3] = new Pair(xPos+1, yPos);
+				}
+			}
+			//Right-most
+			else if(xPos == numCols-1) {
+				//W:7
+				if(checkAdjacent(p,7) == 0) {
+					destinations[7] = new Pair(xPos-1, yPos);
+				}
+			}
+			//In-between
+			else {
+				//E:3
+				if(checkAdjacent(p,3) == 0) {
+					destinations[3] = new Pair(xPos+1, yPos);
+				}
+				//W:7
+				if(checkAdjacent(p,7) == 0) {
+					destinations[7] = new Pair(xPos-1, yPos);
+				}
+			}
+		}
+		else if( numCols == 1) {
+			//Top
+			if(yPos == 0) {
+				//S:5
+				if(checkAdjacent(p,5) == 0 ) {
+					destinations[5] = new Pair(xPos, yPos+1);
+				}
+			}
+			//Bottom
+			else if(yPos == numRows-1) {
+				//N:1
+				if(checkAdjacent(p,1) == 0 ) {
+					destinations[1] = new Pair(xPos, yPos-1);
+				}
+			}
+			//In-between
+			else {
+				//N:1
+				if(checkAdjacent(p,1) == 0 ) {
+					destinations[1] = new Pair(xPos, yPos-1);
+				}
+				//S:5
+				if(checkAdjacent(p,5) == 0 ) {
+					destinations[5] = new Pair(xPos, yPos+1);
+				}
+			}
+		}
+		//Normal board cases (numRows >= 3) && (numCols >= 3)
+		else if(yPos == 0){
+			
 			//Top-left corner
 			if(xPos == 0){
 				//E:3
