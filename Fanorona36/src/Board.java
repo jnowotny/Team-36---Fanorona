@@ -1,3 +1,5 @@
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import java.awt.*;
 import java.awt.geom.*;
@@ -351,7 +353,9 @@ public class Board extends JPanel {
 		
 		removeSacrificed(boardState.getCurrentPlayer());
 		setHighlightAll(false, true);
-		
+		if (this.getTurnCount() <= 1)
+			JOptionPane.showMessageDialog(new JFrame(), "The Game Will Begin Now!");
+		else JOptionPane.showMessageDialog(new JFrame(), "Next User's Turn!");
 	}
 	public void updateRemoveAvailable() {
 		if( !(boardState.getRemovables().isEmpty()) ){
