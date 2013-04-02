@@ -1,14 +1,11 @@
-//import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
 import javax.swing.ButtonGroup;
-import javax.swing.ButtonModel;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.EmptyBorder;
-//import java.awt.GridBagLayout;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -17,8 +14,6 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JSpinner;
 import javax.swing.JRadioButton;
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
 import javax.swing.JTextField;
 
 
@@ -28,44 +23,55 @@ public class NewGameWin extends JFrame {
 	 *  
 	 */
 	private static final long serialVersionUID = 137750314898293920L;
+	
 	private JPanel contentPane;
+	
 	private final JButton btnExit = new JButton("Exit");
+	
+	//Game Types
 	private JComboBox<String> comboLocation;
 	private JLabel lblGameType;
 	private JComboBox<String> comboType;
-	private JLabel lblNewLabel;
+	
+	//Board Size
+	private JLabel lblBoardSize;
 	private JLabel lblRows;
 	private JSpinner spinnerRows;
 	private JLabel lblColumns;
 	private JSpinner spinnerCols;
-	private JRadioButton noTimerButton;
-	private JRadioButton yesTimerButton;
+	
+	//Player 1 vs. Player 2
 	private JRadioButton hostAsP1Button;
 	private JRadioButton hostAsP2Button;
+	private ButtonGroup playerSelection;
+	private int playerNumber = -1;
+	
+	//Human vs. CPU
 	private JRadioButton hostAsHumanButton;
 	private JRadioButton hostAsCpuButton;
-	private ButtonGroup timerSelection;
-	private ButtonGroup playerSelection;
 	private ButtonGroup humanCpuSelection;
+	private int isHuman = -1;
+	
+	//Timer
+	private JRadioButton noTimerButton;
+	private JRadioButton yesTimerButton;
+	private ButtonGroup timerSelection;
 	private JLabel lblTimer;
+	private JSpinner spinnerTimer;
 	private JLabel lblSetTime;
 	private JLabel lblMilliseconds;
 	private int timerButtonSelected = -1;
-	private int playerNumber = -1;
-	private int isHuman = -1;
-	private JSpinner spinnerTimer;
+	
+	//Port
 	private JLabel lblPort;
 	private JSpinner spinnerPort;
+	
+	//IP Address
 	private JLabel lblIpAddress;
 	private JTextField IP1;
 	private JTextField IP2;
 	private JTextField IP3;
 	private JTextField IP4;
-
-	/**
-	 * Launch the application.
-	 */
-	
 
 	/**
 	 * Create the frame.
@@ -75,7 +81,7 @@ public class NewGameWin extends JFrame {
 	}
 	private void initGUI() {
 		setTitle("New Game");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);    
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // X on window closes application   
 		int width = 475;
 	    int height = 350;
 	    Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
@@ -85,34 +91,44 @@ public class NewGameWin extends JFrame {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		//exit button quits application
 		btnExit.setBounds(16, 35, 428, 29);
 		btnExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
 			}
 		});
-		contentPane.setLayout(null);
-		
 		contentPane.add(btnExit);
 		
-		JButton btnNewButton_2 = new JButton("Back to Main Menu");
-		btnNewButton_2.setBounds(16, 6, 428, 29);
-		btnNewButton_2.addActionListener(new ActionListener() {
+		//main menu button closes new game window and takes you to main menu window
+		JButton mainButton = new JButton("Back to Main Menu");
+		mainButton.setBounds(16, 6, 428, 29);
+		mainButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Welcome_Menu win = new Welcome_Menu();
 				win.setVisible(true);
 				dispose();
 			}
 		});
-		contentPane.add(btnNewButton_2);
+		contentPane.add(mainButton);
 		
+		//game type label
+		lblGameType = new JLabel("Game Type");
+		lblGameType.setBounds(26, 115, 79, 16);
+		lblGameType.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+		contentPane.add(lblGameType);
+		lblGameType.setVisible(false);
+		
+		//game types (PvP, PvC, CvC)
 		String[] gameTypes = new String[] {"--Select--", "Player 1 vs. Player 2", "Player vs. CPU", "CPU vs. CPU"};
 		comboType = new JComboBox<String>(gameTypes);
 		comboType.setBounds(107, 111, 175, 27);
 		comboType.setToolTipText("");
 		contentPane.add(comboType);
 		comboType.setVisible(false);
-		comboType.addActionListener(new ActionListener() {
+		comboType.addActionListener(new ActionListener() { //determines when Player and Human/CPU radio buttons show
 			public void actionPerformed(ActionEvent e)  {
 				if (comboType.getSelectedIndex() == 1) { //P v P
 					hostAsHumanButton.setVisible(false);
@@ -121,7 +137,7 @@ public class NewGameWin extends JFrame {
 						hostAsP1Button.setVisible(true);
 						hostAsP2Button.setVisible(true);
 					}
-					else {
+					else { //not host
 						hostAsP1Button.setVisible(false);
 						hostAsP2Button.setVisible(false);
 					}
@@ -133,7 +149,7 @@ public class NewGameWin extends JFrame {
 						hostAsHumanButton.setVisible(true);
 						hostAsCpuButton.setVisible(true);
 					}
-					else {
+					else { // not host
 						hostAsHumanButton.setVisible(false);
 						hostAsCpuButton.setVisible(false);
 					}
@@ -145,12 +161,12 @@ public class NewGameWin extends JFrame {
 						hostAsP1Button.setVisible(true);
 						hostAsP2Button.setVisible(true);
 					}
-					else {
+					else { // not host
 						hostAsP1Button.setVisible(false);
 						hostAsP2Button.setVisible(false);
 					}
 				}
-				else {
+				else { // comboType == 0 or weird thing
 					hostAsP1Button.setVisible(false);
 					hostAsP2Button.setVisible(false);
 					hostAsHumanButton.setVisible(false);
@@ -159,21 +175,23 @@ public class NewGameWin extends JFrame {
 			}
 		});
 		
+		//game location label
 		JLabel lblGameLocation = new JLabel("Game Location");
 		lblGameLocation.setBounds(26, 80, 100, 16);
 		lblGameLocation.setFont(new Font("Lucida Grande", Font.BOLD, 13));
 		contentPane.add(lblGameLocation);
 		
+		//game location (local, client, server)
 		String[]gameLocations = new String[] {"--Select--", "New Local Game", "Connect to Game", "Host Game"};
 		comboLocation = new JComboBox<String>(gameLocations);
 		comboLocation.setBounds(134, 76, 175, 27);
 		comboLocation.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) { // determines which components to display based on location selection
 				if (comboLocation.getSelectedIndex() == 0) {
 					lblGameType.setVisible(false);
 					comboType.setSelectedIndex(0);
 					comboType.setVisible(false);
-					lblNewLabel.setVisible(false);
+					lblBoardSize.setVisible(false);
 					lblRows.setVisible(false);
 					lblColumns.setVisible(false);
 					spinnerRows.setVisible(false);
@@ -181,8 +199,6 @@ public class NewGameWin extends JFrame {
 					lblTimer.setVisible(false);
 					noTimerButton.setVisible(false);
 					yesTimerButton.setVisible(false);
-					//hostAsP1Button.setVisible(false);
-					//hostAsP2Button.setVisible(false);
 					lblSetTime.setVisible(false);
 					lblMilliseconds.setVisible(false);
 					spinnerTimer.setVisible(false);
@@ -202,7 +218,7 @@ public class NewGameWin extends JFrame {
 					lblGameType.setVisible(true);
 					comboType.setSelectedIndex(0);
 					comboType.setVisible(true);
-					lblNewLabel.setVisible(true);
+					lblBoardSize.setVisible(true);
 					lblRows.setVisible(true);
 					lblColumns.setVisible(true);
 					spinnerRows.setVisible(true);
@@ -210,8 +226,6 @@ public class NewGameWin extends JFrame {
 					lblTimer.setVisible(true);
 					noTimerButton.setVisible(true);
 					yesTimerButton.setVisible(true);
-					//hostAsP1Button.setVisible(true);
-					//hostAsP2Button.setVisible(true);
 					lblPort.setVisible(false);
 					spinnerPort.setVisible(false);
 					lblIpAddress.setVisible(false);
@@ -219,14 +233,12 @@ public class NewGameWin extends JFrame {
 					IP2.setVisible(false);
 					IP3.setVisible(false);
 					IP4.setVisible(false);
-					//hostAsHumanButton.setVisible(false);
-					//hostAsCpuButton.setVisible(false);
 				}
 				else if (comboLocation.getSelectedIndex() == 2) { //connect to game
 					lblGameType.setVisible(false);
 					comboType.setSelectedIndex(0);
 					comboType.setVisible(false);
-					lblNewLabel.setVisible(false);
+					lblBoardSize.setVisible(false);
 					lblRows.setVisible(false);
 					lblColumns.setVisible(false);
 					spinnerRows.setVisible(false);
@@ -234,12 +246,10 @@ public class NewGameWin extends JFrame {
 					lblTimer.setVisible(false);
 					noTimerButton.setVisible(false);
 					yesTimerButton.setVisible(false);
-					//hostAsP1Button.setVisible(false);
-					//hostAsP2Button.setVisible(false);
 					lblSetTime.setVisible(false);
 					lblMilliseconds.setVisible(false);
 					spinnerTimer.setVisible(false);
-					timerSelection.clearSelection();
+					timerSelection.clearSelection(); // clears selection for timer
 					lblIpAddress.setVisible(true);
 					IP1.setVisible(true);
 					IP2.setVisible(true);
@@ -256,7 +266,7 @@ public class NewGameWin extends JFrame {
 					lblGameType.setVisible(true);
 					comboType.setSelectedIndex(0);
 					comboType.setVisible(true);
-					lblNewLabel.setVisible(true);
+					lblBoardSize.setVisible(true);
 					lblRows.setVisible(true);
 					lblColumns.setVisible(true);
 					spinnerRows.setVisible(true);
@@ -264,8 +274,6 @@ public class NewGameWin extends JFrame {
 					lblTimer.setVisible(true);
 					noTimerButton.setVisible(true);
 					yesTimerButton.setVisible(true);
-					//hostAsP1Button.setVisible(true);
-					//hostAsP2Button.setVisible(true);
 					lblIpAddress.setVisible(false);
 					IP1.setVisible(false);
 					IP2.setVisible(false);
@@ -273,78 +281,83 @@ public class NewGameWin extends JFrame {
 					IP4.setVisible(false);
 					lblPort.setVisible(true);
 					spinnerPort.setVisible(true);
-					//hostAsP1Button.setVisible(true);
-					//hostAsP2Button.setVisible(true);
 				}	
 			}
 		});
 		comboLocation.setToolTipText("");
 		contentPane.add(comboLocation);
 		
-		lblGameType = new JLabel("Game Type");
-		lblGameType.setBounds(26, 115, 79, 16);
-		lblGameType.setFont(new Font("Lucida Grande", Font.BOLD, 13));
-		contentPane.add(lblGameType);
-		lblGameType.setVisible(false);
+		//Board size label
+		lblBoardSize = new JLabel("Board Size");
+		lblBoardSize.setBounds(26, 159, 79, 16);
+		lblBoardSize.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+		contentPane.add(lblBoardSize);
+		lblBoardSize.setVisible(false);
 		
-		lblNewLabel = new JLabel("Board Size");
-		lblNewLabel.setBounds(26, 159, 79, 16);
-		lblNewLabel.setFont(new Font("Lucida Grande", Font.BOLD, 13));
-		contentPane.add(lblNewLabel);
-		lblNewLabel.setVisible(false);
-		
+		//Rows label
 		lblRows = new JLabel("Rows");
 		lblRows.setBounds(117, 159, 39, 16);
 		contentPane.add(lblRows);
 		lblRows.setVisible(false);
 		
+		//Columns label
 		lblColumns = new JLabel("Columns");
 		lblColumns.setBounds(218, 159, 60, 16);
 		contentPane.add(lblColumns);
 		lblColumns.setVisible(false);
 		
-		SpinnerNumberModel modelRows = new SpinnerNumberModel(5,1,14,2);
+		//Rows spinner
+		SpinnerNumberModel modelRows = new SpinnerNumberModel(5,1,14,2); 
+		//default is 5, min is 1, max is 14, step is 2)
 		spinnerRows = new JSpinner(modelRows);
 		spinnerRows.setBounds(157, 153, 53, 28);
 		contentPane.add(spinnerRows);
 		spinnerRows.setVisible(false);
 		
+		//Columns spinner
 		SpinnerNumberModel modelCols = new SpinnerNumberModel(9,1,14,2);
+		//default is 9, min is 1, max is 14, step is 2)
 		spinnerCols = new JSpinner(modelCols);
 		spinnerCols.setBounds(279, 153, 53, 28);
 		contentPane.add(spinnerCols);
 		spinnerCols.setVisible(false);
 		
+		//Timer label
 		lblTimer = new JLabel("Timer?");
 		lblTimer.setBounds(26, 208, 61, 16);
 		lblTimer.setFont(new Font("Lucida Grande", Font.BOLD, 13));
 		contentPane.add(lblTimer);
 		lblTimer.setVisible(false);
 		
+		//Set time label
 		lblSetTime = new JLabel("Set time:");
 		lblSetTime.setBounds(218, 208, 61, 16);
 		contentPane.add(lblSetTime);
 		lblSetTime.setVisible(false);
 		
+		//Timer spinner
 		SpinnerNumberModel modelTimer = new SpinnerNumberModel(25000,1000,null,1);
+		//default is 25s, min is 1s, no max, step is 1
 		spinnerTimer = new JSpinner(modelTimer);
 		spinnerTimer.setBounds(279, 202, 79, 28);
 		contentPane.add(spinnerTimer);
 		spinnerTimer.setVisible(false);
 		
+		//Milliseconds label
 		lblMilliseconds = new JLabel("milliseconds");
 		lblMilliseconds.setBounds(370, 208, 85, 16);
 		contentPane.add(lblMilliseconds);
 		lblMilliseconds.setVisible(false);
 		
+		//No timer radio button
 		noTimerButton = new JRadioButton("No");
 		noTimerButton.setBounds(84, 204, 60, 23);
 		noTimerButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				lblSetTime.setVisible(false);
+			public void actionPerformed(ActionEvent e) {//if No timer is selected, don't show timer options												
+				lblSetTime.setVisible(false);			
 				spinnerTimer.setVisible(false);
 				lblMilliseconds.setVisible(false);
-				timerButtonSelected = 0;
+				timerButtonSelected = 0; //timer selection = no
 			}
 		});
 		contentPane.add(noTimerButton);
@@ -354,76 +367,85 @@ public class NewGameWin extends JFrame {
 		yesTimerButton = new JRadioButton("Yes");
 		yesTimerButton.setBounds(157, 204, 60, 23);
 		yesTimerButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) { //if Yes timer is selected, show timer options
 				lblSetTime.setVisible(true);
 				spinnerTimer.setVisible(true);
 				lblMilliseconds.setVisible(true);
-				timerButtonSelected = 1;
+				timerButtonSelected = 1; //timer selection = yes
 			}
 		});
 		contentPane.add(yesTimerButton);
 		yesTimerButton.setVisible(false);
 		
+		//Groups "Yes" and "No" Timer buttons
 		timerSelection = new ButtonGroup();
 		timerSelection.add(noTimerButton);
 		timerSelection.add(yesTimerButton);
 		
+		//Player 1 radio button
 		hostAsP1Button = new JRadioButton("P1");
 		hostAsP1Button.setBounds(279, 114, 47, 18);
 		contentPane.add(hostAsP1Button);
 		hostAsP1Button.setVisible(false);
 		hostAsP1Button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				playerNumber = 1;
+			public void actionPerformed(ActionEvent e) { //if player 1 is selected
+				playerNumber = 1; 
 			}
 		});
 		
+		//Player 2 radio button
 		hostAsP2Button = new JRadioButton("P2");
 		hostAsP2Button.setBounds(323, 108, 47, 29);
 		contentPane.add(hostAsP2Button);
 		hostAsP2Button.setVisible(false);
 		hostAsP2Button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) { //if player 2 is selected
 				playerNumber = 2;
 			}
 		});
 		
+		//Groups the player buttons together
 		playerSelection = new ButtonGroup(); 
 		playerSelection.add(hostAsP1Button);
 		playerSelection.add(hostAsP2Button);
 		
+		//Host is human radio button
 		hostAsHumanButton = new JRadioButton("Human");
 		hostAsHumanButton.setBounds(370, 113, 85, 20);
 		contentPane.add(hostAsHumanButton);
 		hostAsHumanButton.setVisible(false);
 		hostAsHumanButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) { //if human is selected
 				isHuman = 1;
 			}
 		});
 		
+		//Host is CPU radio button
 		hostAsCpuButton = new JRadioButton("CPU");
 		hostAsCpuButton.setBounds(370, 140, 69, 19);
 		contentPane.add(hostAsCpuButton);
 		hostAsCpuButton.setVisible(false);
 		hostAsCpuButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) { //if CPU is selected
 				isHuman = 0;
 			}
 		});
 		
+		//Group for human vs CPU buttons
 		humanCpuSelection = new ButtonGroup();
 		humanCpuSelection.add(hostAsHumanButton);
 		humanCpuSelection.add(hostAsCpuButton);
 		
+		//Create new game button
 		JButton btnCreateNewGame = new JButton("Create New Game");
 		btnCreateNewGame.setBounds(71, 273, 319, 29);
+		//makes sure all necessary parameters are met before creating new game
 		btnCreateNewGame.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) { 
 				if (comboLocation.getSelectedIndex() == 1) { //local game
-					boolean playerNeeded = true;
-					if (comboType.getSelectedIndex() == 2 && playerNumber == -1)
-						playerNeeded = false;
+					boolean playerNeeded = true; //if we need the player button selected, lets see if it is
+					if (comboType.getSelectedIndex() == 2 && playerNumber == -1) 
+						playerNeeded = false; //not selected
 					if (timerButtonSelected > -1 && comboType.getSelectedIndex() > 0 && playerNeeded) {
 						int location = 1; //LOCAL
 						int gameType = comboType.getSelectedIndex(); //0 - PvP; 1 - PvC; 2 - CvC
@@ -454,9 +476,9 @@ public class NewGameWin extends JFrame {
 					dispose();
 				}
 				else if (comboLocation.getSelectedIndex() == 3) { //host a game (server)
-					boolean humanCPUNeeded = true;
+					boolean humanCPUNeeded = true; //if we need the human/cpu selection, do we have a selection?
 					if (comboType.getSelectedIndex() == 2 && isHuman == -1)
-						humanCPUNeeded = false;
+						humanCPUNeeded = false; //we don't have a selection
 					if (timerButtonSelected > -1 && comboType.getSelectedIndex() > 0 && playerNumber > -1 && humanCPUNeeded) {
 						int location = 3; //SERVER
 						int gameType = comboType.getSelectedIndex(); //0 - PvP; 1 - PvC; 2 - CvC
@@ -478,45 +500,50 @@ public class NewGameWin extends JFrame {
 		});
 		contentPane.add(btnCreateNewGame);	
 		
+		//Port label
 		lblPort = new JLabel("Port #:");
 		lblPort.setBounds(26, 245, 61, 16);
 		lblPort.setFont(new Font("Lucida Grande", Font.BOLD, 13));
 		contentPane.add(lblPort);
 		lblPort.setVisible(false);
 		
+		//Port spinner
 		SpinnerNumberModel modelPort = new SpinnerNumberModel(1024,1024,65536,1);
+		//default is 1024, min is 1024, max is 65536, step is 1
 		spinnerPort = new JSpinner(modelPort);
 		spinnerPort.setBounds(78, 239, 78, 28);
 		contentPane.add(spinnerPort);
 		spinnerPort.setVisible(false);
 		
+		//IP Address label
 		lblIpAddress = new JLabel("I.P. Address             .           .           .");
 		lblIpAddress.setBounds(167, 245, 277, 16);
 		lblIpAddress.setFont(new Font("Lucida Grande", Font.BOLD, 13));
 		contentPane.add(lblIpAddress);
 		lblIpAddress.setVisible(false);
 		
+		//1st part of IP
 		IP1 = new JTextField();
 		IP1.setBounds(256, 239, 39, 28);
 		IP1.setText("000");
 		contentPane.add(IP1);
 		IP1.setColumns(10);
 		IP1.setVisible(false);
-		
+		//2nd part of IP
 		IP2 = new JTextField();
 		IP2.setBounds(304, 239, 39, 28);
 		IP2.setText("000");
 		IP2.setColumns(10);
 		contentPane.add(IP2);
 		IP2.setVisible(false);
-		
+		//3rd part of IP
 		IP3 = new JTextField();
 		IP3.setBounds(351, 239, 39, 28);
 		IP3.setText("000");
 		IP3.setColumns(10);
 		contentPane.add(IP3);
 		IP3.setVisible(false);
-		
+		//4th part of IP
 		IP4 = new JTextField();
 		IP4.setBounds(397, 239, 39, 28);
 		IP4.setText("000");

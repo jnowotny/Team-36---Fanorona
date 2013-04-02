@@ -19,26 +19,21 @@ public class AboutWin extends JFrame {
 	private final JTextArea txtrFanoromaByTeam = new JTextArea();
 
 	/**
-	 * Launch the application.
-	 */
-	
-
-	/**
 	 * Create the frame.
 	 */
 	public AboutWin() {
 		initGUI();
 	}
 	private void initGUI() {
-		setTitle("About Fanoroma");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setTitle("About Fanorona");
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //if you click on the X of the window, it will dispose
 		setBounds(100, 100, 450, 250);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		btnClose.addActionListener(new ActionListener() {
+		btnClose.addActionListener(new ActionListener() { //tells Close button to destroy itself
 			public void actionPerformed(ActionEvent e) {
 				dispose();
 			}
