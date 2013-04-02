@@ -343,6 +343,7 @@ public class Board extends JPanel {
 	}
 	public void nextTurn(){
 		fan.sacrificeButton.setSelected(false);
+		makingSacrifice = false;
 		boardState.nextCurrentPlayer();
 		boardState.updateTurnCount();
 		boardState.deactivateRemovables();
