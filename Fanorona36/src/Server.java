@@ -25,7 +25,6 @@ public class Server extends Thread{
 	@param f The game the client will command.
 	@param port The port for the server to listen on.*/
 	public Server(int playerNum, int type, int Rows, int Cols, int timerLength, int port) {
-//		portNum = port;
 //		PLAYERNUMBER
 //		- -1;
 //		-  1: 
@@ -36,7 +35,7 @@ public class Server extends Thread{
 //		-  0: P v P
 //		-  1: P v C
 //		-  2: C v C
-		portNum = 11192;
+		portNum = port;
 		playerNumber = playerNum;
 		numRows = Rows;
 		numCols = Cols;

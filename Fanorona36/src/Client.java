@@ -26,8 +26,7 @@ public class Client extends Thread{
 	@param host The Hostname of the server.
 	@param port The Port the server is using.*/
 	public Client(int playerNum, String host, int port) {
-//		hostName = host;
-//		portNum = port;
+
 //		PLAYERNUMBER
 //		- -1;
 //		-  1: 
@@ -38,9 +37,9 @@ public class Client extends Thread{
 //		-  0: P v P
 //		-  1: P v C
 //		-  2: C v C
+		hostName = host;
+		portNum = port;
 		playerNumber = playerNum;
-		hostName = "127.0.0.1";
-		portNum = 11192;
 		try {
 			clientSocket = new Socket(InetAddress.getByName(hostName), portNum);
 		    /* assert:  Socket successfully created */
