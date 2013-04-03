@@ -168,6 +168,28 @@ public class Client extends Thread{
 	public void movePiece(String content) {
 		Pair p1, p2;
 		String moveType;
+		if (content.length() < 15) {
+			StringTokenizer parts = new StringTokenizer(content, " ");
+	    	moveType = parts.nextToken();
+	    	p1 = new Pair(Integer.parseInt(parts.nextToken()),Integer.parseInt(parts.nextToken()));
+	    	p1 = transf2Matrix(p1);
+	    	if (moveType.equals("S")) {
+	    		newGame.board.sacrifice(p1);
+	    	}
+	    	p2 = new Pair(Integer.parseInt(parts.nextToken()),Integer.parseInt(parts.nextToken()));
+	    	p2 = transf2Matrix(p2);
+			newGame.board.move(p1, p2, moveType);
+			if (!(moveType.equals("P")) && !(moveType.equals("S"))) {
+				newGame.board.activateRemovables(p1, p2);
+			}
+			if (moveType.equals("A")) {
+				newGame.board.removeRemovables(0); //0 for A; 1 for W
+			}
+			else if (moveType.equals("W")) {
+				newGame.board.removeRemovables(1); //0 for A; 1 for W
+			}
+		}
+		else {
 	    StringTokenizer moves = new StringTokenizer(content, "+");
 	    LinkedList<String> moveList = new LinkedList<String>();
 	    for (int i=0; i < moves.countTokens()-1; i++) {
@@ -194,6 +216,7 @@ public class Client extends Thread{
 			else if (moveType.equals("W")) {
 				newGame.board.removeRemovables(1); //0 for A; 1 for W
 			}
+	    }
 	    }
 	}
 	

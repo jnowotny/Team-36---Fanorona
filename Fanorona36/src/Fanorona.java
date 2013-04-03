@@ -274,40 +274,41 @@ public class Fanorona extends JFrame {
         		fan.gameLoop.stop();
         		fan.dispose();
         	}
-        	
-        	//Enable player to end turn early with skipbutton if a capture has been made
-        	if (board.getCapturedThisTurn() > 0) {
-        		skipbutton.setVisible(true);
+        	if ((playerNumber == board.getBoardState().getCurrentPlayer()) || (playerNumber == -1) ) {
+            	//Enable player to end turn early with skipbutton if a capture has been made
+            	if (board.getCapturedThisTurn() > 0) {
+            		skipbutton.setVisible(true);
+            	}
+            	else{
+            		skipbutton.setVisible(false);
+            	}
+            	
+            	//If a piece is selected, show destinations to move to...if there aren't any remove choices that need to be made
+            	if(board.getSelected() != null) {
+    	        	sacrificeButton.setVisible(false);
+            		if( !(board.isRemoveAvailable()) ) {
+            			if(board.getBoardState().hasCaptureDestinations(board.getSelected())) {
+    	        			board.highlightCaptureDestinations(board.getSelected());
+    	        		}
+    	        		else if(board.getBoardState().hasDestinations(board.getSelected())) {
+    	        			board.highlightDestinations(board.getSelected());
+    	        		}
+            		}
+            	}
+            	
+            	//Else show pieces that can be moved
+            	else{
+            		sacrificeButton.setVisible(true);
+            		//If capture moves are available, show pieces that can make capture moves
+            		if(board.getBoardState().hasCaptureMoves()){
+            			board.highlightCaptureMovable();
+            		}
+            		//Else show pieces that can make paika moves, if any
+            		else{
+            			board.highlightPaikaMovable();
+            		}
+    			}
         	}
-        	else{
-        		skipbutton.setVisible(false);
-        	}
-        	
-        	//If a piece is selected, show destinations to move to...if there aren't any remove choices that need to be made
-        	if(board.getSelected() != null) {
-	        	sacrificeButton.setVisible(false);
-        		if( !(board.isRemoveAvailable()) ) {
-        			if(board.getBoardState().hasCaptureDestinations(board.getSelected())) {
-	        			board.highlightCaptureDestinations(board.getSelected());
-	        		}
-	        		else if(board.getBoardState().hasDestinations(board.getSelected())) {
-	        			board.highlightDestinations(board.getSelected());
-	        		}
-        		}
-        	}
-        	
-        	//Else show pieces that can be moved
-        	else{
-        		sacrificeButton.setVisible(true);
-        		//If capture moves are available, show pieces that can make capture moves
-        		if(board.getBoardState().hasCaptureMoves()){
-        			board.highlightCaptureMovable();
-        		}
-        		//Else show pieces that can make paika moves, if any
-        		else{
-        			board.highlightPaikaMovable();
-        		}
-			}	
         }
     }
 	

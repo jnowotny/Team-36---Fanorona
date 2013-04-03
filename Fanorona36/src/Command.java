@@ -35,6 +35,7 @@ public class Command {
 		try {
 		    inStream.read(buff);
 		    String command = new String(buff);
+		    System.out.println(command);
 		    StringTokenizer sToken = new StringTokenizer(command, fieldTerminator);
 		    type = sToken.nextToken();
 		    content = sToken.nextToken();
