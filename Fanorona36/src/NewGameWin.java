@@ -416,7 +416,7 @@ public class NewGameWin extends JFrame {
 						playerNeeded = false;
 					if (timerButtonSelected > -1 && comboType.getSelectedIndex() > 0 && playerNeeded) {
 
-						int gameType = comboType.getSelectedIndex(); //0 - PvP; 1 - PvC; 2 - CvC
+						int gameType = comboType.getSelectedIndex(); //1 - PvP; 2 - PvC; 3 - CvC
 						int numRows = (int) spinnerRows.getValue();
 						int numCols = (int) spinnerCols.getValue();
 						int timerLength = -1;
@@ -441,7 +441,7 @@ public class NewGameWin extends JFrame {
 					if (comboType.getSelectedIndex() == 2 && isHuman == -1)
 						humanCPUNeeded = false;
 					if (timerButtonSelected > -1 && comboType.getSelectedIndex() > 0 && playerNumber > -1 && humanCPUNeeded) {
-						int gameType = comboType.getSelectedIndex(); //0 - PvP; 1 - PvC; 2 - CvC
+						int gameType = comboType.getSelectedIndex(); //1 - PvP; 2- PvC; 3 - CvC
 						int numRows = (int) spinnerRows.getValue();
 						int numCols = (int) spinnerCols.getValue();
 						int timerLength = -1;

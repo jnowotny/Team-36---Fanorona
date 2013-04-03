@@ -72,10 +72,10 @@ public class Fanorona extends JFrame {
 		-  2: 
 		
 	GAMETYPE
-		- -1: you don't get to decide! (client)
-		-  0: P v P
-		-  1: P v C
-		-  2: C v C
+		- 0: you don't get to decide! (client)
+		-  1: P v P
+		-  2: P v C
+		-  3: C v C
 	
 	NUMROWS & NUMCOLS
 		- -1: you don't get to decide! (client)
@@ -85,6 +85,8 @@ public class Fanorona extends JFrame {
 
 <<<<<<< HEAD
 	*****************************/
+		playerNumber = playerNum;
+		
 		gameType = type;
 		if (gameType == 2)
 			CPU1 = new AI(this, -1);
@@ -95,7 +97,7 @@ public class Fanorona extends JFrame {
 		numRows = rows;
 		numCols = cols;
 		maxTurns = 10*numRows;
-		playerNumber = playerNum;
+		
 	/*************/
 		timeRemaining = timer / 1000;
 		timerSet = timeRemaining;
