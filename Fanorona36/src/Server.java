@@ -16,6 +16,7 @@ public class Server extends Thread{
 	protected String otherPlayColor;
 	static ServerSocket servSock;
 	static Socket input;
+
 	Fanorona newGame;
 	private ArrayList<MovesList.Triplet> moves;
 	protected int turn;

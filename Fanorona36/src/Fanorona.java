@@ -15,6 +15,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JLabel;
 import java.awt.Color;
+import java.util.ArrayList;
 
 public class Fanorona extends JFrame {
 //Data members
@@ -28,6 +29,7 @@ public class Fanorona extends JFrame {
 	private JLabel p1Score;
 	private JLabel p2Score;
 	
+	private Button hintsButton;
 	private Button skipbutton;
 	private Button btnMainMenu;
 	private Button btnPause;
@@ -53,9 +55,9 @@ public class Fanorona extends JFrame {
 	private static int timeRemaining;
 	private static String color;
 	
-	
+	private AI CPU1;
+	private AI CPU2;
 
-	
 /**Constructor
 * @param playerNum Player Number
 * @param type Game type, PvP, PvC, CvC
@@ -81,8 +83,15 @@ public class Fanorona extends JFrame {
 	TIMER
 		- -1: no timer (local/server) OR you don't get to decide! (client)
 
+<<<<<<< HEAD
 	*****************************/
 		gameType = type;
+		if (gameType == 2)
+			CPU1 = new AI(this, -1);
+		else if (gameType == 3) {
+			CPU1 = new AI(this, 1);
+			CPU2 = new AI(this, 2);
+		}
 		numRows = rows;
 		numCols = cols;
 		maxTurns = 10*numRows;
@@ -154,19 +163,56 @@ public class Fanorona extends JFrame {
 		});
 		board.add(btnPause);
 		
+		hintsButton = new Button("Hints");
+		hintsButton.setBounds(10, 60, 112, 29);
+		hintsButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (board.getBoardState().hasCaptureMoves()){
+					ArrayList<Pair> captureMovables = board.getCaptureMovable();
+					int maxPair = captureMovables.size() - 1;
+					int randomPiece = (int) Math.floor((Math.random()*maxPair)+0);
+					Pair[] listMoves = board.getBoardState().checkCaptureDestinations(captureMovables.get(randomPiece));
+					maxPair = listMoves.length;
+					boolean foundDestination = false;
+					int randomDestination = -1;
+					while(!foundDestination) {
+						randomDestination = (int) Math.floor((Math.random()*maxPair)+0);
+						if (listMoves[randomDestination] != null)
+							foundDestination = true;
+					}
+					if (randomDestination != -1) {
+						board.move(captureMovables.get(randomPiece), listMoves[randomDestination], "capture");
+						board.activateRemovables(captureMovables.get(randomPiece), listMoves[randomDestination]);
+						int advanceOrWithdrawl = (int) Math.floor(Math.random() + .5);
+						if (!(board.getBoardState().getRemovables().isEmpty())) {
+							if (!(board.getBoardState().getRemovables().get(advanceOrWithdrawl).isEmpty())) {
+								board.removeRemovables(advanceOrWithdrawl);
+							}
+							else {
+								if (advanceOrWithdrawl == 1)
+									advanceOrWithdrawl = 0;
+								else advanceOrWithdrawl = 1;
+								board.removeRemovables(advanceOrWithdrawl);
+							}
+						}
+						board.select(listMoves[randomDestination]);
+					}
+				}
+				hintsButton.setVisible(false);
+			}
+		});
+		board.add(hintsButton);
+		
+		
 		skipbutton = new Button("Skip Turn");
 		skipbutton.setBounds(157, 23, 112, 29);
 		skipbutton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (timerSet > 0) {
-					countdown.stop();
 					timeLabel.setText("Next Turn!");
 					timeRemaining = timerSet + 1;
 				}
 				board.nextTurn();
-				if (timerSet > 0 ) {
-					countdown.start();
-				}
 			}
 		});
 		skipbutton.setVisible(false);
@@ -193,13 +239,15 @@ public class Fanorona extends JFrame {
 
 		swap.setVisible(false);
 		
+		countdown = new Timer(1000, new CountdownTimerListener());
 		
 		board.nextTurn();
-		
-		if (timerSet > 0) {
-			countdown = new Timer(1000, new CountdownTimerListener());
+		//JOptionPane.showMessageDialog(new JFrame(), "The Game Will Begin Now!");
+		if (timerSet > 0)
 			countdown.start();
-		}
+		
+		if (gameType == 3)
+			CPU1.makeMove();
 	}
 
 /**Internal Classes*/	
@@ -244,7 +292,6 @@ public class Fanorona extends JFrame {
 
 		public void actionPerformed(ActionEvent e) {
 //        	final int maxTurn = 10*numRows;
-        	
         	fan.board.updateScores();
     		curP1Score = fan.board.getP1Score();
     		curP2Score = fan.board.getP2Score();
@@ -274,41 +321,43 @@ public class Fanorona extends JFrame {
         		fan.gameLoop.stop();
         		fan.dispose();
         	}
-        	if ((playerNumber == board.getBoardState().getCurrentPlayer()) || (playerNumber == -1) ) {
-            	//Enable player to end turn early with skipbutton if a capture has been made
-            	if (board.getCapturedThisTurn() > 0) {
-            		skipbutton.setVisible(true);
-            	}
-            	else{
-            		skipbutton.setVisible(false);
-            	}
-            	
-            	//If a piece is selected, show destinations to move to...if there aren't any remove choices that need to be made
-            	if(board.getSelected() != null) {
-    	        	sacrificeButton.setVisible(false);
-            		if( !(board.isRemoveAvailable()) ) {
-            			if(board.getBoardState().hasCaptureDestinations(board.getSelected())) {
-    	        			board.highlightCaptureDestinations(board.getSelected());
-    	        		}
-    	        		else if(board.getBoardState().hasDestinations(board.getSelected())) {
-    	        			board.highlightDestinations(board.getSelected());
-    	        		}
-            		}
-            	}
-            	
-            	//Else show pieces that can be moved
-            	else{
-            		sacrificeButton.setVisible(true);
-            		//If capture moves are available, show pieces that can make capture moves
-            		if(board.getBoardState().hasCaptureMoves()){
-            			board.highlightCaptureMovable();
-            		}
-            		//Else show pieces that can make paika moves, if any
-            		else{
-            			board.highlightPaikaMovable();
-            		}
-    			}
+
+        	//Enable player to end turn early with skipbutton if a capture has been made
+        	if (board.getCapturedThisTurn() > 0) {
+        		skipbutton.setVisible(true);
         	}
+        	else{
+        		skipbutton.setVisible(false);
+        	}
+        	
+        	//If a piece is selected, show destinations to move to...if there aren't any remove choices that need to be made
+        	if(board.getSelected() != null) {
+	        	sacrificeButton.setVisible(false);
+        		if( !(board.isRemoveAvailable()) ) {
+        			if(board.getBoardState().hasCaptureDestinations(board.getSelected())) {
+	        			board.highlightCaptureDestinations(board.getSelected());
+	        		}
+	        		else if(board.getBoardState().hasDestinations(board.getSelected())) {
+	        			board.highlightDestinations(board.getSelected());
+	        		}
+	        		else {
+	        			board.nextTurn();
+	        		}
+        		}
+        	}
+        	
+        	//Else show pieces that can be moved
+        	else {
+        		sacrificeButton.setVisible(true);
+        		//If capture moves are available, show pieces that can make capture moves
+        		if(board.getBoardState().hasCaptureMoves()){
+        			board.highlightCaptureMovable();
+        		}
+        		//Else show pieces that can make paika moves, if any
+        		else {
+        			board.highlightPaikaMovable();
+        		}
+			}	
         }
     }
 	
@@ -333,11 +382,35 @@ public class Fanorona extends JFrame {
 	public int getMaxTurns() {
 		return maxTurns;
 	}
+	public final Timer getTimer() {
+		return countdown;
+	}
+	public int getTimeSet() {
+		return timerSet;
+	}
+	public int getGameType() {
+		return gameType;
+	}
+	public AI getAI1() {
+		return CPU1;
+	}
+	public AI getAI2() {
+		return CPU2;
+	}
+	public int getPlayerNum() {
+		return playerNumber;
+	}
+	public Button getHintsButton() {
+		return hintsButton;
+	}
 /**Update-Methods*/
 	public void setConfig(int row, int col, String color2, int time) {
 		numRows = row;
 		numCols = col;
 		color = color2;
 		timerLength = time;		
+	}
+	public void setTimeRemaining(int time) {
+		timeRemaining = time;
 	}
 }

@@ -139,7 +139,7 @@ public class BoardState {
 	 */
 	public Pair[] checkDestinations(Pair p){
 		Pair[] destinations = new Pair[8];
-		for(int i = 0; i < 8; i++){
+		for (int i = 0; i < 8; i++){
 			destinations[i] = null;
 		}
 		
@@ -476,6 +476,14 @@ public class BoardState {
 			}
 		}
 		
+		for(int i = 0; i < 8; i++) {
+			for (int j = 0; j < brd.getVisited().size(); j++) {
+				if ((destinations[i] != null) && (destinations[i].isEqualTo(brd.getVisited().get(j)))) {
+					destinations[i] = null;
+					break;
+				}
+			}
+		}
 		
 		return destinations;
 	}

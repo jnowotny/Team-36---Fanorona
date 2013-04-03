@@ -355,6 +355,10 @@ public class Board extends JPanel {
 		repaint();
 	}
 	public void nextTurn(){
+		if (fan.getTimeSet() > 0) {
+			fan.getTimer().stop();
+			fan.setTimeRemaining(fan.getTimeSet() + 1);
+		}
 		fan.sacrificeButton.setSelected(false);
 		makingSacrifice = false;
 		boardState.nextCurrentPlayer();
@@ -363,6 +367,7 @@ public class Board extends JPanel {
 		select(null);
 		visited.clear();
 		capturedThisTurn = 0;
+		fan.getHintsButton().setVisible(true);
 		
 		if(boardState.getCurrentPlayer() == 2){
 			setBackground(maroon);
@@ -373,11 +378,30 @@ public class Board extends JPanel {
 		
 		removeSacrificed(boardState.getCurrentPlayer());
 		setHighlightAll(false, true);
-		if (this.getTurnCount() <= 1) {
-//			JOptionPane.showMessageDialog(new JFrame(), "The Game Will Begin Now!");
+		
+		if (this.getTurnCount() <= 1) {//the first time next turn is called
+			JOptionPane.showMessageDialog(new JFrame(), "The Game Will Begin Now!");
+			if (fan.getGameType() == 2 && fan.getPlayerNum() == 2)
+				fan.getAI1().makeMove();
 		}
-		else JOptionPane.showMessageDialog(new JFrame(), "Next User's Turn!");
+		else { //not first time next turn has been called
+			JOptionPane.showMessageDialog(new JFrame(), "Next User's Turn!");
+			if (fan.getTimeSet() > 0)
+				fan.getTimer().start();
+			
+			//check gametype to see if AI exists
+			if (fan.getGameType() == 2) {
+				if (boardState.getCurrentPlayer() == fan.getAI1().getAINum())
+					fan.getAI1().makeMove();
+			}
+			else if (fan.getGameType() == 3) {
+				if (boardState.getCurrentPlayer() == 1)
+					fan.getAI1().makeMove();
+				else fan.getAI2().makeMove();
+			}
+		}
 	}
+	
 	public void updateRemoveAvailable() {
 		if( !(boardState.getRemovables().isEmpty()) ){
 			for(int i = 0; i < boardState.getRemovables().size(); i++){
@@ -413,7 +437,6 @@ public class Board extends JPanel {
 			boardPieces[yPos2][xPos2].setPieceState(boardState.getCurrentPlayer());
 			movesList.add(p1, p2, "P");
 			nextTurn();
-			
 		}
 		
 		else if (moveType == "capture"){
@@ -577,4 +600,26 @@ public class Board extends JPanel {
 		repaint();
 	}
 	
+	
+	//AI STUFF
+	public ArrayList<Pair> getCaptureMovable(){
+		ArrayList<Pair> captureMovables = new ArrayList<Pair>();
+		for(int i = 0; i < numRows; i++){
+			for(int j = 0; j < numCols; j++){
+				if( (boardState.getBoardGrid()[i][j] == boardState.getCurrentPlayer()) && (boardState.hasCaptureDestinations(new Pair(j,i))) )
+					captureMovables.add(new Pair(j,i));
+			}
+		}
+		return captureMovables;
+	}
+	public ArrayList<Pair> getPaikaMovable(){
+		ArrayList<Pair> paikaMovables = new ArrayList<Pair>();
+		 for(int i = 0; i < numRows; i++){
+	    	for(int j = 0; j < numCols; j++){
+	    		if( (boardState.getBoardGrid()[i][j] == boardState.getCurrentPlayer()) && (boardState.hasDestinations(new Pair(j,i))) )
+	    			paikaMovables.add(new Pair(j,i));
+	    	}
+	     }
+		 return paikaMovables; 
+	}
 }

@@ -14,6 +14,7 @@ public class Client extends Thread{
 	protected int playerNumber;
 	protected int numRows;
 	protected int numCols;
+	protected int playerNum;
 	protected String color;
 	static Socket clientSocket;
 	Fanorona newGame;

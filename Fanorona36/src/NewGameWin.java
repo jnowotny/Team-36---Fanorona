@@ -415,6 +415,7 @@ public class NewGameWin extends JFrame {
 					if (comboType.getSelectedIndex() == 2 && playerNumber == -1)
 						playerNeeded = false;
 					if (timerButtonSelected > -1 && comboType.getSelectedIndex() > 0 && playerNeeded) {
+
 						int gameType = comboType.getSelectedIndex(); //0 - PvP; 1 - PvC; 2 - CvC
 						int numRows = (int) spinnerRows.getValue();
 						int numCols = (int) spinnerCols.getValue();
