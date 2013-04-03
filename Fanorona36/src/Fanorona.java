@@ -59,7 +59,7 @@ public class Fanorona extends JFrame {
 
 	
 /**Constructor**/
-	public Fanorona(int location, int type, int rows, int cols, int timer, int playNum) {
+	public Fanorona(int playNum, int type, int rows, int cols, int timer) {
 	/*////////////////////////////////
 	LOCATION
 		- 1: local game

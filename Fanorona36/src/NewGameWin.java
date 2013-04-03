@@ -414,7 +414,7 @@ public class NewGameWin extends JFrame {
 					if (comboType.getSelectedIndex() == 2 && playerNumber == -1)
 						playerNeeded = false;
 					if (timerButtonSelected > -1 && comboType.getSelectedIndex() > 0 && playerNeeded) {
-						int location = 1; //LOCAL
+						//int location = 1; //LOCAL
 						int gameType = comboType.getSelectedIndex(); //0 - PvP; 1 - PvC; 2 - CvC
 						int numRows = (int) spinnerRows.getValue();
 						int numCols = (int) spinnerCols.getValue();
@@ -422,7 +422,7 @@ public class NewGameWin extends JFrame {
 						if (timerButtonSelected == 1) 
 							if (spinnerTimer.isVisible() && (int) spinnerTimer.getValue() > 0) 
 								timerLength = (int) spinnerTimer.getValue();	
-						Fanorona newGame = new Fanorona(location, gameType, numRows, numCols, timerLength, playerNumber);
+						Fanorona newGame = new Fanorona(playerNumber, gameType, numRows, numCols, timerLength);
 						newGame.setVisible(true);
 						dispose();
 					}
