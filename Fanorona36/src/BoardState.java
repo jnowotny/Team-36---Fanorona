@@ -503,6 +503,7 @@ public class BoardState {
 					for(int j = 0; j < brd.getVisited().size(); j++) {
 						if (destinations[i].isEqualTo(brd.getVisited().get(j)) ){
 							destinations[i] = null;
+							break;
 						}
 					}
 				}

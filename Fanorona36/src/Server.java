@@ -12,6 +12,7 @@ public class Server extends Thread{
 	protected int gameType;
 	protected int numRows;
 	protected int numCols;
+	protected int playerNum;
 	protected String color;
 	ServerSocket servSock;
 	Socket input;
@@ -57,7 +58,7 @@ public class Server extends Thread{
 	}
 	// Starts the Fanorona game
 	public void startGame() {
-		Fanorona newGame = new Fanorona(locate, gameType, numRows, numCols, timerLen);
+		Fanorona newGame = new Fanorona(locate, gameType, numRows, numCols, timerLen, playerNum);
 		newGame.setVisible(true);
 	}
 	

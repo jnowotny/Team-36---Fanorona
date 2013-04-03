@@ -28,6 +28,7 @@ public class Fanorona extends JFrame {
 	private JLabel p1Score;
 	private JLabel p2Score;
 	
+	private Button hintsButton;
 	private Button skipbutton;
 	private Button btnMainMenu;
 	private Button btnPause;
@@ -50,13 +51,15 @@ public class Fanorona extends JFrame {
 	private static int numCols;
 	private static int timerLength;
 	private static int timeRemaining;
+	private static int playerNum;
 	private static String color;
 	
-	
+	private AI CPU1;
+	private AI CPU2;
 
 	
 /**Constructor**/
-	public Fanorona(int location, int type, int rows, int cols, int timer) {
+	public Fanorona(int location, int type, int rows, int cols, int timer, int playNum) {
 	/*////////////////////////////////
 	LOCATION
 		- 1: local game
@@ -76,7 +79,14 @@ public class Fanorona extends JFrame {
 		- -1: no timer (local/server) OR you don't get to decide! (client)
 
 	*///////////////////////////////
+		playerNum = playNum;
 		gameType = type;
+		if (gameType == 2)
+			CPU1 = new AI(this, -1);
+		else if (gameType == 3) {
+			CPU1 = new AI(this, 1);
+			CPU2 = new AI(this, 2);
+		}
 		numRows = rows;
 		numCols = cols;
 		maxTurns = 10*numRows;
@@ -147,15 +157,28 @@ public class Fanorona extends JFrame {
 		});
 		board.add(btnPause);
 		
+		hintsButton = new Button("Hints");
+		hintsButton.setBounds(10, 60, 112, 29);
+		hintsButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//implement with Minimax tree!
+			}
+		});
+		board.add(hintsButton);
+		
+		
 		skipbutton = new Button("Skip Turn");
 		skipbutton.setBounds(157, 23, 112, 29);
 		skipbutton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				countdown.stop();
-				timeRemaining = timerSet + 1;
-				timeLabel.setText("Next Turn!");
+				if (timerSet > 0) {
+					//countdown.stop();
+					timeLabel.setText("Next Turn!");
+					timeRemaining = timerSet + 1;
+				}
 				board.nextTurn();
-				countdown.start();
+				//if (timerSet > 0)
+				//	countdown.start();
 			}
 		});
 		skipbutton.setVisible(false);
@@ -182,13 +205,15 @@ public class Fanorona extends JFrame {
 
 		swap.setVisible(false);
 		
+		countdown = new Timer(1000, new CountdownTimerListener());
 		
 		board.nextTurn();
-		
-		if (timerSet > 0) {
-			countdown = new Timer(1000, new CountdownTimerListener());
+		//JOptionPane.showMessageDialog(new JFrame(), "The Game Will Begin Now!");
+		if (timerSet > 0)
 			countdown.start();
-		}
+		
+		if (gameType == 3)
+			CPU1.makeMove();
 	}
 
 /**Internal Classes*/	
@@ -233,7 +258,6 @@ public class Fanorona extends JFrame {
 
 		public void actionPerformed(ActionEvent e) {
 //        	final int maxTurn = 10*numRows;
-        	
         	fan.board.updateScores();
     		curP1Score = fan.board.getP1Score();
     		curP2Score = fan.board.getP2Score();
@@ -321,11 +345,32 @@ public class Fanorona extends JFrame {
 	public int getMaxTurns() {
 		return maxTurns;
 	}
+	public final Timer getTimer() {
+		return countdown;
+	}
+	public int getTimeSet() {
+		return timerSet;
+	}
+	public int getGameType() {
+		return gameType;
+	}
+	public AI getAI1() {
+		return CPU1;
+	}
+	public AI getAI2() {
+		return CPU2;
+	}
+	public int getPlayerNum() {
+		return playerNum;
+	}
 /**Update-Methods*/
 	public void setConfig(int row, int col, String color2, int time) {
 		numRows = row;
 		numCols = col;
 		color = color2;
 		timerLength = time;		
+	}
+	public void setTimeRemaining(int time) {
+		timeRemaining = time;
 	}
 }

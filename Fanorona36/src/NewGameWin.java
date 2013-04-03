@@ -422,7 +422,7 @@ public class NewGameWin extends JFrame {
 						if (timerButtonSelected == 1) 
 							if (spinnerTimer.isVisible() && (int) spinnerTimer.getValue() > 0) 
 								timerLength = (int) spinnerTimer.getValue();	
-						Fanorona newGame = new Fanorona(location, gameType, numRows, numCols, timerLength);
+						Fanorona newGame = new Fanorona(location, gameType, numRows, numCols, timerLength, playerNumber);
 						newGame.setVisible(true);
 						dispose();
 					}

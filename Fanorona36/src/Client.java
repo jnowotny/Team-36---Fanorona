@@ -13,6 +13,7 @@ public class Client extends Thread{
 	protected int locate;
 	protected int numRows;
 	protected int numCols;
+	protected int playerNum;
 	protected String color;
 	Socket clientSocket;
 	Fanorona newGame;
@@ -45,7 +46,7 @@ public class Client extends Thread{
 	}
 
 	public void startGame() {
-		Fanorona newGame = new Fanorona(locate, gameType, numRows, numCols, timerLen);
+		Fanorona newGame = new Fanorona(locate, gameType, numRows, numCols, timerLen, playerNum);
 		newGame.setVisible(true);
 	}
 	
