@@ -356,6 +356,7 @@ public class Board extends JPanel {
 		select(null);
 		visited.clear();
 		capturedThisTurn = 0;
+		fan.getHintsButton().setVisible(true);
 		
 		if(boardState.getCurrentPlayer() == 2){
 			setBackground(maroon);

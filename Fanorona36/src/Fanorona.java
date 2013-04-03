@@ -15,6 +15,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JLabel;
 import java.awt.Color;
+import java.util.ArrayList;
 
 public class Fanorona extends JFrame {
 //Data members
@@ -161,7 +162,38 @@ public class Fanorona extends JFrame {
 		hintsButton.setBounds(10, 60, 112, 29);
 		hintsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//implement with Minimax tree!
+				if (board.getBoardState().hasCaptureMoves()){
+					ArrayList<Pair> captureMovables = board.getCaptureMovable();
+					int maxPair = captureMovables.size() - 1;
+					int randomPiece = (int) Math.floor((Math.random()*maxPair)+0);
+					Pair[] listMoves = board.getBoardState().checkCaptureDestinations(captureMovables.get(randomPiece));
+					maxPair = listMoves.length;
+					boolean foundDestination = false;
+					int randomDestination = -1;
+					while(!foundDestination) {
+						randomDestination = (int) Math.floor((Math.random()*maxPair)+0);
+						if (listMoves[randomDestination] != null)
+							foundDestination = true;
+					}
+					if (randomDestination != -1) {
+						board.move(captureMovables.get(randomPiece), listMoves[randomDestination], "capture");
+						board.activateRemovables(captureMovables.get(randomPiece), listMoves[randomDestination]);
+						int advanceOrWithdrawl = (int) Math.floor(Math.random() + .5);
+						if (!(board.getBoardState().getRemovables().isEmpty())) {
+							if (!(board.getBoardState().getRemovables().get(advanceOrWithdrawl).isEmpty())) {
+								board.removeRemovables(advanceOrWithdrawl);
+							}
+							else {
+								if (advanceOrWithdrawl == 1)
+									advanceOrWithdrawl = 0;
+								else advanceOrWithdrawl = 1;
+								board.removeRemovables(advanceOrWithdrawl);
+							}
+						}
+						board.select(listMoves[randomDestination]);
+					}
+				}
+				hintsButton.setVisible(false);
 			}
 		});
 		board.add(hintsButton);
@@ -287,7 +319,6 @@ public class Fanorona extends JFrame {
         		fan.gameLoop.stop();
         		fan.dispose();
         	}
-        	
         	//Enable player to end turn early with skipbutton if a capture has been made
         	if (board.getCapturedThisTurn() > 0) {
         		skipbutton.setVisible(true);
@@ -306,18 +337,21 @@ public class Fanorona extends JFrame {
 	        		else if(board.getBoardState().hasDestinations(board.getSelected())) {
 	        			board.highlightDestinations(board.getSelected());
 	        		}
+	        		else {
+	        			board.nextTurn();
+	        		}
         		}
         	}
         	
         	//Else show pieces that can be moved
-        	else{
+        	else {
         		sacrificeButton.setVisible(true);
         		//If capture moves are available, show pieces that can make capture moves
         		if(board.getBoardState().hasCaptureMoves()){
         			board.highlightCaptureMovable();
         		}
         		//Else show pieces that can make paika moves, if any
-        		else{
+        		else {
         			board.highlightPaikaMovable();
         		}
 			}	
@@ -362,6 +396,9 @@ public class Fanorona extends JFrame {
 	}
 	public int getPlayerNum() {
 		return playerNum;
+	}
+	public Button getHintsButton() {
+		return hintsButton;
 	}
 /**Update-Methods*/
 	public void setConfig(int row, int col, String color2, int time) {

@@ -58,7 +58,7 @@ public class Server extends Thread{
 	}
 	// Starts the Fanorona game
 	public void startGame() {
-		Fanorona newGame = new Fanorona(locate, gameType, numRows, numCols, timerLen, playerNum);
+		Fanorona newGame = new Fanorona(playerNum, gameType, numRows, numCols, timerLen);
 		newGame.setVisible(true);
 	}
 	
