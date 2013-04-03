@@ -10,18 +10,20 @@ import java.awt.event.MouseEvent;
 
 public class Piece extends JComponent implements MouseListener{
 	private static final long serialVersionUID = -7913822887443560796L;
-//Data members
-	private boolean isHighlighted = false;
+/**Data members*/
+	
 	private Color maroon = new Color(80,0,30);
 	
+	private Board brd;
+	private boolean isHighlighted;
+	private boolean isSacrificed;
 	private int x_cord;
 	private int y_cord;
 	private int pieceState;
-	private Board brd;
 	private int xPos;
 	private int yPos;
 
-//Constructor	
+/**Constructor*/
 	public Piece(int x, int y, int pieceSt, Board b, int x_pos, int y_pos){
 		brd = b;
 		x_cord = x;
@@ -29,23 +31,25 @@ public class Piece extends JComponent implements MouseListener{
 		xPos = x_pos;
 		yPos = y_pos;
 		pieceState = pieceSt;
+		isHighlighted = false;
+		isSacrificed = false;
 		setBounds(x_cord-3,y_cord-3,26,26);
 		setVisible(true);
 		this.addMouseListener(this);
 	}
 
-//Graphical methods
+/**Graphical methods*/
 	public void paintComponent(Graphics2D g2){
 		super.paintComponent(g2);
 		
 		
-		if(pieceState == 1){
+		if(pieceState == 1 || pieceState == -1){
 			Ellipse2D e = new Ellipse2D.Double(this.getLocation().x + 3, this.getLocation().y + 3, 20, 20);
 			g2.setStroke(new BasicStroke(1));
 			g2.setColor(Color.white);
 		    g2.fill(e);
 		}
-		else if(pieceState == 2){
+		else if(pieceState == 2 || pieceState == -2){
 			Ellipse2D e = new Ellipse2D.Double(this.getLocation().x + 3, this.getLocation().y + 3, 20, 20);
 			g2.setStroke(new BasicStroke(1));
 			g2.setColor(maroon);
@@ -55,6 +59,9 @@ public class Piece extends JComponent implements MouseListener{
 		if(isHighlighted){
 			highlight(g2);
 		}
+		else if(isSacrificed){
+			sacrificialHighlight(g2);
+		}
 	}
 	public void highlight(Graphics2D g2){
 		Ellipse2D e = new Ellipse2D.Double(this.getLocation().x+2, this.getLocation().y+2, 22, 22);
@@ -62,8 +69,16 @@ public class Piece extends JComponent implements MouseListener{
 	    g2.setColor(Color.yellow);
 	    g2.draw(e);
 	}
+	public void sacrificialHighlight(Graphics2D g2){
+		Ellipse2D e = new Ellipse2D.Double(this.getLocation().x+2, this.getLocation().y+2, 22, 22);
+		g2.setStroke(new BasicStroke(3));
+	    g2.setColor(Color.black);
+	    g2.draw(e);
+	    g2.drawLine(this.getLocation().x, this.getLocation().y, this.getLocation().x+26, this.getLocation().y+26);
+	    g2.drawLine(this.getLocation().x, this.getLocation().y+26, this.getLocation().x+26, this.getLocation().y);
+	}
 
-//Get-methods
+/**Get-methods*/
 	public boolean getHighlight(){
 		return isHighlighted;
 	}
@@ -72,21 +87,26 @@ public class Piece extends JComponent implements MouseListener{
 	}
 			
 	
-//Update-methods
+/**Update-methods*/
 	public void setHighlight(boolean b){
 		isHighlighted = b;
 	}
 	public void setPieceState(int pieceSt){
-		if(pieceSt == 0 || pieceSt == 1 || pieceSt == 2){
+		if(pieceSt == 0 || pieceSt == 1 || pieceSt == 2 || pieceSt == -1 || pieceSt == -2){
 			pieceState = pieceSt;
 		}
 	}
+	public void setSacrifice(boolean b){
+		isSacrificed = b;
+	}
 
-
-//MouseListener overridden methods
+/**MouseListener overridden methods*/
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
-		if (isHighlighted){
+		if( (brd.isMakingSacrifice()) && (pieceState == brd.getBoardState().getCurrentPlayer()) ){
+			brd.sacrifice(new Pair(xPos,yPos));
+		}
+		else if (isHighlighted){
 			//If no piece selected at time of click, select the clicked piece
 			if(brd.getSelected() == null){
 				brd.setHighlightAll(false, true);
@@ -124,10 +144,6 @@ public class Piece extends JComponent implements MouseListener{
 				}
 			}
 		}
-		/*	If clicked piece is ( (NOT highlighted) && (no moves have been made this turn) )
-		 *		deselect the selected piece
-		 */
-		
 		else if(brd.getVisited().isEmpty()){
 			
 			brd.setHighlightAll(false, true);

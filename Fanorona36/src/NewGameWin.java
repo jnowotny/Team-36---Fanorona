@@ -1,15 +1,12 @@
 //import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.Toolkit;
 
 import javax.swing.ButtonGroup;
-import javax.swing.ButtonModel;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.EmptyBorder;
-//import java.awt.GridBagLayout;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -18,8 +15,6 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JSpinner;
 import javax.swing.JRadioButton;
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
 import javax.swing.JTextField;
 
 
@@ -41,11 +36,19 @@ public class NewGameWin extends JFrame {
 	private JSpinner spinnerCols;
 	private JRadioButton noTimerButton;
 	private JRadioButton yesTimerButton;
+	private JRadioButton hostAsP1Button;
+	private JRadioButton hostAsP2Button;
+	private JRadioButton hostAsHumanButton;
+	private JRadioButton hostAsCpuButton;
 	private ButtonGroup timerSelection;
+	private ButtonGroup playerSelection;
+	private ButtonGroup humanCpuSelection;
 	private JLabel lblTimer;
 	private JLabel lblSetTime;
 	private JLabel lblMilliseconds;
 	private int timerButtonSelected = -1;
+	private int playerNumber = -1;
+	private int isHuman = -1;
 	private JSpinner spinnerTimer;
 	private JLabel lblPort;
 	private JSpinner spinnerPort;
@@ -70,7 +73,7 @@ public class NewGameWin extends JFrame {
 		setTitle("New Game");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);    
 		int width = 475;
-	    int height = 330;
+	    int height = 350;
 	    Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 	    int x = (screen.width - width) / 2;
 	    int y = (screen.height - height) / 2;
@@ -98,27 +101,74 @@ public class NewGameWin extends JFrame {
 			}
 		});
 		contentPane.add(btnNewButton_2);
-		
-		String gameTypes[] = {"Player 1 vs. Player 2", "Player vs. CPU", "CPU vs. CPU"};
+
+		String[] gameTypes = new String[] {"--Select--", "Player 1 vs. Player 2", "Player vs. CPU", "CPU vs. CPU"};
 		comboType = new JComboBox<String>(gameTypes);
 		comboType.setBounds(107, 111, 175, 27);
 		comboType.setToolTipText("");
 		contentPane.add(comboType);
 		comboType.setVisible(false);
+		comboType.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)  {
+				if (comboType.getSelectedIndex() == 1) { //P v P
+					hostAsHumanButton.setVisible(false);
+					hostAsCpuButton.setVisible(false);
+					if (comboLocation.getSelectedIndex() == 3) { //host 
+						hostAsP1Button.setVisible(true);
+						hostAsP2Button.setVisible(true);
+					}
+					else {
+						hostAsP1Button.setVisible(false);
+						hostAsP2Button.setVisible(false);
+					}
+				}
+				else if (comboType.getSelectedIndex() == 2) { //P v C
+					hostAsP1Button.setVisible(true);
+					hostAsP2Button.setVisible(true);
+					if (comboLocation.getSelectedIndex() == 3) { //host
+						hostAsHumanButton.setVisible(true);
+						hostAsCpuButton.setVisible(true);
+					}
+					else {
+						hostAsHumanButton.setVisible(false);
+						hostAsCpuButton.setVisible(false);
+					}
+				}
+				else if (comboType.getSelectedIndex() == 3) { //C v C
+					hostAsHumanButton.setVisible(false);
+					hostAsCpuButton.setVisible(false);
+					if (comboLocation.getSelectedIndex() == 3) { //host
+						hostAsP1Button.setVisible(true);
+						hostAsP2Button.setVisible(true);
+					}
+					else {
+						hostAsP1Button.setVisible(false);
+						hostAsP2Button.setVisible(false);
+					}
+				}
+				else {
+					hostAsP1Button.setVisible(false);
+					hostAsP2Button.setVisible(false);
+					hostAsHumanButton.setVisible(false);
+					hostAsCpuButton.setVisible(false);
+				}
+			}
+		});
 		
 		JLabel lblGameLocation = new JLabel("Game Location");
 		lblGameLocation.setBounds(26, 80, 100, 16);
 		lblGameLocation.setFont(new Font("Lucida Grande", Font.BOLD, 13));
 		contentPane.add(lblGameLocation);
 		
-		String gameLocations[] = {"--Select Game--", "New Local Game", "Connect to Game", "Host Game"};
+		String[]gameLocations = new String[] {"--Select--", "New Local Game", "Connect to Game", "Host Game"};
 		comboLocation = new JComboBox<String>(gameLocations);
 		comboLocation.setBounds(134, 76, 175, 27);
 		comboLocation.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int selInd = comboLocation.getSelectedIndex();
-				if (selInd == 0) {
+				int selIndexLoc = comboLocation.getSelectedIndex();
+				if (selIndexLoc == 0) {
 					lblGameType.setVisible(false);
+					comboType.setSelectedIndex(0);
 					comboType.setVisible(false);
 					lblNewLabel.setVisible(false);
 					lblRows.setVisible(false);
@@ -128,6 +178,8 @@ public class NewGameWin extends JFrame {
 					lblTimer.setVisible(false);
 					noTimerButton.setVisible(false);
 					yesTimerButton.setVisible(false);
+					//hostAsP1Button.setVisible(false);
+					//hostAsP2Button.setVisible(false);
 					lblSetTime.setVisible(false);
 					lblMilliseconds.setVisible(false);
 					spinnerTimer.setVisible(false);
@@ -138,9 +190,14 @@ public class NewGameWin extends JFrame {
 					IP2.setVisible(false);
 					IP3.setVisible(false);
 					IP4.setVisible(false);
+					hostAsP1Button.setVisible(false);
+					hostAsP2Button.setVisible(false);
+					hostAsHumanButton.setVisible(false);
+					hostAsCpuButton.setVisible(false);
 				}
-				else if (selInd == 1) { //local game
+				else if (selIndexLoc == 1) { //local game
 					lblGameType.setVisible(true);
+					comboType.setSelectedIndex(0);
 					comboType.setVisible(true);
 					lblNewLabel.setVisible(true);
 					lblRows.setVisible(true);
@@ -158,8 +215,9 @@ public class NewGameWin extends JFrame {
 					IP3.setVisible(false);
 					IP4.setVisible(false);
 				}
-				else if (selInd == 2) { //connect to game
+				else if (selIndexLoc == 2) { //connect to game
 					lblGameType.setVisible(false);
+					comboType.setSelectedIndex(0);
 					comboType.setVisible(false);
 					lblNewLabel.setVisible(false);
 					lblRows.setVisible(false);
@@ -180,9 +238,14 @@ public class NewGameWin extends JFrame {
 					IP4.setVisible(true);
 					lblPort.setVisible(true);
 					spinnerPort.setVisible(true);
+					hostAsP1Button.setVisible(false);
+					hostAsP2Button.setVisible(false);
+					hostAsHumanButton.setVisible(false);
+					hostAsCpuButton.setVisible(false);
 				}
-				else if (selInd == 3) { //host game
+				else if (selIndexLoc == 3) { //host game
 					lblGameType.setVisible(true);
+					comboType.setSelectedIndex(0);
 					comboType.setVisible(true);
 					lblNewLabel.setVisible(true);
 					lblRows.setVisible(true);
@@ -292,20 +355,70 @@ public class NewGameWin extends JFrame {
 		timerSelection.add(noTimerButton);
 		timerSelection.add(yesTimerButton);
 		
+		hostAsP1Button = new JRadioButton("P1");
+		hostAsP1Button.setBounds(279, 114, 47, 18);
+		contentPane.add(hostAsP1Button);
+		hostAsP1Button.setVisible(false);
+		hostAsP1Button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				playerNumber = 1;
+			}
+		});
+		
+		hostAsP2Button = new JRadioButton("P2");
+		hostAsP2Button.setBounds(323, 108, 47, 29);
+		contentPane.add(hostAsP2Button);
+		hostAsP2Button.setVisible(false);
+		hostAsP2Button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				playerNumber = 2;
+			}
+		});
+		
+		playerSelection = new ButtonGroup(); 
+		playerSelection.add(hostAsP1Button);
+		playerSelection.add(hostAsP2Button);
+		
+		hostAsHumanButton = new JRadioButton("Human");
+		hostAsHumanButton.setBounds(370, 113, 85, 20);
+		contentPane.add(hostAsHumanButton);
+		hostAsHumanButton.setVisible(false);
+		hostAsHumanButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				isHuman = 1;
+			}
+		});
+		
+		hostAsCpuButton = new JRadioButton("CPU");
+		hostAsCpuButton.setBounds(370, 140, 69, 19);
+		contentPane.add(hostAsCpuButton);
+		hostAsCpuButton.setVisible(false);
+		hostAsCpuButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				isHuman = 0;
+			}
+		});
+		
+		humanCpuSelection = new ButtonGroup();
+		humanCpuSelection.add(hostAsHumanButton);
+		humanCpuSelection.add(hostAsCpuButton);
+		
 		JButton btnCreateNewGame = new JButton("Create New Game");
 		btnCreateNewGame.setBounds(71, 273, 319, 29);
 		btnCreateNewGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int selInd = comboLocation.getSelectedIndex();
-				if (selInd == 1) { //local game
-					if (timerButtonSelected > -1) {
+
+				int selIndexLoc = comboLocation.getSelectedIndex();
+				if (selIndexLoc == 1) { //local game
+					boolean playerNeeded = true;
+					if (comboType.getSelectedIndex() == 2 && playerNumber == -1)
+						playerNeeded = false;
+					if (timerButtonSelected > -1 && comboType.getSelectedIndex() > 0 && playerNeeded) {
 						int location = 1; //LOCAL
 						int gameType = comboType.getSelectedIndex(); //0 - PvP; 1 - PvC; 2 - CvC
 						int numRows = (int) spinnerRows.getValue();
 						int numCols = (int) spinnerCols.getValue();
 						int timerLength = -1;
-						String address = "";
-						int port = -1;
 						if (timerButtonSelected == 1) 
 							if (spinnerTimer.isVisible() && (int) spinnerTimer.getValue() > 0) 
 								timerLength = (int) spinnerTimer.getValue();	
@@ -314,36 +427,33 @@ public class NewGameWin extends JFrame {
 						dispose();
 					}
 				}
-				else if (selInd == 2) { //connect to game (client)
+				else if (selIndexLoc == 2) { //connect to game (client)
 					int location = 2; 		//CLIENT
 					String address = IP1.getText() + "." + IP2.getText() + "." + IP3.getText() + "." + IP4.getText();
 					int port = (int) spinnerPort.getValue();
 					Thread cliThread = new Thread(new Client(location, address, port));
 					cliThread.start();
-//					Client client = new Client(location, address, port);
-//					Fanorona newGame = new Fanorona(location, gameType, numRows, numCols, timerLength, port, address);
-//					Client client = new Client(newGame, address, port); //HELP!!!!!!
-//					newGame.setVisible(true);
 					dispose();
 				
 				}
-				else if (selInd == 3) { //host a game (server)
-					int location = 3; //SERVER
-					int gameType = comboType.getSelectedIndex(); //0 - PvP; 1 - PvC; 2 - CvC
-					int numRows = (int) spinnerRows.getValue();
-					int numCols = (int) spinnerCols.getValue();
-					int timerLength = -1;
-					String address = "";
-					int port = (int) spinnerPort.getValue();
-					if (timerButtonSelected == 1) 
-						if (spinnerTimer.isVisible() && (int) spinnerTimer.getValue() > 0) 
-							timerLength = (int) spinnerTimer.getValue();
-					Thread serThread = new Thread(new Server(location, gameType, numRows, numCols, timerLength, port));
-//					Server serv = new Server(location, gameType, numRows, numCols, timerLength, port);
-//					Fanorona newGame = new Fanorona(location, gameType, numRows, numCols, timerLength, port, address);
-//			    	Server serv = new Server(newGame, port); //HELP!!!!!!!!!!
-//					newGame.setVisible(true);
-					dispose();
+				else if (selIndexLoc == 3) { //host a game (server)
+					boolean humanCPUNeeded = true;
+					if (comboType.getSelectedIndex() == 2 && isHuman == -1)
+						humanCPUNeeded = false;
+					if (timerButtonSelected > -1 && comboType.getSelectedIndex() > 0 && playerNumber > -1 && humanCPUNeeded) {
+						int location = 3; //SERVER
+						int gameType = comboType.getSelectedIndex(); //0 - PvP; 1 - PvC; 2 - CvC
+						int numRows = (int) spinnerRows.getValue();
+						int numCols = (int) spinnerCols.getValue();
+						int timerLength = -1;
+						int port = (int) spinnerPort.getValue();
+						if (timerButtonSelected == 1) 
+							if (spinnerTimer.isVisible() && (int) spinnerTimer.getValue() > 0) 
+								timerLength = (int) spinnerTimer.getValue();
+						Thread servThread = new Thread(new Server(location, gameType, numRows, numCols, timerLength, port));
+						servThread.start();
+						dispose();
+					}
 				}
 			}
 		});

@@ -1,3 +1,5 @@
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import java.awt.*;
 import java.awt.geom.*;
@@ -6,17 +8,19 @@ import java.util.ArrayList;
 
 public class Board extends JPanel {
 	private static final long serialVersionUID = -9165633611662257140L;
-//Data members
+/**Data members*/
 	
-	//Basic data-types
+	/**Basic data-types*/
 	private int numRows;
 	private int numCols;
 	private int xStartCoord;
 	private int yStartCoord;
 	private int sqSideLen;
-	private boolean removeAvailable;
 	private int capturedThisTurn;
-	//Objects
+	private boolean removeAvailable;
+	private boolean makingSacrifice;
+	/**Objects*/
+	private static Fanorona fan;
 	private BoardState boardState;
 //	private Stack<Move> moveList = new Stack<Move>();
 	private Piece[][] boardPieces;
@@ -25,19 +29,20 @@ public class Board extends JPanel {
 	private ArrayList<Pair> visited;
 	private Color maroon = new Color(80,0,30);
 	
-//Constructor
-	public Board(int rows, int columns) {
+/**Constructor*/
+	public Board(int rows, int columns, Fanorona f) {
 		
 		this.setLayout(null);
-		
+		fan = f;
 		numRows = rows;
 		numCols = columns;
 		xStartCoord = 350-50*(numCols/2);
 		yStartCoord = 50;
 		sqSideLen = 50;
-		removeAvailable = false;
 		capturedThisTurn = 0;
-
+		removeAvailable = false;
+		makingSacrifice = false;
+		
 		boardState = new BoardState(numRows, numCols,this);
 		boardPieces = new Piece[numRows][numCols];
 		selected = null;
@@ -76,7 +81,8 @@ public class Board extends JPanel {
 	    }
 	    
 	}
-		
+
+/**AI related items*/		
 	class PiecePosition {
 		int xPos;
 		int yPos;
@@ -229,26 +235,34 @@ public class Board extends JPanel {
 		return (0);
 		
 	}
-	//Graphical Methods
-		@Override
-		public void paintComponent(Graphics g){
-			super.paintComponent(g);
-			Graphics2D g2 = (Graphics2D) g;
+/**Graphical Methods*/
+	@Override
+	public void paintComponent(Graphics g){
+		super.paintComponent(g);
+		Graphics2D g2 = (Graphics2D) g;
 		    
-			drawBoard(g2);
-			drawPieces(g2);
-	    }
+		drawBoard(g2);
+		drawPieces(g2);
+	}
 		
-		public void drawBoard(Graphics2D g2){
+	public void drawBoard(Graphics2D g2){
 			
-			Rectangle2D backdrop = new Rectangle2D.Double(xStartCoord+sqSideLen-20, yStartCoord+sqSideLen-20, 40+50*(numCols-1), 40+50*(numRows-1));
-			g2.setStroke(new BasicStroke(1));
-		    g2.setColor(Color.gray);
-		    g2.fill(backdrop);
-		    
-		    g2.setStroke(new BasicStroke(3));
-		    g2.setColor(maroon);
+		Rectangle2D backdrop = new Rectangle2D.Double(xStartCoord+sqSideLen-20, yStartCoord+sqSideLen-20, 40+50*(numCols-1), 40+50*(numRows-1));
+		g2.setStroke(new BasicStroke(1));
+	    g2.setColor(Color.gray);
+	    g2.fill(backdrop);
+	    
+	    g2.setStroke(new BasicStroke(3));
+	    g2.setColor(maroon);
 		
+	    if( (numRows == 1) && (numCols != 1)) {
+	    	g2.drawLine(xStartCoord + sqSideLen, yStartCoord + sqSideLen, xStartCoord + sqSideLen*(numCols), yStartCoord + sqSideLen);
+	    }
+	    else if( (numCols == 1) && (numRows != 1)) {
+	    	g2.drawLine(xStartCoord + sqSideLen, yStartCoord + sqSideLen, xStartCoord + sqSideLen, yStartCoord + sqSideLen*(numRows));
+	    }
+	    
+	    //Draws the board
 	    for(int i = 1; i < numRows; i++){
 	    	for(int j = 1; j < numCols; j ++){
 	    		g2.drawRect(xStartCoord + sqSideLen*(j), yStartCoord + sqSideLen*(i), sqSideLen, sqSideLen);
@@ -269,7 +283,7 @@ public class Board extends JPanel {
 		}
 	}
 
-//Get-methods
+/**Get-methods*/
 	public Piece[][] getBoardPieces() {
 		return boardPieces;
 	}
@@ -298,48 +312,59 @@ public class Board extends JPanel {
 	public int getP2Score(){
 		return boardState.getP2Score();
 	}
+	public int getCapturedThisTurn(){
+		return capturedThisTurn;
+	}
+	public boolean isRemoveAvailable() {
+		return removeAvailable;
+	}	
+	public boolean isMakingSacrifice(){
+		return makingSacrifice;
+	}
 	public Pair getSelected(){
 		return selected;
 	}
 	public ArrayList<Pair> getVisited(){
 		return visited;
 	}
-	public boolean isRemoveAvailable() {
-		return removeAvailable;
-	}
-	public int getCapturedThisTurn(){
-		return capturedThisTurn;
-	}	
-	public void activateRemovables(Pair p1, Pair p2) {
-		boardState.activateRemovables(p1, p2);	
-	}
 	
-//Update-methods
+	
+/**Update-methods*/
 	public void select(Pair p){
 		selected = p;
 	}
 	public void setBoardPieces(Piece[][] boardPieces) {
 		this.boardPieces = boardPieces;
 	}
+	public void setMakingSacrifice(boolean b){
+		makingSacrifice = b;
+	}
 	public void updateScores(){
 		boardState.updateScores();
 		repaint();
 	}
 	public void nextTurn(){
+		fan.sacrificeButton.setSelected(false);
+		makingSacrifice = false;
 		boardState.nextCurrentPlayer();
 		boardState.updateTurnCount();
 		boardState.deactivateRemovables();
 		select(null);
 		visited.clear();
 		capturedThisTurn = 0;
+		
 		if(boardState.getCurrentPlayer() == 2){
 			setBackground(maroon);
 		}
 		else{
 			setBackground(Color.white);
 		}
-		setHighlightAll(false, true);
 		
+		removeSacrificed(boardState.getCurrentPlayer());
+		setHighlightAll(false, true);
+		if (this.getTurnCount() <= 1)
+			JOptionPane.showMessageDialog(new JFrame(), "The Game Will Begin Now!");
+		else JOptionPane.showMessageDialog(new JFrame(), "Next User's Turn!");
 	}
 	public void updateRemoveAvailable() {
 		if( !(boardState.getRemovables().isEmpty()) ){
@@ -359,8 +384,8 @@ public class Board extends JPanel {
 		nextSelected = null;
 	}
 
-//Game-logic methods
-	//Make a moveType move from position p1 to p2
+/**Game-logic methods*/
+	/**Make a moveType move from position p1 to p2*/
 	public void move(Pair p1, Pair p2, String moveType){
 		int xPos1 = p1.getFirst();
 		int yPos1 = p1.getSecond();
@@ -396,25 +421,34 @@ public class Board extends JPanel {
 		}
 		
 	}
-	
-	//TODO implement sacrifice move
+	/**Make sacrifice move that leaves the chosen piece in-game until the start of that player's next turn, possibly blocking captures from the opponent*/
 	public void sacrifice(Pair p){
-		
-	}
-	
-	
-//Graphical Game-logic methods
-	
-	//TODO find use for this or delete it...might be useful for sacrifice
-	public void unHighlight_and_Remove(Pair p){
 		int xPos = p.getFirst();
 		int yPos = p.getSecond();
-		boardPieces[yPos][xPos].setHighlight(false);
-		boardPieces[yPos][xPos].setPieceState(0);
-		boardState.setBoardGrid(yPos, xPos, 0);
-		repaint();
+		boardState.setBoardGrid(yPos, xPos, (boardState.getCurrentPlayer()*(-1)) );
+		boardPieces[yPos][xPos].setPieceState((boardState.getCurrentPlayer()*(-1)));
+		boardPieces[yPos][xPos].setSacrifice(true);
+		nextTurn();
 	}
-	//Remove pieces found in removable.get(i)
+	/**Calls boardState's activateRemovables function*/
+	public void activateRemovables(Pair p1, Pair p2) {
+		boardState.activateRemovables(p1, p2);	
+	}	
+
+/**Graphical Game-logic methods*/
+	
+	/**Change the highlight status of all pieces, optionally call repaint()*/
+	public void setHighlightAll(boolean isHighlight, boolean doRepaint){
+		for(int i = 0; i < numRows; i++){
+	    	for(int j = 0; j < numCols; j++){
+	    		boardPieces[i][j].setHighlight(isHighlight);
+	    	}
+		}
+		if(doRepaint){
+			repaint();
+		}
+	}
+	/**Remove pieces found in removable.get(i)*/
 	public void removeRemovables(int i){
 		if( (i == 0) || (i == 1)){
 			for(int j = 0; j < boardState.getRemovables().get(i).size(); j++){
@@ -428,18 +462,7 @@ public class Board extends JPanel {
 			boardState.deactivateRemovables();
 		}
 	}
-	//Change the highlight status of all pieces, optionally call repaint()
-	public void setHighlightAll(boolean isHighlight, boolean doRepaint){
-		for(int i = 0; i < numRows; i++){
-	    	for(int j = 0; j < numCols; j++){
-	    		boardPieces[i][j].setHighlight(isHighlight);
-	    	}
-		}
-		if(doRepaint){
-			repaint();
-		}
-	}
-	//Remove all pieces that have isHighlighted set to true
+	/**Remove all pieces that have isHighlighted set to true*/
 	public void removeHighlightedPieces(){
 		for(int i = 0; i < numRows; i++){
 	    	for(int j = 0; j < numCols; j++){
@@ -451,7 +474,20 @@ public class Board extends JPanel {
 	    	}
 		}
 	}
-	//Highlight all pieces that can make a capture move this turn
+	/**Remove pieces sacrificed by current player on their last turn */
+	public void removeSacrificed(int currentPlayer){
+		for(int i = 0; i < numRows; i++){
+			for(int j = 0; j < numCols; j++){
+				if(boardState.getBoardGrid()[i][j] == (currentPlayer * (-1))){
+					boardState.setBoardGrid(i, j, 0);
+					boardPieces[i][j].setSacrifice(false);
+					boardPieces[i][j].setPieceState(0);
+					break;
+				}
+			}
+		}
+	}
+	/**Highlight all pieces that can make a capture move this turn*/
 	public void highlightCaptureMovable(){
 		for(int i = 0; i < numRows; i++){
 			for(int j = 0; j < numCols; j++){
@@ -462,7 +498,7 @@ public class Board extends JPanel {
 		}
 		repaint();
 	}
-	//Highlight all pieces that can make a paika move this turn
+	/**Highlight all pieces that can make a paika move this turn*/
 	public void highlightPaikaMovable(){		
 		 for(int i = 0; i < numRows; i++){
 	    	for(int j = 0; j < numCols; j++){
@@ -473,7 +509,7 @@ public class Board extends JPanel {
 	     }
 		 repaint();
 	}
-	//Highlight all empty spots adjacent to p
+	/**Highlight all empty spots adjacent to p*/
 	public void highlightDestinations(Pair p){
 		Pair[] destinations = boardState.checkDestinations(p);
 		for(int i = 0; i < 8; i++){
@@ -494,7 +530,7 @@ public class Board extends JPanel {
 		}	
 		repaint();
 	}
-	//Highlight all empty spots adjacent to p that can be used for a capture move
+	/**Highlight all empty spots adjacent to p that can be used for a capture move*/
 	public void highlightCaptureDestinations(Pair p){
 		Pair[] destinations = boardState.checkCaptureDestinations(p);
 		for(int i = 0; i < 8; i++){
@@ -515,7 +551,7 @@ public class Board extends JPanel {
 		}	
 		repaint();
 	}
-	//Highlight all pieces that are options to be removed as a result of a capture move
+	/**Highlight all pieces that are options to be removed as a result of a capture move*/
 	public void highlightRemovables(){
 		for(int i = 0; i < boardState.getRemovables().size(); i++){
 			for(int j = 0; j < boardState.getRemovables().get(i).size(); j++){

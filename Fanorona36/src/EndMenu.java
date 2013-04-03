@@ -104,7 +104,9 @@ public class EndMenu extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					if (timeOut)
+					if (f.getNumRows() == 1 && f.getNumRows() == 1)
+						lblWinnerLabel.setText("Draw!");
+					else if (timeOut)
 						lblWinnerLabel.setText("Player " + f.board.getBoardState().getNextPlayer() + " is the winnner!");
 					else {
 						if (curP1Score != 0 && curP2Score != 0)

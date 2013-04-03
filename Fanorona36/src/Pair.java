@@ -1,5 +1,5 @@
 
-//Container class for 2 ints, corresponding to an xPosition and yPosition
+/**Container class for 2 ints, corresponding to an xPosition and yPosition*/
 public class Pair {
 	private int first;
 	private int second;

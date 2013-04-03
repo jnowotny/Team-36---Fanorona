@@ -1,9 +1,9 @@
 import java.util.ArrayList;
 
 public class BoardState {
-//Data members
+/**Data members*/
 	
-	//Basic data-types
+	/**Basic data-types*/
 	private int numRows;
 	private int numCols;
 	private int[][] boardGrid;
@@ -12,11 +12,11 @@ public class BoardState {
 	private int turnCount = 0;
 	private int currentPlayer = 2;		//1 or 2 (player), 0: error
 
-	//Objects
+	/**Objects*/
 	private Board brd;
 	ArrayList<ArrayList<Pair>> removables;
 	
-//Constructor
+/**Constructor*/
 	public BoardState(int rows, int columns, Board b){
 		brd = b;
 		numRows = rows;
@@ -42,7 +42,7 @@ public class BoardState {
 		boardGrid[numRows/2][numCols/2] = 0;
 	}
 	
-//Get-methods
+/**Get-methods*/
 	public int[][] getBoardGrid() {
 		return boardGrid;
 	}
@@ -73,12 +73,12 @@ public class BoardState {
 		return removables;
 	}
 
-//Update-methods
+/**Update-methods*/
 	public void setBoardGrid(int[][] boardGrid) {
 		this.boardGrid = boardGrid;
 	}
 	public void setBoardGrid(int i, int j, int pieceSt){
-		if(pieceSt == 0 || pieceSt == 1 || pieceSt == 2){
+		if(pieceSt == 0 || pieceSt == 1 || pieceSt == 2 || pieceSt == -1 || pieceSt == -2){
 			this.boardGrid[i][j] = pieceSt;
 		}
 	}
@@ -93,10 +93,10 @@ public class BoardState {
 		int p2Count = 0;
 		for(int i = 0; i < numRows; ++i){
 			for(int j = 0; j < numCols; ++j){
-				if (boardGrid[i][j] == 2) {
+				if ( (boardGrid[i][j] == 2) || (boardGrid[i][j] == -2) ){
 					p2Count++;
 				}
-				if (boardGrid[i][j] == 1) {
+				if ( (boardGrid[i][j] == 1) || (boardGrid[i][j] == -1) ){
 					p1Count++;
 				}
 			}
@@ -116,10 +116,10 @@ public class BoardState {
 		}
 	}
 
-//Game-logic methods
+/**Game-logic methods*/
 	
 	
-	//Returns true if p has an empty spot in a valid adjacency
+	/**Returns true if p has an empty spot in a valid adjacency*/
 	public boolean hasDestinations(Pair p){
 		Pair[] destinations = checkDestinations(p);
 		for(int i = 0; i < 8; i++){
@@ -130,7 +130,7 @@ public class BoardState {
 		return false;
 	}
 
-	/*	Given Pair(x,y), returns array[8] of Pair(x,y) for adjacent spaces that are empty.
+	/**	Given Pair(x,y), returns array[8] of Pair(x,y) for adjacent spaces that are empty.
 	 *  If array[i] == null, then the Pair position represented by i is occupied or invalid.
 	 * 
 	 *  		0  1  2
@@ -146,7 +146,64 @@ public class BoardState {
 		int xPos = p.getFirst();
 		int yPos = p.getSecond();
 		
-		if(yPos == 0){
+		//Special board case (numRows == 1)
+		if( numRows == 1 ) {
+			//Left-most 
+			if(xPos == 0) {
+				//E:3
+				if(checkAdjacent(p,3) == 0) {
+					destinations[3] = new Pair(xPos+1, yPos);
+				}
+			}
+			//Right-most
+			else if(xPos == numCols-1) {
+				//W:7
+				if(checkAdjacent(p,7) == 0) {
+					destinations[7] = new Pair(xPos-1, yPos);
+				}
+			}
+			//In-between
+			else {
+				//E:3
+				if(checkAdjacent(p,3) == 0) {
+					destinations[3] = new Pair(xPos+1, yPos);
+				}
+				//W:7
+				if(checkAdjacent(p,7) == 0) {
+					destinations[7] = new Pair(xPos-1, yPos);
+				}
+			}
+		}
+		else if( numCols == 1) {
+			//Top
+			if(yPos == 0) {
+				//S:5
+				if(checkAdjacent(p,5) == 0 ) {
+					destinations[5] = new Pair(xPos, yPos+1);
+				}
+			}
+			//Bottom
+			else if(yPos == numRows-1) {
+				//N:1
+				if(checkAdjacent(p,1) == 0 ) {
+					destinations[1] = new Pair(xPos, yPos-1);
+				}
+			}
+			//In-between
+			else {
+				//N:1
+				if(checkAdjacent(p,1) == 0 ) {
+					destinations[1] = new Pair(xPos, yPos-1);
+				}
+				//S:5
+				if(checkAdjacent(p,5) == 0 ) {
+					destinations[5] = new Pair(xPos, yPos+1);
+				}
+			}
+		}
+		//Normal board cases (numRows >= 3) && (numCols >= 3)
+		else if(yPos == 0){
+			
 			//Top-left corner
 			if(xPos == 0){
 				//E:3
@@ -423,7 +480,7 @@ public class BoardState {
 		return destinations;
 	}
 	
-	//Returns true if current player can make a capture move
+	/**Returns true if current player can make a capture move*/
 	public boolean hasCaptureMoves(){
 		for(int i = 0; i < numRows; i++){
 			for(int j = 0; j < numCols; j++){
@@ -454,7 +511,7 @@ public class BoardState {
 		return destinations;
 	}
 	
-	//Returns true if p has a destination for which the move would have capture options
+	/**Returns true if p has a destination for which the move would have capture options*/
 	public boolean hasCaptureDestinations(Pair p){
 		Pair[] destinations = checkCaptureDestinations(p);
 		for(int i = 0; i < 8; i++){
@@ -465,7 +522,7 @@ public class BoardState {
 		return false;
 	}
 	
-	//Returns true if a Move from p1 to p2 has Capture options
+	/**Returns true if a Move from p1 to p2 has Capture options*/
 	public boolean hasCaptures_Move(Pair p1, Pair p2){
 		ArrayList<ArrayList<Pair>> capturables = new ArrayList<ArrayList<Pair>>();
 		capturables = getCaptures_Move(p1,p2);
@@ -484,7 +541,7 @@ public class BoardState {
 		}
 	}
 	
-	/*Returns an ArrayList of 2 ArrayList<Pair> 
+	/**Returns an ArrayList of 2 ArrayList<Pair> 
 	 *	ArrayList<Pair> are filled with positions of capturable pieces in an unbroken line
 	 *	As a result of a Move from p1 to p2*/
 	public ArrayList<ArrayList<Pair>> getCaptures_Move(Pair p1, Pair p2){
@@ -698,11 +755,11 @@ public class BoardState {
 		return removablePieces;
 	}
 
-	//Returns the pieceState of adjacent spot to p in given direction
+	/**Returns the pieceState of adjacent spot to p in given direction*/
 	public int checkAdjacent(Pair p, int direction){
 		int xPos = p.getFirst();
 		int yPos = p.getSecond();
-		int adjacentPieceState = -1; //If -1 is returned, this function was called erroneously
+		int adjacentPieceState = 3; //If 3 is returned, this function was called erroneously
 		
 		switch(direction){
 			//NW
@@ -745,12 +802,12 @@ public class BoardState {
 		return adjacentPieceState;
 	}
 	
-	//Load the ArrayList of pieces that can be captured from getCaptures_Move into removables ArrayList
+	/**Load the ArrayList of pieces that can be captured from getCaptures_Move into removables ArrayList*/
 	public void activateRemovables(Pair p1, Pair p2){
 		removables = getCaptures_Move(p1, p2);
 	}
 	
-	//Empties the removables ArrayList
+	/**Empties the removables ArrayList*/
 	public void deactivateRemovables(){
 		removables.clear();
 	}
