@@ -1,21 +1,25 @@
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.StringTokenizer;
 
 public class Server extends Thread{
 	
-	public boolean recv = true;
+	protected boolean moving = true;
 	protected int portNum;
 	protected int playerNumber;
 	protected int timerLen;
 	protected int gameType;
 	protected int numRows;
 	protected int numCols;
-	protected String color;
-	ServerSocket servSock;
-	Socket input;
+	protected String otherPlayColor;
+	static ServerSocket servSock;
+	static Socket input;
 	Fanorona newGame;
+	private ArrayList<MovesList.Triplet> moves;
+	protected int turn;
+	private boolean notStarted = true;
 	
     /**
 	@param f The game the client will command.
@@ -39,10 +43,10 @@ public class Server extends Thread{
 		gameType = type;
 		timerLen = timerLength;
 		if (playerNumber == 1) {
-			color = "W";
+			otherPlayColor = "B";
 		}
 		else if (playerNumber == 2) {
-			color = "B";
+			otherPlayColor = "W";
 		}
 		try {
 			servSock = new ServerSocket(portNum);
@@ -53,7 +57,7 @@ public class Server extends Thread{
 		}   
 		
 		try {
-			final Socket input = servSock.accept();
+			input = servSock.accept();
 			Thread t = new Thread(new Worker(input, "server", this));
 			t.start();				
 		}
@@ -72,13 +76,21 @@ public class Server extends Thread{
 	}
 	// Starts the Fanorona game
 	public void startGame() {
-		Fanorona newGame = new Fanorona(playerNumber, gameType, numRows, numCols, timerLen);
+		newGame = new Fanorona(playerNumber, gameType, numRows, numCols, timerLen);
+		try {
+			Server.sleep(100);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		newGame.setVisible(true);
+		turn = 0;
+		notStarted = false;
 	}
 	
 	public String getConfig() {
 		String conf;
-		conf = numCols + " " + numRows + " " + color + " " + timerLen;
+		conf = numCols + " " + numRows + " " + otherPlayColor + " " + timerLen;
  		return conf;
 	}
 	
@@ -94,7 +106,7 @@ public class Server extends Thread{
 		if (type.equals("A")) {
 			try {
 				OutputStream outStream = input.getOutputStream();
-				Command move = new Command("capture_move", "A"+p.getFirst()+p.getSecond()+q.getFirst()+q.getSecond());
+				Command move = new Command("capture_move", "A"+" "+p.getFirst()+" "+p.getSecond()+" "+q.getFirst()+" "+q.getSecond()+" ");
 				move.send(outStream);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -103,7 +115,7 @@ public class Server extends Thread{
 		if (type.equals("W")) {
 			try {
 				OutputStream outStream = input.getOutputStream();
-				Command move = new Command("capture_move", "W"+p.getFirst()+p.getSecond()+q.getFirst()+q.getSecond());
+				Command move = new Command("capture_move", "W"+" "+p.getFirst()+" "+p.getSecond()+" "+q.getFirst()+" "+q.getSecond()+" ");
 				move.send(outStream);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -112,7 +124,7 @@ public class Server extends Thread{
 		if (type.equals("P")) {
 			try {
 				OutputStream outStream = input.getOutputStream();
-				Command move = new Command("paika_move", "P"+p.getFirst()+p.getSecond()+q.getFirst()+q.getSecond());
+				Command move = new Command("paika_move", "P"+" "+p.getFirst()+" "+p.getSecond()+" "+q.getFirst()+" "+q.getSecond()+" ");
 				move.send(outStream);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -121,7 +133,7 @@ public class Server extends Thread{
 		if (type.equals("S")) {
 			try {
 				OutputStream outStream = input.getOutputStream();
-				Command move = new Command("sacrifice_move", "S"+p.getFirst()+p.getSecond()+q.getFirst()+q.getSecond());
+				Command move = new Command("sacrifice_move", "S"+" "+p.getFirst()+" "+p.getSecond()+" ");
 				move.send(outStream);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -164,21 +176,36 @@ public class Server extends Thread{
 	    	p1 = transf2Matrix(p1);
 	    	p2 = new Pair(Integer.parseInt(parts.nextToken()),Integer.parseInt(parts.nextToken()));
 	    	p2 = transf2Matrix(p2);
-	    	newGame.board.move(p1, p2, moveType);
-			if ((moveType != "P") && (moveType != "S")) {
+			newGame.board.move(p1, p2, moveType);
+			if (!(moveType.equals("P")) && !(moveType.equals("S"))) {
 				newGame.board.activateRemovables(p1, p2);
 			}
-			if (moveType == "A") {
+			if (moveType.equals("A")) {
 				newGame.board.removeRemovables(0); //0 for A; 1 for W
 			}
-			else if (moveType == "W") {
+			else if (moveType.equals("W")) {
 				newGame.board.removeRemovables(1); //0 for A; 1 for W
 			}
 	    }
 	}
 	public void run() {
-		while (true) {
+		while (notStarted) {
 			
+		}
+		//Turn == 0
+		while (true) {
+			if ((newGame.board.getTurnCount() > turn) && (newGame.board.getBoardState().getCurrentPlayer() == playerNumber)) {
+				while (moving) {
+					if (newGame.board.movesList.getSize() > 0 ) {
+						moves = newGame.board.movesList.getMoveArray();
+						for (MovesList.Triplet move : moves) {
+							sendMove(move.getPair1(),move.getPair2(),move.getMoveType());
+						}
+						moving = false;
+					}
+				}
+				turn++;
+			}
 		}
 	}
 }

@@ -137,6 +137,12 @@ public class Piece extends JComponent implements MouseListener{
 						for(int j = 0; j < brd.getBoardState().getRemovables().get(i).size(); j++){
 							if(	brd.getBoardState().getRemovables().get(i).get(j).isEqualTo(new Pair(xPos, yPos))){
 								brd.removeRemovables(i);
+								if (i == 0) {
+									brd.movesList.add(brd.getSelected(), brd.getNextSelected(), "A");
+								}
+								else if (i == 1) {
+									brd.movesList.add(brd.getSelected(), brd.getNextSelected(), "W");
+								}
 								brd.updateSelected();
 //								brd.setHighlightAll(false,true);
 								break;

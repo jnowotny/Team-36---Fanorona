@@ -26,9 +26,10 @@ public class Board extends JPanel {
 	private Piece[][] boardPieces;
 	private Pair selected;
 	private Pair nextSelected;
-	private ArrayList<Pair> visited;
+	protected ArrayList<Pair> visited;
 	private Color maroon = new Color(80,0,30);
 	protected int playerNumber;
+	protected MovesList movesList;
 	
 /**Constructor
  * @param playerNum Player Number
@@ -48,6 +49,7 @@ public class Board extends JPanel {
 		capturedThisTurn = 0;
 		removeAvailable = false;
 		makingSacrifice = false;
+		movesList = new MovesList();
 		
 		boardState = new BoardState(numRows, numCols,this);
 		boardPieces = new Piece[numRows][numCols];
@@ -330,6 +332,9 @@ public class Board extends JPanel {
 	public Pair getSelected(){
 		return selected;
 	}
+	public Pair getNextSelected(){
+		return nextSelected;
+	}
 	public ArrayList<Pair> getVisited(){
 		return visited;
 	}
@@ -368,8 +373,9 @@ public class Board extends JPanel {
 		
 		removeSacrificed(boardState.getCurrentPlayer());
 		setHighlightAll(false, true);
-		if (this.getTurnCount() <= 1)
-			JOptionPane.showMessageDialog(new JFrame(), "The Game Will Begin Now!");
+		if (this.getTurnCount() <= 1) {
+//			JOptionPane.showMessageDialog(new JFrame(), "The Game Will Begin Now!");
+		}
 		else JOptionPane.showMessageDialog(new JFrame(), "Next User's Turn!");
 	}
 	public void updateRemoveAvailable() {
@@ -405,6 +411,7 @@ public class Board extends JPanel {
 			//P2 becomes current player's piece
 			boardState.setBoardGrid(yPos2, xPos2, boardState.getCurrentPlayer());
 			boardPieces[yPos2][xPos2].setPieceState(boardState.getCurrentPlayer());
+			movesList.add(p1, p2, "P");
 			nextTurn();
 			
 		}
@@ -434,6 +441,7 @@ public class Board extends JPanel {
 		boardState.setBoardGrid(yPos, xPos, (boardState.getCurrentPlayer()*(-1)) );
 		boardPieces[yPos][xPos].setPieceState((boardState.getCurrentPlayer()*(-1)));
 		boardPieces[yPos][xPos].setSacrifice(true);
+		movesList.add(p, null, "S");
 		nextTurn();
 	}
 	/**Calls boardState's activateRemovables function*/

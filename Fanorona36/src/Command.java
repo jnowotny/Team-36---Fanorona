@@ -82,6 +82,7 @@ public class Command {
 	@return The byte array of the Command */
     public byte[] getBytes(){
         String s = type + fieldTerminator + content + fieldTerminator;
+        System.out.println(s);
 	return s.getBytes();
     }
 

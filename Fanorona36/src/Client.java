@@ -1,11 +1,12 @@
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.StringTokenizer;
 
 public class Client extends Thread{
 
-	public boolean recv = true;
+	protected boolean moving = true;
 	protected int portNum;
 	protected String hostName;
 	protected int gameType;
@@ -14,8 +15,11 @@ public class Client extends Thread{
 	protected int numRows;
 	protected int numCols;
 	protected String color;
-	Socket clientSocket;
+	static Socket clientSocket;
 	Fanorona newGame;
+	private ArrayList<MovesList.Triplet> moves;
+	protected int turn;
+	private boolean notStarted = true;
 		
     /**
 	@param location The game the client will command.
@@ -38,7 +42,7 @@ public class Client extends Thread{
 		hostName = "127.0.0.1";
 		portNum = 11192;
 		try {
-			final Socket clientSocket = new Socket(InetAddress.getByName(hostName), portNum);
+			clientSocket = new Socket(InetAddress.getByName(hostName), portNum);
 		    /* assert:  Socket successfully created */
 			Thread tClient = new Thread(new Worker(clientSocket, "client", this));
 			tClient.start();
@@ -55,8 +59,16 @@ public class Client extends Thread{
 	}
 
 	public void startGame() {
-		Fanorona newGame = new Fanorona(playerNumber, gameType, numRows, numCols, timerLen);
+		newGame = new Fanorona(playerNumber, gameType, numRows, numCols, timerLen);
+		try {
+			Client.sleep(100);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		newGame.setVisible(true);
+		turn = 0;
+		notStarted = false;
 	}
 	
 	public Pair transf2Cartesian(Pair p1) {
@@ -112,7 +124,7 @@ public class Client extends Thread{
 		if (type.equals("S")) {
 			try {
 				OutputStream outStream = clientSocket.getOutputStream();
-				Command move = new Command("sacrifice_move", "S"+" "+p.getFirst()+" "+p.getSecond()+" "+q.getFirst()+" "+q.getSecond()+" ");
+				Command move = new Command("sacrifice_move", "S"+" "+p.getFirst()+" "+p.getSecond()+" ");
 				move.send(outStream);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -125,10 +137,10 @@ public class Client extends Thread{
 	    numCols  = Integer.parseInt(sToken.nextToken());
 	    numRows = Integer.parseInt(sToken.nextToken());
 	    color  = sToken.nextToken();
-	    if (color == "W") {
+	    if (color.equals("W")) {
 	    	playerNumber = 1;
 	    }
-	    else if (color == "B") {
+	    else if (color.equals("B")) {
 	    	playerNumber = 2;
 	    }
 	    timerLen  = Integer.parseInt(sToken.nextToken());
@@ -167,24 +179,43 @@ public class Client extends Thread{
 	    	moveType = parts.nextToken();
 	    	p1 = new Pair(Integer.parseInt(parts.nextToken()),Integer.parseInt(parts.nextToken()));
 	    	p1 = transf2Matrix(p1);
+	    	if (moveType.equals("S")) {
+	    		newGame.board.sacrifice(p1);
+	    		break;
+	    	}
 	    	p2 = new Pair(Integer.parseInt(parts.nextToken()),Integer.parseInt(parts.nextToken()));
 	    	p2 = transf2Matrix(p2);
 			newGame.board.move(p1, p2, moveType);
-			if ((moveType != "P") && (moveType != "S")) {
+			if (!(moveType.equals("P")) && !(moveType.equals("S"))) {
 				newGame.board.activateRemovables(p1, p2);
 			}
-			if (moveType == "A") {
+			if (moveType.equals("A")) {
 				newGame.board.removeRemovables(0); //0 for A; 1 for W
 			}
-			else if (moveType == "W") {
+			else if (moveType.equals("W")) {
 				newGame.board.removeRemovables(1); //0 for A; 1 for W
 			}
 	    }
 	}
 	
 	public void run() {
-		while (true) {
+		while (notStarted) {
 			
+		}
+		//Turn == 0
+		while (true) {
+			if ((newGame.board.getTurnCount() > turn) && (newGame.board.getBoardState().getCurrentPlayer() == playerNumber)) {
+				while (moving) {
+					if (newGame.board.movesList.getSize() > 0 ) {
+						moves = newGame.board.movesList.getMoveArray();
+						for (MovesList.Triplet move : moves) {
+							sendMove(move.getPair1(),move.getPair2(),move.getMoveType());
+						}
+						moving = false;
+					}
+				}
+				turn++;
+			}
 		}
 	}
 }
