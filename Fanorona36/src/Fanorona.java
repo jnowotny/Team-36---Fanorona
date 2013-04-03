@@ -45,6 +45,7 @@ public class Fanorona extends JFrame {
 	private int curP2Score;
 	private int timerSet;
 	private int maxTurns;
+	private static int playerNumber;
 	private static int gameType;
 	private static int numRows;
 	private static int numCols;
@@ -55,13 +56,18 @@ public class Fanorona extends JFrame {
 	
 
 	
-/**Constructor**/
-	public Fanorona(int location, int type, int rows, int cols, int timer) {
-	/*////////////////////////////////
-	LOCATION
-		- 1: local game
-		- 2: connect to a game (client)
-		- 3: host a game (server)
+/**Constructor
+* @param playerNum Player Number
+* @param type Game type, PvP, PvC, CvC
+* @param rows Number of Rows 
+* @param cols Number of Columns
+* @param timer Time in ms */
+	public Fanorona(int playerNum, int type, int rows, int cols, int timer) {
+	/*****************************
+	PLAYERNUMBER
+		- -1;
+		-  1: 
+		-  2: 
 		
 	GAMETYPE
 		- -1: you don't get to decide! (client)
@@ -75,20 +81,21 @@ public class Fanorona extends JFrame {
 	TIMER
 		- -1: no timer (local/server) OR you don't get to decide! (client)
 
-	*///////////////////////////////
+	*****************************/
 		gameType = type;
 		numRows = rows;
 		numCols = cols;
 		maxTurns = 10*numRows;
-	///////////////
+		playerNumber = playerNum;
+	/*************/
 		timeRemaining = timer / 1000;
 		timerSet = timeRemaining;
-	//////////////
-		board = new Board(numRows, numCols, this);
+	/*************/
+		board = new Board(numRows, numCols, playerNumber, this);
 		pause = new PauseMenu(this);
 		swap = new JFrame();
 		timeOut = false;
-	//////////////
+	/*************/
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		int width = 800;
@@ -151,11 +158,15 @@ public class Fanorona extends JFrame {
 		skipbutton.setBounds(157, 23, 112, 29);
 		skipbutton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				countdown.stop();
-				timeRemaining = timerSet + 1;
-				timeLabel.setText("Next Turn!");
+				if (timerSet > 0) {
+					countdown.stop();
+					timeLabel.setText("Next Turn!");
+					timeRemaining = timerSet + 1;
+				}
 				board.nextTurn();
-				countdown.start();
+				if (timerSet > 0 ) {
+					countdown.start();
+				}
 			}
 		});
 		skipbutton.setVisible(false);

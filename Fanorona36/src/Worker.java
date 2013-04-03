@@ -1,7 +1,7 @@
 import java.io.*;
 import java.net.*;
 
-public class Worker implements Runnable {
+public class Worker extends Thread {
 
     /** Socket that will carry commands */
     Socket socket;
@@ -39,10 +39,15 @@ public class Worker implements Runnable {
 			OutputStream outStream = socket.getOutputStream();
 			outStream.flush();
 			InputStream inStream = socket.getInputStream();
-			//Send WELCOME command if server
+			//Send WELCOME command if worker is server
 			if ((workType.equals("server"))&&(socket.isBound())) {
 				Command welcome = new Command("ack","WELCOME");
 				welcome.send(outStream);
+				try {
+					Worker.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 			else if (!(workType.equals("client"))){
 				socket.close();
@@ -128,6 +133,10 @@ public class Worker implements Runnable {
 		
 		catch (IOException e) {
 			System.err.println("Message error in Worker: " + e.getMessage());
+		}
+		
+		catch (NullPointerException nule) {
+			nule.printStackTrace();
 		}
 	
 	}

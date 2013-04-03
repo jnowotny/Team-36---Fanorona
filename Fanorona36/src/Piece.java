@@ -102,54 +102,56 @@ public class Piece extends JComponent implements MouseListener{
 
 /**MouseListener overridden methods*/
 	@Override
-	public void mouseClicked(MouseEvent arg0) {
-		if( (brd.isMakingSacrifice()) && (pieceState == brd.getBoardState().getCurrentPlayer()) ){
-			brd.sacrifice(new Pair(xPos,yPos));
-		}
-		else if (isHighlighted){
-			//If no piece selected at time of click, select the clicked piece
-			if(brd.getSelected() == null){
-				brd.setHighlightAll(false, true);
-				setHighlight(true);
-				brd.select(new Pair(xPos,yPos));
+	public void mousePressed(MouseEvent arg0) {
+		if((brd.playerNumber == brd.getBoardState().getCurrentPlayer()) || (brd.playerNumber == -1)) {
+			if( (brd.isMakingSacrifice()) && (pieceState == brd.getBoardState().getCurrentPlayer()) ){
+				brd.sacrifice(new Pair(xPos,yPos));
 			}
-			//If clicked piece matches selected piece , deselect it
-			else if((xPos == brd.getSelected().getFirst()) && (yPos == brd.getSelected().getSecond())){
-				brd.setHighlightAll(false, true);
-				brd.select(null);
-			}
-			//If clicked piece is empty, move selected piece there
-			else if(pieceState == 0){
-				//If the Move has capture options, make a "capture" move
-				if(brd.getBoardState().hasCaptures_Move(brd.getSelected(), new Pair(xPos, yPos))){
-					brd.move(brd.getSelected(), new Pair(xPos, yPos), "capture");
+			else if (isHighlighted){
+				//If no piece selected at time of click, select the clicked piece
+				if(brd.getSelected() == null){
+					brd.setHighlightAll(false, true);
+					setHighlight(true);
+					brd.select(new Pair(xPos,yPos));
 				}
-				//If the Move does not have capture options, make a "paika" move
-				else {
-					brd.move(brd.getSelected(), new Pair(xPos, yPos), "paika");					
+				//If clicked piece matches selected piece , deselect it
+				else if((xPos == brd.getSelected().getFirst()) && (yPos == brd.getSelected().getSecond())){
+					brd.setHighlightAll(false, true);
+					brd.select(null);
 				}
-			}
-			//If clicked piece belongs to currentPlayer's opponent
-			else if(pieceState == brd.getBoardState().getNextPlayer()){
-				//Find a matching pair in ArrayList removables, then remove all pieces in that ArrayList
-				for(int i = 0; i < brd.getBoardState().getRemovables().size(); i++){
-					for(int j = 0; j < brd.getBoardState().getRemovables().get(i).size(); j++){
-						if(	brd.getBoardState().getRemovables().get(i).get(j).isEqualTo(new Pair(xPos, yPos))){
-							brd.removeRemovables(i);
-							brd.updateSelected();
-//							brd.setHighlightAll(false,true);
-							break;
+				//If clicked piece is empty, move selected piece there
+				else if(pieceState == 0){
+					//If the Move has capture options, make a "capture" move
+					if(brd.getBoardState().hasCaptures_Move(brd.getSelected(), new Pair(xPos, yPos))){
+						brd.move(brd.getSelected(), new Pair(xPos, yPos), "capture");
+					}
+					//If the Move does not have capture options, make a "paika" move
+					else {
+						brd.move(brd.getSelected(), new Pair(xPos, yPos), "paika");					
+					}
+				}
+				//If clicked piece belongs to currentPlayer's opponent
+				else if(pieceState == brd.getBoardState().getNextPlayer()){
+					//Find a matching pair in ArrayList removables, then remove all pieces in that ArrayList
+					for(int i = 0; i < brd.getBoardState().getRemovables().size(); i++){
+						for(int j = 0; j < brd.getBoardState().getRemovables().get(i).size(); j++){
+							if(	brd.getBoardState().getRemovables().get(i).get(j).isEqualTo(new Pair(xPos, yPos))){
+								brd.removeRemovables(i);
+								brd.updateSelected();
+//								brd.setHighlightAll(false,true);
+								break;
+							}
 						}
 					}
 				}
 			}
+			else if(brd.getVisited().isEmpty()){
+				
+				brd.setHighlightAll(false, true);
+				brd.select(null);
+			}
+			super.repaint();
 		}
-		else if(brd.getVisited().isEmpty()){
-			
-			brd.setHighlightAll(false, true);
-			brd.select(null);
-		}
-		super.repaint();
 	}
 	
 	@Override
@@ -159,7 +161,7 @@ public class Piece extends JComponent implements MouseListener{
 	public void mouseExited(MouseEvent arg0) {
 	}
 	@Override
-	public void mousePressed(MouseEvent arg0) {
+	public void mouseClicked(MouseEvent arg0) {
 	}
 	@Override
 	public void mouseReleased(MouseEvent arg0) {

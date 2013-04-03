@@ -7,7 +7,7 @@ public class Server extends Thread{
 	
 	public boolean recv = true;
 	protected int portNum;
-	protected int locate;
+	protected int playerNumber;
 	protected int timerLen;
 	protected int gameType;
 	protected int numRows;
@@ -20,15 +20,30 @@ public class Server extends Thread{
     /**
 	@param f The game the client will command.
 	@param port The port for the server to listen on.*/
-	public Server(int location, int type, int Rows, int Cols, int timerLength, int port) {
+	public Server(int playerNum, int type, int Rows, int Cols, int timerLength, int port) {
 //		portNum = port;
+//		PLAYERNUMBER
+//		- -1;
+//		-  1: 
+//		-  2: 
+//		
+//		GAMETYPE
+//		- -1: you don't get to decide! (client)
+//		-  0: P v P
+//		-  1: P v C
+//		-  2: C v C
 		portNum = 11192;
-		locate = location;
+		playerNumber = playerNum;
 		numRows = Rows;
 		numCols = Cols;
 		gameType = type;
 		timerLen = timerLength;
-		color = "W";
+		if (playerNumber == 1) {
+			color = "W";
+		}
+		else if (playerNumber == 2) {
+			color = "B";
+		}
 		try {
 			servSock = new ServerSocket(portNum);
 		    }
@@ -38,7 +53,7 @@ public class Server extends Thread{
 		}   
 		
 		try {
-			Socket input = servSock.accept();
+			final Socket input = servSock.accept();
 			Thread t = new Thread(new Worker(input, "server", this));
 			t.start();				
 		}
@@ -57,7 +72,7 @@ public class Server extends Thread{
 	}
 	// Starts the Fanorona game
 	public void startGame() {
-		Fanorona newGame = new Fanorona(locate, gameType, numRows, numCols, timerLen);
+		Fanorona newGame = new Fanorona(playerNumber, gameType, numRows, numCols, timerLen);
 		newGame.setVisible(true);
 	}
 	

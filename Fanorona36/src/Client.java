@@ -10,7 +10,7 @@ public class Client extends Thread{
 	protected String hostName;
 	protected int gameType;
 	protected int timerLen;
-	protected int locate;
+	protected int playerNumber;
 	protected int numRows;
 	protected int numCols;
 	protected String color;
@@ -21,10 +21,20 @@ public class Client extends Thread{
 	@param location The game the client will command.
 	@param host The Hostname of the server.
 	@param port The Port the server is using.*/
-	public Client(int location, String host, int port) {
+	public Client(int playerNum, String host, int port) {
 //		hostName = host;
 //		portNum = port;
-		locate = location;
+//		PLAYERNUMBER
+//		- -1;
+//		-  1: 
+//		-  2: 
+//		
+//		GAMETYPE
+//		- -1: you don't get to decide! (client)
+//		-  0: P v P
+//		-  1: P v C
+//		-  2: C v C
+		playerNumber = playerNum;
 		hostName = "127.0.0.1";
 		portNum = 11192;
 		try {
@@ -45,7 +55,7 @@ public class Client extends Thread{
 	}
 
 	public void startGame() {
-		Fanorona newGame = new Fanorona(locate, gameType, numRows, numCols, timerLen);
+		Fanorona newGame = new Fanorona(playerNumber, gameType, numRows, numCols, timerLen);
 		newGame.setVisible(true);
 	}
 	
@@ -115,6 +125,12 @@ public class Client extends Thread{
 	    numCols  = Integer.parseInt(sToken.nextToken());
 	    numRows = Integer.parseInt(sToken.nextToken());
 	    color  = sToken.nextToken();
+	    if (color == "W") {
+	    	playerNumber = 1;
+	    }
+	    else if (color == "B") {
+	    	playerNumber = 2;
+	    }
 	    timerLen  = Integer.parseInt(sToken.nextToken());
 		
 	}

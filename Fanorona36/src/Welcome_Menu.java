@@ -37,6 +37,7 @@ public class Welcome_Menu extends JFrame {
 	    int x = (screen.width - width) / 2;
 	    int y = (screen.height - height) / 2;
 	    setBounds(x, y, width, height);
+	    setResizable(false);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);

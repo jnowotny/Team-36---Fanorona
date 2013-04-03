@@ -78,6 +78,7 @@ public class NewGameWin extends JFrame {
 	    int x = (screen.width - width) / 2;
 	    int y = (screen.height - height) / 2;
 	    setBounds(x, y, width, height);
+	    this.setResizable(false);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -414,7 +415,6 @@ public class NewGameWin extends JFrame {
 					if (comboType.getSelectedIndex() == 2 && playerNumber == -1)
 						playerNeeded = false;
 					if (timerButtonSelected > -1 && comboType.getSelectedIndex() > 0 && playerNeeded) {
-						int location = 1; //LOCAL
 						int gameType = comboType.getSelectedIndex(); //0 - PvP; 1 - PvC; 2 - CvC
 						int numRows = (int) spinnerRows.getValue();
 						int numCols = (int) spinnerCols.getValue();
@@ -422,16 +422,15 @@ public class NewGameWin extends JFrame {
 						if (timerButtonSelected == 1) 
 							if (spinnerTimer.isVisible() && (int) spinnerTimer.getValue() > 0) 
 								timerLength = (int) spinnerTimer.getValue();	
-						Fanorona newGame = new Fanorona(location, gameType, numRows, numCols, timerLength);
+						Fanorona newGame = new Fanorona(playerNumber, gameType, numRows, numCols, timerLength);
 						newGame.setVisible(true);
 						dispose();
 					}
 				}
 				else if (selIndexLoc == 2) { //connect to game (client)
-					int location = 2; 		//CLIENT
 					String address = IP1.getText() + "." + IP2.getText() + "." + IP3.getText() + "." + IP4.getText();
 					int port = (int) spinnerPort.getValue();
-					Thread cliThread = new Thread(new Client(location, address, port));
+					Thread cliThread = new Thread(new Client(playerNumber, address, port));
 					cliThread.start();
 					dispose();
 				
@@ -441,7 +440,6 @@ public class NewGameWin extends JFrame {
 					if (comboType.getSelectedIndex() == 2 && isHuman == -1)
 						humanCPUNeeded = false;
 					if (timerButtonSelected > -1 && comboType.getSelectedIndex() > 0 && playerNumber > -1 && humanCPUNeeded) {
-						int location = 3; //SERVER
 						int gameType = comboType.getSelectedIndex(); //0 - PvP; 1 - PvC; 2 - CvC
 						int numRows = (int) spinnerRows.getValue();
 						int numCols = (int) spinnerCols.getValue();
@@ -450,7 +448,7 @@ public class NewGameWin extends JFrame {
 						if (timerButtonSelected == 1) 
 							if (spinnerTimer.isVisible() && (int) spinnerTimer.getValue() > 0) 
 								timerLength = (int) spinnerTimer.getValue();
-						Thread servThread = new Thread(new Server(location, gameType, numRows, numCols, timerLength, port));
+						Thread servThread = new Thread(new Server(playerNumber, gameType, numRows, numCols, timerLength, port));
 						servThread.start();
 						dispose();
 					}

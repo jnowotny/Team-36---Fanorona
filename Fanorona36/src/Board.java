@@ -28,11 +28,17 @@ public class Board extends JPanel {
 	private Pair nextSelected;
 	private ArrayList<Pair> visited;
 	private Color maroon = new Color(80,0,30);
+	protected int playerNumber;
 	
-/**Constructor*/
-	public Board(int rows, int columns, Fanorona f) {
+/**Constructor
+ * @param playerNum Player Number
+ * @param rows Number of Rows
+ * @param columns Number of Columns
+ * @param f Fanorona object */
+	public Board(int rows, int columns, int playerNum, Fanorona f) {
 		
 		this.setLayout(null);
+		playerNumber = playerNum;
 		fan = f;
 		numRows = rows;
 		numCols = columns;
